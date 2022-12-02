@@ -1,6 +1,4 @@
 fun main() {
-    val input = readInput("Day02")
-
     var part1Sum = 0
     var part2Sum = 0
     input.map { it.split(" ") }.filter { it.size == 2 }.map {

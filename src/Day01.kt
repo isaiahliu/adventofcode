@@ -1,6 +1,4 @@
 fun main() {
-    val input = readInput("Day01")
-
     val sumList = arrayListOf<Int>()
     var sum = 0
     input.forEach {

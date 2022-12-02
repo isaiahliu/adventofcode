@@ -5,7 +5,7 @@ import java.security.MessageDigest
 /**
  * Reads lines from the given input txt file.
  */
-fun readInput(name: String) = ClassLoader.getSystemResource("$name.txt")?.file?.let { File(it) }?.readLines().orEmpty()
+val input by lazy { RuntimeException().stackTrace.firstOrNull { it.methodName == "main" }?.className?.removeSuffix("Kt")?.let { ClassLoader.getSystemResource("${it}.txt") }?.file?.let { File(it) }?.readLines().orEmpty() }
 
 /**
  * Converts string to md5 hash.
