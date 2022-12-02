@@ -1,17 +1,22 @@
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
-    }
-
-    fun part2(input: List<String>): Int {
-        return input.size
-    }
-
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
-
     val input = readInput("Day01")
-    println(part1(input))
-    println(part2(input))
+
+    val sumList = arrayListOf<Int>()
+    var sum = 0
+    input.forEach {
+        if (it.isEmpty()) {
+            sumList += sum
+            sum = 0
+        } else {
+            sum += it.toInt()
+        }
+    }
+
+    sumList.sortDescending()
+
+    val part1Result = sumList.first()
+    val part2Result = sumList.take(3).sum()
+
+    println(part1Result)
+    println(part2Result)
 }
