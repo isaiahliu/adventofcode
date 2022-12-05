@@ -17,7 +17,7 @@ fun main() {
     println(part2Sum)
 }
 
-enum class BattleResult(val score: Int, val code: String) {
+private enum class BattleResult(val score: Int, val code: String) {
     LOSE(0, "X"), DRAW(3, "Y"), WIN(6, "Z");
 
     companion object {
@@ -33,7 +33,7 @@ enum class BattleResult(val score: Int, val code: String) {
     }
 }
 
-enum class Shape(val score: Int, vararg val codes: String) {
+private enum class Shape(val score: Int, vararg val codes: String) {
     ROCK(1, "A", "X"), PAPER(2, "B", "Y"), SCISSORS(3, "C", "Z");
 
     companion object {
