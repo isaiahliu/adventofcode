@@ -1,25 +1,27 @@
 fun main() {
     val line = input.first()
 
-    val chars1 = CharArray(4) {
+    val distinct1 = 4
+    val chars1 = CharArray(distinct1) {
         line[it]
     }
 
-    val chars2 = CharArray(14) {
+    val distinct2 = 14
+    val chars2 = CharArray(distinct2) {
         line[it]
     }
 
     var part1Result = 0
     var part2Result = 0
     for ((index, c) in line.withIndex()) {
-        chars1[index % 4] = c
-        chars2[index % 14] = c
+        chars1[index % distinct1] = c
+        chars2[index % distinct2] = c
 
-        if (part1Result == 0 && index > 3 && chars1.distinct().size == 4) {
+        if (part1Result == 0 && index >= distinct1 && chars1.distinct().size == distinct1) {
             part1Result = index + 1
         }
 
-        if (part2Result == 0 && index > 13 && chars2.distinct().size == 14) {
+        if (part2Result == 0 && index >= distinct2 && chars2.distinct().size == distinct2) {
             part2Result = index + 1
         }
 
