@@ -1,24 +1,6 @@
 import kotlin.math.absoluteValue
 
 fun main() {
-    fun follow(previous: RopeNode, next: RopeNode) {
-        val diffX = previous.x - next.x
-        val diffY = previous.y - next.y
-
-        var newX = next.x
-        var newY = next.y
-        if (diffX.absoluteValue > 1 || diffY.absoluteValue > 1) {
-            if (diffX.absoluteValue > 0) {
-                newX += diffX / diffX.absoluteValue
-            }
-            if (diffY.absoluteValue > 0) {
-                newY += diffY / diffY.absoluteValue
-            }
-        }
-
-        next.move(newX, newY)
-    }
-
     val rope1 = Array(2) { RopeNode(0, 0) }
     val rope2 = Array(10) { RopeNode(0, 0) }
 
@@ -28,12 +10,12 @@ fun main() {
         repeat(it[1].toInt()) {
             rope1[0].move(direction)
             repeat(rope1.size - 1) {
-                follow(rope1[it], rope1[it + 1])
+                rope1[it + 1].follow(rope1[it])
             }
 
             rope2[0].move(direction)
             repeat(rope2.size - 1) {
-                follow(rope2[it], rope2[it + 1])
+                rope2[it + 1].follow(rope2[it])
             }
         }
     }
@@ -74,5 +56,23 @@ private class RopeNode(var x: Int, var y: Int) {
         y = toY
 
         visited += "${x}_${y}"
+    }
+
+    fun follow(previous: RopeNode) {
+        val diffX = previous.x - x
+        val diffY = previous.y - y
+
+        var newX = x
+        var newY = y
+        if (diffX.absoluteValue > 1 || diffY.absoluteValue > 1) {
+            if (diffX.absoluteValue > 0) {
+                newX += diffX / diffX.absoluteValue
+            }
+            if (diffY.absoluteValue > 0) {
+                newY += diffY / diffY.absoluteValue
+            }
+        }
+
+        move(newX, newY)
     }
 }
