@@ -59,12 +59,8 @@ private class RopeNode(var x: Int, var y: Int) {
         var newX = x
         var newY = y
         if (diffX.absoluteValue > 1 || diffY.absoluteValue > 1) {
-            if (diffX.absoluteValue > 0) {
-                newX += diffX / diffX.absoluteValue
-            }
-            if (diffY.absoluteValue > 0) {
-                newY += diffY / diffY.absoluteValue
-            }
+            newX += diffX.compareTo(0)
+            newY += diffY.compareTo(0)
         }
 
         move(newX, newY)
