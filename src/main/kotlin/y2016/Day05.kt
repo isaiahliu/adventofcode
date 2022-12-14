@@ -14,7 +14,7 @@ fun main() {
     val passwordPos = hashSetOf<Int>()
     while (!passwordDone) {
         while (true) {
-            val md5 = (prefix + currentNum).md5()
+            val md5 = (prefix + currentNum).md5
             if (md5.startsWith("00000")) {
                 if (password1.length < 8) {
                     password1.append(md5[5])

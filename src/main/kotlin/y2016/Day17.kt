@@ -27,7 +27,7 @@ fun main() {
                     continue
                 }
 
-                val (up, down, left, right) = (line + task.step).md5().take(4).map {
+                val (up, down, left, right) = (line + task.step).md5.take(4).map {
                     it != 'a' && it !in '0'..'9'
                 }
 

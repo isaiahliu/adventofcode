@@ -10,6 +10,7 @@ val input by lazy { RuntimeException().stackTrace.firstOrNull { it.methodName ==
 /**
  * Converts string to md5 hash.
  */
-fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
-        .toString(16)
-        .padStart(32, '0')
+val String.md5
+    get() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
+            .toString(16)
+            .padStart(32, '0')

@@ -12,7 +12,7 @@ fun main() {
     var fiveResult = 0
     var sixResult = 0
     while (!fiveFound || !sixFound) {
-        val md5 = "$input$num".md5()
+        val md5 = "$input$num".md5
 
         if (!fiveFound && md5.startsWith("00000")) {
             fiveFound = true

@@ -25,8 +25,8 @@ fun main() {
         val md5Cache = hashMapOf<Int, String>()
         fun Int.md5(): String {
             return md5Cache.computeIfAbsent(this) {
-                (0..extra).fold("${salt}${this}") { a, b ->
-                    a.md5()
+                (0..extra).fold("${salt}${this}") { a, _ ->
+                    a.md5
                 }
             }
         }
