@@ -1,6 +1,6 @@
 package y2016
 
-import input
+import util.input
 
 fun main() {
     val ranges = input.map { it.split("-") }.map { IpRange(it[0].toLong(), it[1].toLong()) }.sortedWith(compareBy<IpRange> { it.min }.thenBy { it.max })

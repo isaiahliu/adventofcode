@@ -1,6 +1,6 @@
 package y2015
 
-import input
+import util.input
 
 fun main() {
     val regex = "To continue, please consult the code grid in the manual.  Enter the code at row (\\d+), column (\\d+).".toRegex()

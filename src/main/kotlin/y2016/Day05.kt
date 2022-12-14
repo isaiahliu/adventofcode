@@ -1,7 +1,7 @@
 package y2016
 
-import input
-import md5
+import util.input
+import util.md5
 
 fun main() {
     val prefix = input.first()

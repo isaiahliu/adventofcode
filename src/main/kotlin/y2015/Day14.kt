@@ -1,6 +1,6 @@
 package y2015
 
-import input
+import util.input
 
 fun main() {
     val regex = "\\w+ can fly (\\d+) km/s for (\\d+) seconds, but then must rest for (\\d+) seconds.".toRegex()

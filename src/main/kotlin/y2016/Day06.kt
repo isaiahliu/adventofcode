@@ -1,6 +1,6 @@
 package y2016
 
-import input
+import util.input
 
 fun main() {
     val list = Array<MutableList<Char>>(input.first().length) {

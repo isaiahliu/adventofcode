@@ -1,6 +1,6 @@
 package y2016
 
-import input
+import util.input
 
 fun main() {
     val regex = "Disc #\\d+ has (\\d+) positions; at time=(\\d+), it is at position (\\d+).".toRegex()

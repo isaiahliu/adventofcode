@@ -1,6 +1,6 @@
 package y2022
 
-import input
+import util.input
 
 fun main() {
     var part1Result = 0

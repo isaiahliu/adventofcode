@@ -1,6 +1,6 @@
 package y2022
 
-import input
+import util.input
 
 fun main() {
     fun process(maxRound: Int, initProcessor: (Long, Long) -> Long): Long {

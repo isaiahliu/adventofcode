@@ -1,7 +1,7 @@
 package y2015
 
-import input
-import md5
+import util.input
+import util.md5
 
 fun main() {
     var num = 1

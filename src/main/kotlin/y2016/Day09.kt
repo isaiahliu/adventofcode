@@ -1,6 +1,6 @@
 package y2016
 
-import input
+import util.input
 
 fun main() {
     fun decompress(line: String, applyDecompressRecursively: Boolean = false): Long {

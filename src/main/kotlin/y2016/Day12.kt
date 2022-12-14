@@ -1,6 +1,6 @@
 package y2016
 
-import input
+import util.input
 
 fun main() {
     val instructions = input.map { it.split(" ") }.toTypedArray()

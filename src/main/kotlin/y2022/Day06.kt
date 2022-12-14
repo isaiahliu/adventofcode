@@ -1,6 +1,6 @@
 package y2022
 
-import input
+import util.input
 
 fun main() {
     val line = input.first()

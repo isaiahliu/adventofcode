@@ -1,6 +1,6 @@
 package y2015
 
-import input
+import util.input
 
 fun main() {
     val packages = input.map { it.toInt() }.sortedDescending()

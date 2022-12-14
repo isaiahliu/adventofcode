@@ -1,6 +1,6 @@
 package y2016
 
-import input
+import util.input
 
 fun main() {
     fun CharArray.process(instruction: List<String>, reverse: Boolean = false) {

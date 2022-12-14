@@ -1,6 +1,6 @@
 package y2015
 
-import input
+import util.input
 
 fun main() {
     val rsexp = "\\w+: capacity (-?\\d+), durability (-?\\d+), flavor (-?\\d+), texture (-?\\d+), calories (-?\\d+)".toRegex()
