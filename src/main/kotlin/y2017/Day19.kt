@@ -13,7 +13,7 @@ fun main() {
 
     val forwardChars = charArrayOf('|', '-')
 
-    var steps = 1
+    var steps = 0
 
     fun forward() {
         when (direction) {
@@ -98,5 +98,5 @@ fun main() {
         forward()
     }
     println(path.toString())
-    println(steps - 1)
+    println(steps)
 }
