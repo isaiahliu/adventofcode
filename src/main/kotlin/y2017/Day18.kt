@@ -3,12 +3,11 @@ package y2017
 import util.input
 
 fun main() {
-
     val instructions = input.map { it.split(" ") }
 
     val program = Program(instructions)
 
-    while (!program.suspended) {
+    while (!program.terminated) {
         program.execute()
     }
 
@@ -22,7 +21,7 @@ fun main() {
     programA.targetProgram = programB
     programB.targetProgram = programA
 
-    while (!((programA.waitingTurn > 5 && programB.waitingTurn > 5) || programA.suspended && programB.suspended)) {
+    while (!((programA.waitingTurn > 5 && programB.waitingTurn > 5) || programA.terminated && programB.terminated)) {
         programA.execute()
         programB.execute()
     }
@@ -33,7 +32,7 @@ fun main() {
 private class Program(private val instructions: List<List<String>>, private val version2: Boolean = false) {
     val registers = LongArray(26)
 
-    var suspended = false
+    var terminated = false
 
     val queue = arrayListOf<Long>()
 
@@ -49,7 +48,7 @@ private class Program(private val instructions: List<List<String>>, private val 
 
     fun execute() {
         val instruction = instructions.getOrNull(index) ?: run {
-            suspended = true
+            terminated = true
             return
         }
 
@@ -91,7 +90,7 @@ private class Program(private val instructions: List<List<String>>, private val 
                 } else {
                     if (instruction[1].evaluate() != 0L) {
                         if (!recoverHistory.add("${targetProgram.queue.last()}_${index}_${registers.joinToString()}")) {
-                            suspended = true
+                            terminated = true
                         }
                     }
                     index++
