@@ -4,7 +4,6 @@ import util.input
 
 fun main() {
     val step = input.first().toInt()
-//    val step = 3
 
     var currentNum = 0
     var currentNode = Day17Node(currentNum++)
