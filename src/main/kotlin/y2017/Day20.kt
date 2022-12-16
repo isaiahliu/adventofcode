@@ -40,22 +40,20 @@ fun main() {
         return 0
     }
 
-    val destroyTasks = arrayListOf<Pair<Day20Particle, Day20Particle>>()
+    val destroyTasks = hashMapOf<Int, MutableList<Pair<Day20Particle, Day20Particle>>>()
 
     for ((index, particle) in particles.withIndex()) {
         for (targetParticle in particles.drop(index + 1)) {
             val collideTurn = collide(particle.copy(), targetParticle.copy())
             if (collideTurn > 0) {
-                particle.destroyTurn = particle.destroyTurn.coerceAtMost(collideTurn)
-                targetParticle.destroyTurn = targetParticle.destroyTurn.coerceAtMost(collideTurn)
 
-                destroyTasks += particle to targetParticle
+                destroyTasks.computeIfAbsent(collideTurn) { arrayListOf() } += particle to targetParticle
             }
         }
     }
 
-    destroyTasks.forEach {
-        if (it.first.destroyTurn == it.second.destroyTurn) {
+    destroyTasks.entries.sortedBy { it.key }.forEach { (_, pairs) ->
+        pairs.filter { !it.first.destroyed && !it.second.destroyed }.forEach {
             it.first.destroyed = true
             it.second.destroyed = true
         }
@@ -66,8 +64,6 @@ fun main() {
 
 private data class Day20Particle(var index: Int, var px: Int, var py: Int, var pz: Int, var vx: Int, var vy: Int, var vz: Int, val ax: Int, val ay: Int, val az: Int) {
     var destroyed: Boolean = false
-
-    var destroyTurn: Int = 0
 
     fun move(times: Int = 1) {
         repeat(times) {
