@@ -40,7 +40,7 @@ fun main() {
 
             //Begin caching
             if (shapeIndex > 500) {
-                val cacheKey = "${shapeIndex % 5}-${topIncrement},"
+                val cacheKey = "${shapeIndex % 5}-${movementIndex % line.length}-${topIncrement},"
 
                 if (cache1.isEmpty()) {
                     cacheStartTop = top.toLong()
@@ -53,8 +53,8 @@ fun main() {
                     cache2.append(cacheKey)
 
                     if (cache1.contentEquals(cache2)) {
-                        val cacheNodes = cache1.split(",").mapNotNull { it.split("-").getOrNull(1)?.toIntOrNull() }
-                        result2 = cacheStartTop + (targetRocks - 500) / cacheNodes.size * cacheNodes.sum() + cacheNodes.take(((targetRocks - 500) % cacheNodes.size).toInt()).sum()+1
+                        val cacheNodes = cache1.split(",").mapNotNull { it.split("-").getOrNull(2)?.toIntOrNull() }
+                        result2 = cacheStartTop + (targetRocks - 500) / cacheNodes.size * cacheNodes.sum() + cacheNodes.take(((targetRocks - 500) % cacheNodes.size).toInt()).sum() + 1
                     }
                 }
             }
