@@ -53,17 +53,11 @@ fun main() {
                 when (instructionIndex - 1) {
                     10 -> {
                         val b = registers['b' - 'a']
-                        val f = registers['f' - 'a']
 
-                        val minFactor = b.minFactor()
+                        registers['f' - 'a'] = if (b.minFactor() == null) 1 else 0
 
-                        if (f > 0 && minFactor != null) {
-                            registers['d' - 'a'] = minFactor
-                            registers['e' - 'a'] = b / minFactor
-                        } else {
-                            registers['d' - 'a'] = b - 1
-                            registers['e' - 'a'] = b - 1
-                        }
+                        registers['d' - 'a'] = b - 1
+                        registers['e' - 'a'] = b - 1
                     }
                 }
             }
