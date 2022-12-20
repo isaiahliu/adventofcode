@@ -25,12 +25,7 @@ fun main() {
         repeat(burst) {
             val current = map[row]?.get(column) ?: 0
 
-            direction = when (current) {
-                0 -> direction + 3
-                1 -> direction
-                2 -> direction + 1
-                else -> direction + 2
-            } % 4
+            direction = (direction + current + 3) % 4
 
             val newStatus = (current + step) % 4
             map.computeIfAbsent(row) { hashMapOf() }[column] = newStatus
