@@ -5,7 +5,7 @@ import util.input
 fun main() {
     val maxDigits = input.maxOf { it.length }
 
-    val baseNum = "".padStart(maxDigits, '2').toLong(5)
+    val baseNum = String(CharArray(maxDigits) { '2' }).toLong(5)
 
     fun convertTo(num: Long): String {
         return String((num + baseNum).toString(5).map { c ->
