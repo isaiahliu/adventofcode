@@ -13,7 +13,7 @@ fun main() {
     fun convertTo(num: Long): String {
         return (num + baseNum).toString(5).map {
             digits2[digits1.indexOf(it)]
-        }.toCharArray().concatToString().trimStart('0')
+        }.toCharArray().concatToString().trimStart('0').takeIf { it.isNotEmpty() } ?: "0"
     }
 
     fun convertFrom(num: String): Long {
