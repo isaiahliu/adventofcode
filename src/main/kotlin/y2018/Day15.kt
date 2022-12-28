@@ -52,7 +52,7 @@ fun main() {
 
         fun printMap() {
             map.forEach {
-                var hps = StringBuilder()
+                val hps = StringBuilder()
                 val mapLine = it.joinToString("") {
                     when (it) {
                         wall -> "#"
@@ -69,7 +69,7 @@ fun main() {
                         else -> "."
                     }
                 }
-                println("${mapLine}   ${hps}")
+                println("$mapLine   $hps")
             }
         }
 
