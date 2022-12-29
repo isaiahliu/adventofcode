@@ -9,7 +9,6 @@ fun main() {
 
     val depth = input.first().split(" ").last().toInt()
     val (targetX, targetY) = input.drop(1).first().split(" ").last().split(",").map { it.toInt() }
-
 //    depth = 510
 //    targetX = 10
 //    targetY = 10
