@@ -3,7 +3,6 @@ package y2018
 import util.input
 
 fun main() {
-
     var instPointer: Int
     val instructions = input.map { it.split(" ") }.map { it[0] to it.drop(1).map { it.toInt() } }.also {
         it.first().also { (_, args) ->
