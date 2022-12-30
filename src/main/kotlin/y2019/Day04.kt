@@ -3,7 +3,7 @@ package y2019
 import util.input
 
 fun main() {
-    val (min, max) = input.first().let { it.split("-") }.map { it.toInt() }
+    val (min, max) = input.first().split("-").map { it.toInt() }
 
     fun process(v2: Boolean): Int {
         var result = 0
