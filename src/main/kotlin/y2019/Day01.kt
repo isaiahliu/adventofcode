@@ -7,19 +7,13 @@ fun main() {
 
     println(nums.sumOf { it / 3 - 2 })
 
-    println(nums.sumOf {
-        var sum = 0
-        var t = it
-        while (true) {
-            t = t / 3 - 2
+    var result = 0
+    var t = nums
+    while (t.isNotEmpty()) {
+        t = t.map { it / 3 - 2 }.filter { it > 0 }
 
-            if (t > 0) {
-                sum += t
-            } else {
-                break
-            }
+        result += t.sum()
+    }
 
-        }
-        sum
-    })
+    println(result)
 }
