@@ -7,8 +7,7 @@ fun main() {
     val ware1 = hashMapOf<Pair<Int, Int>, Int>()
     val ware2 = hashMapOf<Pair<Int, Int>, Int>()
 
-    val ware1Path = input.first().split(",").map { it[0] to it.substring(1).toInt() }
-    val ware2Path = input.drop(1).first().split(",").map { it[0] to it.substring(1).toInt() }
+    val (ware1Path, ware2Path) = input.map { it.split(",").map { it[0] to it.substring(1).toInt() } }
 
     fun draw(paths: List<Pair<Char, Int>>, map: MutableMap<Pair<Int, Int>, Int>) {
         var x = 0
