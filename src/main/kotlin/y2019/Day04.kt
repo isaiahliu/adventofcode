@@ -11,22 +11,9 @@ fun main() {
             val digits = num.toString().padStart(6, '0').toCharArray().map { it - '0' }
 
             val match = if (v2) {
-                var digit = digits[0]
-                var count = 1
-                val counts = hashSetOf<Int>()
-                repeat(5) {
-                    if (digits[it + 1] == digit) {
-                        count++
-                    } else {
-                        counts += count
-                        digit = digits[it + 1]
-                        count = 1
-                    }
+                (0 until 5).any {
+                    digits[it] == digits[it + 1] && digits[it] != digits.getOrNull(it + 2) && digits[it] != digits.getOrNull(it - 1)
                 }
-
-                counts += count
-
-                2 in counts
             } else {
                 digits.distinct().size < 6
             }
