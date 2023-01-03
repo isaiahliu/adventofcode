@@ -1,6 +1,7 @@
 package y2019
 
 import util.input
+import kotlin.math.pow
 
 fun main() {
     fun process(inputNum: Int): Int {
@@ -11,8 +12,10 @@ fun main() {
 
         var index = 0
 
-        fun readParam(paramIndex: Int, positionMode: Boolean): Int {
-            return if (positionMode) {
+        fun readParam(paramIndex: Int): Int {
+            val paramMode = (nums[index] / 10 / (10.0.pow(paramIndex)).toInt()) % 10 == 0
+
+            return if (paramMode) {
                 nums[nums[index + paramIndex]]
             } else {
                 nums[index + paramIndex]
@@ -20,20 +23,14 @@ fun main() {
         }
 
         while (index < nums.size) {
-            val t = nums[index]
-            val instruction = t % 100
-            val param1Mode = (t / 100) % 10 == 0
-            val param2Mode = (t / 1000) % 10 == 0
-            val param3Mode = (t / 10000) % 10 == 0
-
-            when (instruction) {
+            when (nums[index] % 100) {
                 1 -> {
-                    nums[nums[index + 3]] = readParam(1, param1Mode) + readParam(2, param2Mode)
+                    nums[nums[index + 3]] = readParam(1) + readParam(2)
                     index += 4
                 }
 
                 2 -> {
-                    nums[nums[index + 3]] = readParam(1, param1Mode) * readParam(2, param2Mode)
+                    nums[nums[index + 3]] = readParam(1) * readParam(2)
                     index += 4
                 }
 
@@ -48,23 +45,23 @@ fun main() {
                 }
 
                 5 -> {
-                    if (readParam(1, param1Mode) != 0) {
-                        index = readParam(2, param2Mode)
+                    if (readParam(1) != 0) {
+                        index = readParam(2)
                     } else {
                         index += 3
                     }
                 }
 
                 6 -> {
-                    if (readParam(1, param1Mode) == 0) {
-                        index = readParam(2, param2Mode)
+                    if (readParam(1) == 0) {
+                        index = readParam(2)
                     } else {
                         index += 3
                     }
                 }
 
                 7 -> {
-                    nums[nums[index + 3]] = if (readParam(1, param1Mode) < readParam(2, param2Mode)) {
+                    nums[nums[index + 3]] = if (readParam(1) < readParam(2)) {
                         1
                     } else {
                         0
@@ -73,7 +70,7 @@ fun main() {
                 }
 
                 8 -> {
-                    nums[nums[index + 3]] = if (readParam(1, param1Mode) == readParam(2, param2Mode)) {
+                    nums[nums[index + 3]] = if (readParam(1) == readParam(2)) {
                         1
                     } else {
                         0
