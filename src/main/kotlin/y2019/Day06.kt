@@ -19,7 +19,7 @@ fun main() {
         nodeMap.computeIfAbsent(from) { Node(from) }.children += nodeMap.computeIfAbsent(to) { Node(to) }
     }
 
-    val root = nodeMap[(nodeMap.keys - nodeMap.values.map { it.children }.flatten().map { it.name }.toSet()).first()]!!
+    val root = nodeMap[(nodeMap.keys - nodeMap.values.map { it.children.map { it.name } }.flatten().toSet()).first()]!!
 
     fun calculateDepth(node: Node, depth: Int) {
         node.depth = depth
