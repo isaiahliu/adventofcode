@@ -147,5 +147,6 @@ fun main() {
         })
     }
 
+    process(false, 0)
     process(true, 5)
 }
