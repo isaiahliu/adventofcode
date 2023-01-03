@@ -33,8 +33,8 @@ fun main() {
 
     println(nodeMap.values.sumOf { it.depth })
 
-    val sanRoute = nodeMap.values.filter { it.containsChild("SAN") }
-    val youRoute = nodeMap.values.filter { it.containsChild("YOU") }
+    val sanRoute = nodeMap.values.filter { it.containsChild("SAN") }.toSet()
+    val youRoute = nodeMap.values.filter { it.containsChild("YOU") }.toSet()
 
     val t = sanRoute.intersect(youRoute).maxBy { it.depth }
 
