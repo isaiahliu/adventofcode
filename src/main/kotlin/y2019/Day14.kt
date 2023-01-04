@@ -58,7 +58,7 @@ fun main() {
     println(count)
 
     val target = 1000000000000L
-    var t = (1000000000000L / count * 1.85).toLong()
+    var t = (target / count * 1.85).toLong()
 
     while (true) {
         val process = process(t)
