@@ -31,8 +31,6 @@ fun main() {
         var score = 0
         val positions = arrayListOf<Int>()
 
-        var ballPosition = 0 to 0
-        var padPosition = 0 to 0
         val memory = input.first().let {
             it.split(",").map { it.toLong() }.toLongArray()
         }.mapIndexed { index, l ->
@@ -81,16 +79,17 @@ fun main() {
                 }
 
                 3 -> {
-                    val (currentX, currentY) = ballPosition
+                    val ballX = map.entries.first { it.value == 4 }.key.first
+                    val padX = map.entries.first { it.value == 3 }.key.first
 
                     var inputNum = 0L
 
                     when {
-                        currentX - padPosition.first > 0 -> {
+                        ballX - padX > 0 -> {
                             inputNum = 1
                         }
 
-                        currentX - padPosition.first < 0 -> {
+                        ballX - padX < 0 -> {
                             inputNum = -1   //up
                         }
                     }
@@ -110,15 +109,6 @@ fun main() {
                                 map[positions[0] to positions[1]] = output.toInt()
                             }
 
-                            when (output.toInt()) {
-                                4 -> {
-                                    ballPosition = positions[0] to positions[1]
-                                }
-
-                                3 -> {
-                                    padPosition = positions[0] to positions[1]
-                                }
-                            }
                             positions.clear()
                         }
 
