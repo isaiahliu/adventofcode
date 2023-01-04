@@ -40,7 +40,7 @@ fun main() {
     result.forEach {
         println(it.joinToString("") {
             when (it) {
-                0 -> "."
+                0 -> " "
                 else -> "#"
             }
         })
