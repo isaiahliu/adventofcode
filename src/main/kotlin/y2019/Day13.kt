@@ -82,16 +82,10 @@ fun main() {
                     val ballX = map.entries.first { it.value == 4 }.key.first
                     val padX = map.entries.first { it.value == 3 }.key.first
 
-                    var inputNum = 0L
-
-                    when {
-                        ballX - padX > 0 -> {
-                            inputNum = 1
-                        }
-
-                        ballX - padX < 0 -> {
-                            inputNum = -1   //up
-                        }
+                    val inputNum = when {
+                        ballX - padX > 0 -> 1L
+                        ballX - padX < 0 -> -1L
+                        else -> 0L
                     }
 
                     writeParam(1, inputNum)
