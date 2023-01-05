@@ -70,22 +70,20 @@ fun main() {
     println(result1)
 
     val length = nums.size * 10000 - nums.take(7).reduce { acc, n -> acc * 10 + n }
-    var source = IntArray(length) {
+    val array = IntArray(length) {
         nums[nums.size - (it % nums.size) - 1]
     }
 
-    var target = IntArray(0)
     repeat(100) {
         var sum = 0
-        target = IntArray(length) {
-            sum += source[it]
+
+        repeat(array.size) {
+            sum += array[it]
             sum %= 10
 
-            sum
+            array[it] = sum
         }
-
-        source = target
     }
 
-    println(target.takeLast(8).reversed().joinToString("") { it.toString() })
+    println(array.takeLast(8).reversed().joinToString("") { it.toString() })
 }
