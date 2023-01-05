@@ -1,7 +1,6 @@
 package y2019
 
 import util.input
-import java.time.Duration
 import java.time.LocalDateTime
 import kotlin.math.absoluteValue
 
@@ -70,11 +69,23 @@ fun main() {
     val result1 = process(nums, 100, 1, 0, 8)
     println(result1)
 
-    val offset = nums.take(7).reduce { acc, n -> acc * 10 + n }
+    val length = nums.size * 10000 - nums.take(7).reduce { acc, n -> acc * 10 + n }
+    var source = IntArray(length) {
+        nums[nums.size - (it % nums.size) - 1]
+    }
 
-    val result2 = process(nums, 100, 10000, offset, 8)
-    println(result2)
+    var target = IntArray(0)
+    repeat(100) {
+        var sum = 0
+        target = IntArray(length) {
+            sum += source[it]
+            sum %= 10
 
-    val endTime = LocalDateTime.now()
-    println("Time cost: ${Duration.between(startTime, endTime).seconds}s")
+            sum
+        }
+
+        source = target
+    }
+
+    println(target.takeLast(8).reversed().joinToString("") { it.toString() })
 }
