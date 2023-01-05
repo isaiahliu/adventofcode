@@ -1,9 +1,12 @@
 package y2019
 
 import util.input
+import java.time.Duration
+import java.time.LocalDateTime
 import kotlin.math.absoluteValue
 
 fun main() {
+    val startTime = LocalDateTime.now()
     val nums = input.map { it.map { it - '0' }.toIntArray() }.first()
 
     fun process(init: IntArray, phase: Int, times: Int, offset: Int, outputLength: Int): String {
@@ -71,4 +74,7 @@ fun main() {
 
     val result2 = process(nums, 100, 10000, offset, 8)
     println(result2)
+
+    val endTime = LocalDateTime.now()
+    println("Time cost: ${Duration.between(startTime, endTime).seconds}s")
 }
