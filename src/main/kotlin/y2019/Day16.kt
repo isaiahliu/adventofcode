@@ -1,11 +1,9 @@
 package y2019
 
 import util.input
-import java.time.LocalDateTime
 import kotlin.math.absoluteValue
 
 fun main() {
-    val startTime = LocalDateTime.now()
     val nums = input.map { it.map { it - '0' }.toIntArray() }.first()
 
     fun process(init: IntArray, phase: Int, times: Int, offset: Int, outputLength: Int): String {
