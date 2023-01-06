@@ -19,7 +19,7 @@ fun main() {
                 }
             }
 
-            array.takeLast(8).reversed().joinToString("") { it.toString() }
+            array.takeLast(outputLength).reversed().joinToString("") { it.toString() }
         } else {
             val length = init.size * times
 
