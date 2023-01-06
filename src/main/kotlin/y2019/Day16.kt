@@ -9,11 +9,14 @@ fun main() {
     fun process(init: IntArray, phase: Int, times: Int, offset: Int, outputLength: Int): String {
         return if (offset > init.size * times / 2) {
             val length = nums.size * times - offset
+
+            var sum = 0
             val array = IntArray(length) {
-                nums[nums.size - (it % nums.size) - 1]
+                sum += nums[nums.size - (it % nums.size) - 1]
+                sum
             }
 
-            repeat(phase) {
+            repeat(phase - 1) {
                 for (index in 1 until array.size) {
                     array[index] = (array[index] + array[index - 1]) % 10
                 }
