@@ -6,7 +6,7 @@ import kotlin.math.pow
 fun main() {
     fun process(inputNum: Long): Long {
         var result = 0L
-        val nums = input.first().let {
+        val memory = input.first().let {
             it.split(",").map { it.toLong() }.toLongArray()
         }.mapIndexed { index, l ->
             index.toLong() to l
@@ -17,28 +17,28 @@ fun main() {
         var done = false
 
         fun readParam(paramIndex: Long): Long {
-            return when ((nums[index]!!.toInt() / 10 / (10.0.pow(paramIndex.toInt())).toInt()) % 10) {
-                0 -> nums[nums[index + paramIndex] ?: 0L] ?: 0L
-                1 -> nums[index + paramIndex] ?: 0L
-                else -> nums[relativeBase + (nums[index + paramIndex] ?: 0L)] ?: 0L
+            return when ((memory[index]!!.toInt() / 10 / (10.0.pow(paramIndex.toInt())).toInt()) % 10) {
+                0 -> memory[memory[index + paramIndex] ?: 0L] ?: 0L
+                1 -> memory[index + paramIndex] ?: 0L
+                else -> memory[relativeBase + (memory[index + paramIndex] ?: 0L)] ?: 0L
             }
         }
 
         fun writeParam(paramIndex: Long, value: Long) {
-            when ((nums[index]!!.toInt() / 10 / (10.0.pow(paramIndex.toInt())).toInt()) % 10) {
-                0 -> nums[nums[index + paramIndex] ?: 0L] = value
+            when ((memory[index]!!.toInt() / 10 / (10.0.pow(paramIndex.toInt())).toInt()) % 10) {
+                0 -> memory[memory[index + paramIndex] ?: 0L] = value
                 1 -> {
-                    nums[index + paramIndex] = value
+                    memory[index + paramIndex] = value
                 }
 
                 else -> {
-                    nums[relativeBase + (nums[index + paramIndex] ?: 0L)] = value
+                    memory[relativeBase + (memory[index + paramIndex] ?: 0L)] = value
                 }
             }
         }
 
         while (!done) {
-            when (nums[index]!!.toInt() % 100) {
+            when (memory[index]!!.toInt() % 100) {
                 1 -> {
                     writeParam(3, readParam(1) + readParam(2))
                     index += 4
@@ -77,22 +77,22 @@ fun main() {
 
                 7 -> {
                     writeParam(
-                        3, if (readParam(1) < readParam(2)) {
-                            1
-                        } else {
-                            0
-                        }
+                            3, if (readParam(1) < readParam(2)) {
+                        1
+                    } else {
+                        0
+                    }
                     )
                     index += 4
                 }
 
                 8 -> {
                     writeParam(
-                        3, if (readParam(1) == readParam(2)) {
-                            1
-                        } else {
-                            0
-                        }
+                            3, if (readParam(1) == readParam(2)) {
+                        1
+                    } else {
+                        0
+                    }
                     )
                     index += 4
                 }
