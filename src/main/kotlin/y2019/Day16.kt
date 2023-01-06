@@ -73,13 +73,8 @@ fun main() {
     }
 
     repeat(100) {
-        var sum = 0
-
-        repeat(array.size) {
-            sum += array[it]
-            sum %= 10
-
-            array[it] = sum
+        for (index in 1 until array.size) {
+            array[index] = (array[index] + array[index - 1]) % 10
         }
     }
 
