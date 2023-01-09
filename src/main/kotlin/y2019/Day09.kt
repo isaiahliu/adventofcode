@@ -4,8 +4,7 @@ import util.input
 import kotlin.math.pow
 
 fun main() {
-    fun process(inputNum: Long): Long {
-        var result = 0L
+    fun process(inputReader: () -> Long, outputWriter: (Long) -> Unit) {
         val memory = input.first().let {
             it.split(",").map { it.toLong() }.toLongArray()
         }.mapIndexed { index, l ->
@@ -50,12 +49,12 @@ fun main() {
                 }
 
                 3 -> {
-                    writeParam(1, inputNum)
+                    writeParam(1, inputReader())
                     index += 2
                 }
 
                 4 -> {
-                    result = readParam(1)
+                    outputWriter(readParam(1))
                     index += 2
                 }
 
@@ -112,9 +111,21 @@ fun main() {
                 }
             }
         }
-        return result
     }
 
-    println(process(1L))
-    println(process(2L))
+    var result1 = 0L
+    val inputReader1 = { 1L }
+    val outputWriter1: (Long) -> Unit = {
+        result1 = it
+    }
+    process(inputReader1, outputWriter1)
+    println(result1)
+
+    var result2 = 0L
+    val inputReader2 = { 2L }
+    val outputWriter2: (Long) -> Unit = {
+        result2 = it
+    }
+    process(inputReader2, outputWriter2)
+    println(result2)
 }
