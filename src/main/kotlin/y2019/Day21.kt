@@ -159,11 +159,11 @@ fun main() {
         }
     }
 
-//    println(IO(false, true).also {
-//        it.process()
-//    }.result)
+    println(IO(false).also {
+        it.process()
+    }.result)
 
-    println(IO(true, true).also {
+    println(IO(true).also {
         it.process()
     }.result)
 }
