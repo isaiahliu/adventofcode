@@ -54,11 +54,11 @@ fun main() {
     val b = (a * offset.negate()).mod(CARD_COUNT2)
 
     val an = a.modPow(times, CARD_COUNT2)
-    var result = (pos * an) % CARD_COUNT2
+    pos = (pos * an) % CARD_COUNT2
 
-    result += (a - BigInteger.ONE).modInverse(CARD_COUNT2) * (an - BigInteger.ONE) * b
+    pos += (a - BigInteger.ONE).modInverse(CARD_COUNT2) * (an - BigInteger.ONE) * b
 
-    result %= CARD_COUNT2
+    pos %= CARD_COUNT2
 
-    println(result)
+    println(pos)
 }
