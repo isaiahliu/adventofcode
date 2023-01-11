@@ -49,7 +49,7 @@ fun main() {
     val times = 101741582076661L.toBigInteger()
 
     //For one time, y = ax + b
-    //For n times, y = a^n*x + (b^n - 1) / (b - 1)
+    //For n times, y = a^n*x + b* (a^n - 1) / (a - 1)
     val a = increment.modInverse(CARD_COUNT2)
     val b = (a * offset.negate()).mod(CARD_COUNT2)
 
