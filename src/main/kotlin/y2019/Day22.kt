@@ -54,9 +54,8 @@ fun main() {
     val b = (a * offset.negate()).mod(CARD_COUNT2)
 
     val an = a.modPow(times, CARD_COUNT2)
-    pos = (pos * an) % CARD_COUNT2
 
-    pos += (a - BigInteger.ONE).modInverse(CARD_COUNT2) * (an - BigInteger.ONE) * b
+    pos = (pos * an) % CARD_COUNT2 + (a - BigInteger.ONE).modInverse(CARD_COUNT2) * (an - BigInteger.ONE) * b
 
     pos %= CARD_COUNT2
 
