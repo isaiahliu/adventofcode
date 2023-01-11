@@ -5,7 +5,7 @@ import java.util.*
 import kotlin.math.pow
 
 fun main() {
-    class IO(private val x: Int, private val y: Int, private val debug: Boolean = false) {
+    class IntCodeComputer(private val x: Int, private val y: Int, private val debug: Boolean = false) {
         fun process() {
             val memory = input.first().let {
                 it.split(",").map { it.toLong() }.toLongArray()
@@ -137,7 +137,7 @@ fun main() {
     var result1 = 0
     repeat(50) { y ->
         repeat(50) { x ->
-            if (IO(x, y).also { it.process() }.result == 1L) {
+            if (IntCodeComputer(x, y).also { it.process() }.result == 1L) {
                 result1++
             }
         }
@@ -149,7 +149,7 @@ fun main() {
 
     fun read(x: Int, y: Int): Boolean {
         return cache.computeIfAbsent(x to y) {
-            IO(x, y).also { it.process() }.result == 1L
+            IntCodeComputer(x, y).also { it.process() }.result == 1L
         }
     }
 

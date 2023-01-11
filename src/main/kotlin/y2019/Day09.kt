@@ -4,7 +4,7 @@ import util.input
 import kotlin.math.pow
 
 fun main() {
-    class IO(private val inputVal: Long, private val debug: Boolean = false) {
+    class IntCodeComputer(private val inputVal: Long, private val debug: Boolean = false) {
         fun process() {
             val memory = input.first().let {
                 it.split(",").map { it.toLong() }.toLongArray()
@@ -128,11 +128,11 @@ fun main() {
         }
     }
 
-    println(IO(1).also {
+    println(IntCodeComputer(1).also {
         it.process()
     }.result)
 
-    println(IO(2).also {
+    println(IntCodeComputer(2).also {
         it.process()
     }.result)
 }
