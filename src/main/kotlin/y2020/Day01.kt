@@ -9,15 +9,11 @@ fun main() {
 
     println(num * (2020 - num))
 
-    var result = 0
-    loop@ for (num1 in nums) {
-        for (num2 in nums) {
-            if ((2020 - num1 - num2) in nums) {
-                result = num1 * num2 * (2020 - num1 - num2)
-                break@loop
-            }
-        }
-    }
+    for (num1 in nums) {
+        val num2 = nums.firstOrNull { (2020 - num1 - it) in nums } ?: continue
 
-    println(result)
+        println(num1 * num2 * (2020 - num1 - num2))
+
+        break
+    }
 }
