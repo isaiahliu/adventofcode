@@ -54,8 +54,6 @@ fun main() {
         return result
     }
 
-    val g = groups.map { it.calculatePossibilities() }
-
     println(groups.fold(1L) { a, b ->
         a * b.calculatePossibilities()
     })
