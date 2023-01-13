@@ -10,7 +10,13 @@ fun main() {
 
         fun match(charArray: String, index: Int): Int {
             return if (fixedChar != null) {
-                if (charArray.getOrNull(index) == fixedChar) 1 else 0
+                val match = charArray.getOrNull(index) == fixedChar
+                if (match) {
+                    println("--match ${index}-${fixedChar}")
+                } else {
+                    println("mismatch ${index}-${fixedChar}")
+                }
+                if (match) 1 else 0
             } else {
                 println("processing ${id}")
                 subRules.maxOf {
@@ -62,15 +68,15 @@ fun main() {
     rulesMap[8]?.also {
         it.fixedChar = null
         it.subRules.clear()
-        it.subRules += listOf(rulesMap[42]!!)
-        it.subRules += listOf(rulesMap[42]!!, rulesMap[8]!!)
+        it.subRules.add(listOf(rulesMap[42]!!))
+        it.subRules.add(listOf(rulesMap[42]!!, rulesMap[8]!!))
     }
 
     rulesMap[11]?.also {
         it.fixedChar = null
         it.subRules.clear()
-        it.subRules += listOf(rulesMap[42]!!, rulesMap[31]!!)
-        it.subRules += listOf(rulesMap[42]!!, rulesMap[11]!!, rulesMap[31]!!)
+        it.subRules.add(listOf(rulesMap[42]!!, rulesMap[31]!!))
+        it.subRules.add(listOf(rulesMap[42]!!, rulesMap[11]!!, rulesMap[31]!!))
     }
 
     println(lines.first().let { rule0.match(it, 0) })
