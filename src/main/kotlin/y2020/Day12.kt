@@ -72,22 +72,24 @@ fun main() {
                 else -> throw RuntimeException(method.toString())
             }
 
-            val t = if (v2) waypoint else position
-            when (moveDirection) {
-                NORTH -> {
-                    t[1] += moveCount
-                }
+            if (moveCount > 0) {
+                val t = if (v2) waypoint else position
+                when (moveDirection) {
+                    NORTH -> {
+                        t[1] += moveCount
+                    }
 
-                SOUTH -> {
-                    t[1] -= moveCount
-                }
+                    SOUTH -> {
+                        t[1] -= moveCount
+                    }
 
-                EAST -> {
-                    t[0] += moveCount
-                }
+                    EAST -> {
+                        t[0] += moveCount
+                    }
 
-                WEST -> {
-                    t[0] -= moveCount
+                    WEST -> {
+                        t[0] -= moveCount
+                    }
                 }
             }
         }
