@@ -17,15 +17,15 @@ fun main() {
     }
 
     var diff = BigInteger.ZERO
-    var d = nums.first().first
+    var div = nums.first().first
     var base = BigInteger.ZERO
     nums.drop(1).forEach { (b, m) ->
-        base = (d.modInverse(b) * (m - diff)).mod(d * b)
+        base = (div.modInverse(b) * (m - diff)).mod(div * b)
 
-        diff += d * base
+        diff += div * base
 
-        d *= b
+        div *= b
     }
 
-    println((base * d + diff) % d)
+    println((base * div + diff) % div)
 }
