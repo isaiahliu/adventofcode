@@ -8,30 +8,27 @@ fun main() {
 
         var fixedChar: Char? = null
 
-        fun match(charArray: String, index: Int): Int {
+        fun match(charArray: String, index: Int, recursiveCount: Int, route: Set<Int>): Set<Int> {
+            if (index + recursiveCount > charArray.length) {
+                return emptySet()
+            }
             return if (fixedChar != null) {
                 val match = charArray.getOrNull(index) == fixedChar
-                if (match) {
-                    println("--match ${index}-${fixedChar}")
-                } else {
-                    println("mismatch ${index}-${fixedChar}")
-                }
-                if (match) 1 else 0
+                if (match) setOf(1) else emptySet()
             } else {
-                println("processing ${id}")
-                subRules.maxOf {
-                    var length = 0
+                subRules.map {
+                    var res = setOf(0)
                     for (rule in it) {
-                        val matchLength = rule.match(charArray, index + length)
-                        if (matchLength == 0) {
-                            return@maxOf 0
-                        }
-
-                        length += matchLength
+                        val rc = recursiveCount + if (rule.id in route) 1 else 0
+                        res =
+                            res.map { length ->
+                                rule.match(charArray, index + length, rc, route + rule.id).map { it + length }
+                            }
+                                .flatten().toSet()
                     }
 
-                    return@maxOf length
-                }
+                    res
+                }.flatten().toSet()
             }
         }
     }
@@ -63,7 +60,7 @@ fun main() {
 
     val rule0 = rulesMap[0]!!
 
-//    println(lines.count { rule0.match(it, 0) == it.length })
+    println(lines.count { it.length in rule0.match(it, 0, 0, emptySet()) })
 
     rulesMap[8]?.also {
         it.fixedChar = null
@@ -79,5 +76,5 @@ fun main() {
         it.subRules.add(listOf(rulesMap[42]!!, rulesMap[11]!!, rulesMap[31]!!))
     }
 
-    println(lines.first().let { rule0.match(it, 0) })
+    println(lines.count { it.length in rule0.match(it, 0, 0, emptySet()) })
 }
