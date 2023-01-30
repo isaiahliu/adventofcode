@@ -4,17 +4,6 @@ import util.input
 import java.util.*
 
 fun main() {
-    fun Array<out List<Int>>.cacheKey(): String {
-        val numMap = this.toList().flatten().sorted().withIndex().associate {
-            it.value to it.index
-        }
-        return this.joinToString("|") {
-            it.joinToString {
-                numMap[it].toString()
-            }
-        }
-    }
-
     fun process(init: Array<out List<Int>>, game: Int, debug: Boolean = false): Int {
         val playersRoute = Array(init.size) { hashSetOf<String>() }
 
