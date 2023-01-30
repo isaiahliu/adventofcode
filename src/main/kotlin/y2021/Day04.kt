@@ -36,19 +36,20 @@ fun main() {
             it -= drawNum
         }
 
-        val wins = boards.filter {
+        val winners = boards.filter {
             it.values.map { it.first }.distinct().size < 5 || it.values.map { it.second }.distinct().size < 5
         }.toSet()
 
-        if (result1 == 0 && wins.isNotEmpty()) {
-            result1 = wins.first().keys.sum() * drawNum
+        val winner = winners.firstOrNull()
+        if (result1 == 0 && winner != null) {
+            result1 = winner.keys.sum() * drawNum
         }
 
-        wins.firstOrNull()?.also {
+        winner?.also {
             result2 = it.keys.sum() * drawNum
         }
 
-        boards -= wins
+        boards -= winners
     }
 
     println(result1)
