@@ -22,7 +22,7 @@ fun main() {
             ) {
                 result1 += num + 1
 
-                var basin = hashSetOf(rowIndex to columnIndex)
+                val basin = hashSetOf(rowIndex to columnIndex)
                 val tasks = hashMapOf(rowIndex to columnIndex to num)
 
                 while (tasks.isNotEmpty()) {
