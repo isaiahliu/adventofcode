@@ -49,16 +49,18 @@ fun main() {
 
     println(result1)
     for (y in points.minOf { it.second }..points.maxOf { it.second }) {
-        for (x in points.minOf { it.first }..points.maxOf { it.first }) {
-            print(
-                if (x to y in points) {
-                    "#"
-                } else {
-                    " "
-                }
-            )
-        }
-        println()
+        buildString {
+            for (x in points.minOf { it.first }..points.maxOf { it.first }) {
+                append(
+                    if (x to y in points) {
+                        "#"
+                    } else {
+                        " "
+                    }
+                )
+            }
+        }.also { println(it) }
+
     }
 }
 
