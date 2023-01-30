@@ -4,8 +4,8 @@ import util.input
 
 fun main() {
     val fishes = LongArray(9)
-    input.first().split(",").map { it.toInt() }.forEach {
-        fishes[it]++
+    input.first().split(",").forEach {
+        fishes[it.toInt()]++
     }
 
     var currentIndex = 0
