@@ -17,25 +17,11 @@ fun main() {
         val regex = "(\\d+),(\\d+) -> (\\d+),(\\d+)".toRegex()
         input.mapNotNull { regex.matchEntire(it)?.groupValues?.drop(1)?.map { it.toInt() } }
             .forEach { (x1, y1, x2, y2) ->
-                var deltaX = 0
-                var deltaY = 0
-                when {
-                    x1 == x2 -> {
-                        deltaY = (y2 - y1).let { it / it.absoluteValue }
-                    }
+                val deltaX = (x2 - x1).takeIf { it != 0 }?.let { it / it.absoluteValue } ?: 0
+                val deltaY = (y2 - y1).takeIf { it != 0 }?.let { it / it.absoluteValue } ?: 0
 
-                    y1 == y2 -> {
-                        deltaX = (x2 - x1).let { it / it.absoluteValue }
-                    }
-
-                    else -> {
-                        if (v2) {
-                            deltaY = (y2 - y1).let { it / it.absoluteValue }
-                            deltaX = (x2 - x1).let { it / it.absoluteValue }
-                        } else {
-                            return@forEach
-                        }
-                    }
+                if (!v2 && deltaX != 0 && deltaY != 0) {
+                    return@forEach
                 }
 
                 mark(x1 to y1)
