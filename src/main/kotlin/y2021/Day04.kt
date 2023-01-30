@@ -40,13 +40,12 @@ fun main() {
             it.values.map { it.first }.distinct().size < 5 || it.values.map { it.second }.distinct().size < 5
         }.toSet()
 
-        val winner = winners.firstOrNull()
-        if (result1 == 0 && winner != null) {
-            result1 = winner.keys.sum() * drawNum
+        winners.firstOrNull()?.also {
+            result2 = it.keys.sum() * drawNum
         }
 
-        winner?.also {
-            result2 = it.keys.sum() * drawNum
+        if (result1 == 0 && result2 > 0) {
+            result1 = result2
         }
 
         boards -= winners
