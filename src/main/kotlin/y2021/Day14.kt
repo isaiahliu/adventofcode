@@ -26,7 +26,6 @@ fun main() {
     }
 
     fun process(depth: Int): Long {
-        val counts = LongArray(26)
         val cache = hashMapOf<String, LongArray>()
 
         fun walk(pair: Pair<Char, Char>, depth: Int): LongArray? {
@@ -54,12 +53,14 @@ fun main() {
             return result
         }
 
+        val counts = LongArray(26)
+
         init.forEach { counts[it]++ }
 
-        for (index in 0 until init.length - 1) {
-            walk(init[index] to init[index + 1], depth)?.also { counts.merge(it) }
+        init.reduce { a, b ->
+            walk(a to b, depth)?.also { counts.merge(it) }
+            b
         }
-
 
         return counts.max() - counts.filter { it > 0 }.min()
     }
