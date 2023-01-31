@@ -66,7 +66,7 @@ fun main() {
         return stack.peek().second
     }
 
-    fun process(lines: List<String>): List<Node> {
+    fun process(lines: List<String>, debug: Boolean = false): List<Node> {
         return lines.map {
             var depth = -1
             var pos = 0
@@ -154,6 +154,10 @@ fun main() {
                 }
 
                 break
+            }
+
+            if (debug) {
+                sum.printSnails()
             }
 
             sum
