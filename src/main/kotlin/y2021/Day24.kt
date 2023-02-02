@@ -1,6 +1,7 @@
 package y2021
 
 import util.input
+import kotlin.math.absoluteValue
 
 fun main() {
     operator fun LongArray.get(char: String): Long {
@@ -62,25 +63,74 @@ fun main() {
         return registers.last()
     }
 
-    println(process(List(14) { 9L }))
 
-    val params = arrayListOf<Long>()
+    val params = arrayListOf<LongArray>()
+    val t = arrayListOf<Long>()
     input.forEachIndexed { index, s ->
         when (index % 18) {
-            5, 4, 15 -> params += s.split(" ").last().toLong()
+            5, 4, 15 -> {
+                t += s.split(" ").last().toLong()
+                if (t.size == 3) {
+                    params += t.toLongArray()
+                    t.clear()
+                }
+            }
         }
     }
 
-    var z = 0L
-    for (index in params.indices step 3) {
-        val param1 = params[index]
-        val param2 = params[index + 1]
-        val param3 = params[index + 2]
-        println("${param1} ${param2} ${param3}")
-        val x = if (z.mod(26L) + param2 == 9L) 0L else 1L
+    var done = false
+    val inputs = LongArray(14)
+    val results = LongArray(14)
+    var index = 0
+    loop@ while (index < results.size) {
+        if (index < 0) {
+            val a = 1
+        }
+        val (param1, param2, param3) = params[index]
+        //println("${param1} ${param2} ${param3}")
+
+
+        var z = results.getOrNull(index - 1) ?: 0L
+        val targetNum = z.mod(26L) + param2
+
+        if (param1 == 26L) {
+            if (targetNum in 1..9) {
+                inputs[index] = -targetNum
+            } else {
+                while (true) {
+                    if (index < 0) {
+                        val b = 1
+                    }
+                    when {
+                        inputs[index] <= 0 -> {
+                            index--
+                        }
+
+                        inputs[index] == 1L -> {
+                            inputs[index] = 0L
+                            index--
+                        }
+
+                        else -> {
+                            inputs[index]--
+                            break
+                        }
+                    }
+                }
+                continue
+            }
+        } else if (inputs[index] == 0L) {
+            inputs[index] = 9L
+        }
+
+        val x = if (targetNum == inputs[index]) 0L else 1L
         z /= param1
-        z = z * (x * 25L + 1L) + (9L + param3) * x
-        println("x=${x} z=${z}")
+        results[index] = z * (x * 25L + 1L) + (inputs[index] + param3) * x
+
+        index++
     }
-    println(z)
+    println(inputs.joinToString("") { it.absoluteValue.toString() })
+
+    println(process(inputs.map { it.absoluteValue }))
+
 }
