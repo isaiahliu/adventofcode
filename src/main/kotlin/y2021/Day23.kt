@@ -217,7 +217,6 @@ fun main() {
         }
 
         var sum = Int.MAX_VALUE
-        map.printMap()
 
         val visited = hashMapOf(map.serialize() to 0)
         val tasks = hashMapOf(map.serialize() to 0)
@@ -266,10 +265,8 @@ fun main() {
             }
         }
 
-        println(map.done())
-
         return sum
     }
-//    println(process(false))
+    println(process(false))
     println(process(true))
 }
