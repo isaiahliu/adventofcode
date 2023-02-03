@@ -45,7 +45,8 @@ fun main() {
         }
 
         if (rowIndex == peopleCount) {
-            val scorePart1 = (0 until peopleCount).sumOf { happiness[seat[it]][seat[(it + 1) % peopleCount]] } + (0 until peopleCount).sumOf { happiness[seat[(it + 1) % peopleCount]][seat[it]] }
+            val scorePart1 =
+                (0 until peopleCount).sumOf { happiness[seat[it]][seat[(it + 1) % peopleCount]] } + (0 until peopleCount).sumOf { happiness[seat[(it + 1) % peopleCount]][seat[it]] }
             val scorePart2 = (0 until peopleCount).sumOf {
                 seat.getOrNull(it + 1)?.let { t -> happiness[seat[it]][t] } ?: 0
             } + (0 until peopleCount).sumOf {

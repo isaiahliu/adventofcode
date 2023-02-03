@@ -58,11 +58,13 @@ fun main() {
                 val result = buildString {
                     nodes.forEachIndexed { index, node ->
                         if (index > 0) {
-                            append(if (index - 1 == it) {
-                                first
-                            } else {
-                                second
-                            })
+                            append(
+                                if (index - 1 == it) {
+                                    first
+                                } else {
+                                    second
+                                }
+                            )
                         }
                         append(node)
                     }

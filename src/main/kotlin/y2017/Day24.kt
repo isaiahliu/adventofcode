@@ -8,7 +8,11 @@ fun main() {
     val lengthResults = hashMapOf<Int, Int>()
     fun walk(sum: Int, length: Int, currentNum: Int, nodes: List<List<Int>>): Int {
         return nodes.filter { it.contains(currentNum) }.maxOfOrNull {
-            walk(sum + it.sum(), length + 1, it.fold(currentNum, Int::xor), nodes.toMutableList().also { list -> list -= it })
+            walk(
+                sum + it.sum(),
+                length + 1,
+                it.fold(currentNum, Int::xor),
+                nodes.toMutableList().also { list -> list -= it })
         } ?: run {
             lengthResults[length] = (lengthResults[length] ?: 0).coerceAtLeast(sum)
             sum

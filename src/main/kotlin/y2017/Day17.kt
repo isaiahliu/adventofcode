@@ -43,7 +43,6 @@ private class Day17Node(val value: Int, initPrevious: Day17Node? = null) {
 
     private lateinit var _next: Day17Node
 
-
     var next: Day17Node
         get() {
             return _next

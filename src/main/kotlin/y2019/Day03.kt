@@ -47,7 +47,7 @@ fun main() {
     draw(ware2Path, ware2)
 
     val intersects = ware1.keys.intersect(ware2.keys)
-    
+
     println(intersects.minOf { (x, y) -> x.absoluteValue + y.absoluteValue })
     println(intersects.minOf { (x, y) -> ware1[x to y]!! + ware2[x to y]!! })
 }

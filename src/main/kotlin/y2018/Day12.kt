@@ -14,7 +14,6 @@ fun main() {
         it[0].map { it == '#' } to (it[2] == "#")
     }
 
-
     fun process(times: Long): Long {
         var map: Map<Long, Boolean> = initial
 

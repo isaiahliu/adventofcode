@@ -58,7 +58,8 @@ fun main() {
 
     println(result1)
 
-    val output012 = outputs[0]?.history.orEmpty().union(outputs[1]?.history.orEmpty()).union(outputs[2]?.history.orEmpty())
+    val output012 =
+        outputs[0]?.history.orEmpty().union(outputs[1]?.history.orEmpty()).union(outputs[2]?.history.orEmpty())
 
     println(output012.fold(1) { a, b -> a * b })
 }

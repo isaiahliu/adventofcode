@@ -21,7 +21,8 @@ fun main() {
         part2Group += it
 
         if (part2Group.size == 3) {
-            part2Sum += part2Group[0].toCharArray().intersect(part2Group[1].toCharArray().toSet()).intersect(part2Group[2].toCharArray().toSet()).sumOf { it.priority }
+            part2Sum += part2Group[0].toCharArray().intersect(part2Group[1].toCharArray().toSet())
+                .intersect(part2Group[2].toCharArray().toSet()).sumOf { it.priority }
 
             part2Group.clear()
         }

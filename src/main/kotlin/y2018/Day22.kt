@@ -47,7 +47,11 @@ fun main() {
     fun walk(): Int {
         var result = 0
         val tasks = arrayListOf(Task(0, 0, 0, TORCH))
-        val walked = hashMapOf<Int, MutableSet<Pair<Int, Int>>>(NEITHER to hashSetOf(), TORCH to hashSetOf(), GEAR to hashSetOf())
+        val walked = hashMapOf<Int, MutableSet<Pair<Int, Int>>>(
+            NEITHER to hashSetOf(),
+            TORCH to hashSetOf(),
+            GEAR to hashSetOf()
+        )
 
         while (true) {
             val current = tasks.toList()
@@ -75,7 +79,12 @@ fun main() {
                         continue
                     }
 
-                    arrayOf(task.x - 1 to task.y, task.x + 1 to task.y, task.x to task.y - 1, task.x to task.y + 1).filter { (x, y) -> x >= 0 && y >= 0 }.forEach { (x, y) ->
+                    arrayOf(
+                        task.x - 1 to task.y,
+                        task.x + 1 to task.y,
+                        task.x to task.y - 1,
+                        task.x to task.y + 1
+                    ).filter { (x, y) -> x >= 0 && y >= 0 }.forEach { (x, y) ->
                         when (riskLevel(x, y)) {
                             ROCKY -> {
                                 if (task.tools == GEAR || task.tools == TORCH) {

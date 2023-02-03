@@ -115,7 +115,12 @@ fun main() {
         fun attack(rowIndex: Int, columnIndex: Int): Boolean {
             val character = map[rowIndex][columnIndex] ?: return false
 
-            val nearby = arrayOf(rowIndex - 1 to columnIndex, rowIndex to columnIndex - 1, rowIndex to columnIndex + 1, rowIndex + 1 to columnIndex)
+            val nearby = arrayOf(
+                rowIndex - 1 to columnIndex,
+                rowIndex to columnIndex - 1,
+                rowIndex to columnIndex + 1,
+                rowIndex + 1 to columnIndex
+            )
 
             val enemies = nearby.filter { (r, c) ->
                 character.isEnemy(map[r][c])
@@ -163,7 +168,12 @@ fun main() {
                 if (gameover) {
                     fullround = false
                 } else {
-                    val nearby = arrayOf(rowIndex - 1 to columnIndex, rowIndex to columnIndex - 1, rowIndex to columnIndex + 1, rowIndex + 1 to columnIndex)
+                    val nearby = arrayOf(
+                        rowIndex - 1 to columnIndex,
+                        rowIndex to columnIndex - 1,
+                        rowIndex to columnIndex + 1,
+                        rowIndex + 1 to columnIndex
+                    )
 
                     if (!attack(rowIndex, columnIndex)) {
                         val movementMap = drawMovementMap(rowIndex, columnIndex)

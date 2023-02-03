@@ -91,7 +91,6 @@ fun main() {
         return part2Array[x][y]
     }
 
-
     var x = size / 2
     var y = size / 2
     part2Array[x][y] = 1

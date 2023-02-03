@@ -78,21 +78,23 @@ fun main() {
 
                     7 -> {
                         writeParam(
-                                3, if (readParam(1) < readParam(2)) {
-                            1
-                        } else {
-                            0
-                        }
+                            3, if (readParam(1) < readParam(2)) {
+                                1
+                            } else {
+                                0
+                            }
                         )
                         index += 4
                     }
 
                     8 -> {
-                        writeParam(3, if (readParam(1) == readParam(2)) {
-                            1
-                        } else {
-                            0
-                        })
+                        writeParam(
+                            3, if (readParam(1) == readParam(2)) {
+                                1
+                            } else {
+                                0
+                            }
+                        )
                         index += 4
                     }
 

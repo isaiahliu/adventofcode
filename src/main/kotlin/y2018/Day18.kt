@@ -17,7 +17,16 @@ fun main() {
     }.toTypedArray()
 
     fun Array<IntArray>.count(rowIndex: Int, columnIndex: Int): Pair<Int, Int> {
-        val group = arrayOf(rowIndex - 1 to columnIndex - 1, rowIndex - 1 to columnIndex, rowIndex - 1 to columnIndex + 1, rowIndex to columnIndex - 1, rowIndex to columnIndex + 1, rowIndex + 1 to columnIndex - 1, rowIndex + 1 to columnIndex, rowIndex + 1 to columnIndex + 1).mapNotNull { (r, c) ->
+        val group = arrayOf(
+            rowIndex - 1 to columnIndex - 1,
+            rowIndex - 1 to columnIndex,
+            rowIndex - 1 to columnIndex + 1,
+            rowIndex to columnIndex - 1,
+            rowIndex to columnIndex + 1,
+            rowIndex + 1 to columnIndex - 1,
+            rowIndex + 1 to columnIndex,
+            rowIndex + 1 to columnIndex + 1
+        ).mapNotNull { (r, c) ->
             getOrNull(r)?.getOrNull(c)
         }.groupingBy { it }.eachCount()
 

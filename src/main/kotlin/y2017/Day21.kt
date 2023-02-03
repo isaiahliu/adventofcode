@@ -3,12 +3,15 @@ package y2017
 import util.input
 
 fun main() {
-    val mapping = input.map { it.split(" => ").let { it[0].split("/").map { it.toCharArray() } to it[1].split("/").map { it.toCharArray() } } }
+    val mapping = input.map {
+        it.split(" => ").let { it[0].split("/").map { it.toCharArray() } to it[1].split("/").map { it.toCharArray() } }
+    }
 
     var array = arrayOf(
-            charArrayOf('.', '#', '.'),
-            charArrayOf('.', '.', '#'),
-            charArrayOf('#', '#', '#'))
+        charArrayOf('.', '#', '.'),
+        charArrayOf('.', '.', '#'),
+        charArrayOf('#', '#', '#')
+    )
 
     fun Array<CharArray>.transform(): Array<CharArray> {
         val subSize = if (this.size % 2 == 0) {
@@ -38,7 +41,10 @@ fun main() {
 
                         (0 until subSize).all { row ->
                             (0 until subSize).all { column ->
-                                this[gridRowIndex * subSize + row][gridColumnIndex * subSize + column] == matcher(row, column)
+                                this[gridRowIndex * subSize + row][gridColumnIndex * subSize + column] == matcher(
+                                    row,
+                                    column
+                                )
                             }
                         }
                     }
@@ -46,7 +52,8 @@ fun main() {
 
                 repeat(subSize + 1) { row ->
                     repeat(subSize + 1) { column ->
-                        result[gridRowIndex * (subSize + 1) + row][gridColumnIndex * (subSize + 1) + column] = mappingResult[row][column]
+                        result[gridRowIndex * (subSize + 1) + row][gridColumnIndex * (subSize + 1) + column] =
+                            mappingResult[row][column]
                     }
                 }
             }

@@ -6,7 +6,8 @@ fun main() {
     var part1Sum = 0
     var part2Sum = 0
     input.forEach {
-        part1Sum += (it.length - it.replace("\\\\", " ").replace("\\\"", " ").replace("\\\\x..".toRegex(), " ").length + 2)
+        part1Sum += (it.length - it.replace("\\\\", " ").replace("\\\"", " ")
+            .replace("\\\\x..".toRegex(), " ").length + 2)
 
         part2Sum += it.count { it == '"' || it == '\\' } + 2
     }

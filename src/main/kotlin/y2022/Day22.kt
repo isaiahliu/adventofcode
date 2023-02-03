@@ -38,7 +38,6 @@ fun main() {
 
     val cubeSize = sqrt(map.sumOf { it.count { it >= 0 } } / 6.0).toInt()
 
-
     fun process(cubeMode: Boolean) {
         //R D L T
         var direction = 0

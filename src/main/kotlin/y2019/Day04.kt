@@ -12,7 +12,9 @@ fun main() {
 
             val match = if (v2) {
                 (0 until 5).any {
-                    digits[it] == digits[it + 1] && digits[it] != digits.getOrNull(it + 2) && digits[it] != digits.getOrNull(it - 1)
+                    digits[it] == digits[it + 1] && digits[it] != digits.getOrNull(it + 2) && digits[it] != digits.getOrNull(
+                        it - 1
+                    )
                 }
             } else {
                 digits.distinct().size < 6

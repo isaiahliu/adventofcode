@@ -52,8 +52,8 @@ fun main() {
         }
 
         if (abaExists && doubleSet.mapIndexed { index, s -> s to index }.groupBy({ it.first }, { it.second }).filter {
-                    it.value.max() - it.value.min() > 1
-                }.isNotEmpty()) {
+                it.value.max() - it.value.min() > 1
+            }.isNotEmpty()) {
             part2Sum++
         }
     }

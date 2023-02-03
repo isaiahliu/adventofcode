@@ -41,7 +41,6 @@ fun main() {
         }
     }
 
-
     fun process(startTurn: Int, start: Pair<Int, Int>, goal: Pair<Int, Int>): Int {
         val tasks = hashSetOf(start)
         var turn = startTurn

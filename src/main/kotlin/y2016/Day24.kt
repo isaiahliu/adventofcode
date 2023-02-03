@@ -29,7 +29,6 @@ fun main() {
             }
         }
 
-
         fun findPath(fromRowIndex: Int, fromColumnIndex: Int): Array<IntArray> {
             return pathCache.computeIfAbsent("${fromRowIndex}_${fromColumnIndex}") {
                 val result = Array(map.size) { rowIndex ->
@@ -91,7 +90,11 @@ fun main() {
             points.forEach { pair ->
                 val path = findPath(rowIndex, columnIndex)
 
-                walk(steps + path[pair.first][pair.second], pair.first, pair.second, points.toMutableList().also { it.remove(pair) })
+                walk(
+                    steps + path[pair.first][pair.second],
+                    pair.first,
+                    pair.second,
+                    points.toMutableList().also { it.remove(pair) })
             }
         }
 

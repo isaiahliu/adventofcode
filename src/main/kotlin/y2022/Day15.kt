@@ -8,14 +8,15 @@ fun main() {
 
     fun process(targetRow: Int): List<IntRange> {
         val ranges = arrayListOf<Pair<Int, Int>>()
-        input.mapNotNull { regex.matchEntire(it)?.groupValues?.drop(1)?.map { it.toInt() } }.forEach { (sx, sy, bx, by) ->
-            val distance = (sx - bx).absoluteValue + (sy - by).absoluteValue
+        input.mapNotNull { regex.matchEntire(it)?.groupValues?.drop(1)?.map { it.toInt() } }
+            .forEach { (sx, sy, bx, by) ->
+                val distance = (sx - bx).absoluteValue + (sy - by).absoluteValue
 
-            if (targetRow in sy - distance..sy + distance) {
-                val xWidth = distance - (sy - targetRow).absoluteValue
-                ranges += sx - xWidth to sx + xWidth
+                if (targetRow in sy - distance..sy + distance) {
+                    val xWidth = distance - (sy - targetRow).absoluteValue
+                    ranges += sx - xWidth to sx + xWidth
+                }
             }
-        }
         if (ranges.isEmpty()) {
             return emptyList()
         }

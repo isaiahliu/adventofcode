@@ -61,7 +61,12 @@ fun main() {
                     if (rowIndex != 2 || columnIndex != 2) {
                         val index = rowIndex * 5 + columnIndex
 
-                        bugsCount[index] = arrayOf(rowIndex - 1 to columnIndex, rowIndex to columnIndex - 1, rowIndex to columnIndex + 1, rowIndex + 1 to columnIndex).sumOf { (r, c) ->
+                        bugsCount[index] = arrayOf(
+                            rowIndex - 1 to columnIndex,
+                            rowIndex to columnIndex - 1,
+                            rowIndex to columnIndex + 1,
+                            rowIndex + 1 to columnIndex
+                        ).sumOf { (r, c) ->
                             when {
                                 r < 0 -> {
                                     if (previousMap.isBug(1, 2)) 1 else 0

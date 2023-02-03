@@ -32,7 +32,12 @@ fun main() {
         }.toIntArray()
     }.toTypedArray()
 
-    fun process(startIndex: Int, endIndex: Int, heightCheck: (Int) -> Boolean, arrivedCheck: (Pair<Int, Int>) -> Boolean): Int {
+    fun process(
+        startIndex: Int,
+        endIndex: Int,
+        heightCheck: (Int) -> Boolean,
+        arrivedCheck: (Pair<Int, Int>) -> Boolean
+    ): Int {
         val arrived = hashSetOf<String>()
         fun walked(pair: Pair<Int, Int>): Boolean {
             return !arrived.add("${pair.first}_${pair.second}")
@@ -56,10 +61,14 @@ fun main() {
 
                 val currentHeight = heightmap[task.first][task.second]
 
-                heightmap.getOrNull(task.first - 1)?.getOrNull(task.second)?.takeIf { heightCheck(it - currentHeight) }?.also { tasks += task.first - 1 to task.second }
-                heightmap.getOrNull(task.first + 1)?.getOrNull(task.second)?.takeIf { heightCheck(it - currentHeight) }?.also { tasks += task.first + 1 to task.second }
-                heightmap.getOrNull(task.first)?.getOrNull(task.second - 1)?.takeIf { heightCheck(it - currentHeight) }?.also { tasks += task.first to task.second - 1 }
-                heightmap.getOrNull(task.first)?.getOrNull(task.second + 1)?.takeIf { heightCheck(it - currentHeight) }?.also { tasks += task.first to task.second + 1 }
+                heightmap.getOrNull(task.first - 1)?.getOrNull(task.second)?.takeIf { heightCheck(it - currentHeight) }
+                    ?.also { tasks += task.first - 1 to task.second }
+                heightmap.getOrNull(task.first + 1)?.getOrNull(task.second)?.takeIf { heightCheck(it - currentHeight) }
+                    ?.also { tasks += task.first + 1 to task.second }
+                heightmap.getOrNull(task.first)?.getOrNull(task.second - 1)?.takeIf { heightCheck(it - currentHeight) }
+                    ?.also { tasks += task.first to task.second - 1 }
+                heightmap.getOrNull(task.first)?.getOrNull(task.second + 1)?.takeIf { heightCheck(it - currentHeight) }
+                    ?.also { tasks += task.first to task.second + 1 }
             }
 
             step++

@@ -54,7 +54,9 @@ fun main() {
 
                     if (cache1.contentEquals(cache2)) {
                         val cacheNodes = cache1.split(",").mapNotNull { it.split("-").getOrNull(2)?.toIntOrNull() }
-                        result2 = cacheStartTop + (targetRocks - 500) / cacheNodes.size * cacheNodes.sum() + cacheNodes.take(((targetRocks - 500) % cacheNodes.size).toInt()).sum() + 1
+                        result2 =
+                            cacheStartTop + (targetRocks - 500) / cacheNodes.size * cacheNodes.sum() + cacheNodes.take(((targetRocks - 500) % cacheNodes.size).toInt())
+                                .sum() + 1
                     }
                 }
             }
@@ -81,7 +83,9 @@ private sealed class AbstractShape(protected val room: Array<BooleanArray>) {
     val top: Int get() = nodes.maxOf { it[0] }
 
     fun move(rowMove: (Int) -> Int, columnMove: (Int) -> Int): Boolean {
-        return if (nodes.all { (row, column) -> (room.getOrNull(rowMove(row))?.getOrNull(columnMove(column)) == false) }) {
+        return if (nodes.all { (row, column) ->
+                (room.getOrNull(rowMove(row))?.getOrNull(columnMove(column)) == false)
+            }) {
             nodes.forEach {
                 it[0] = rowMove(it[0])
                 it[1] = columnMove(it[1])

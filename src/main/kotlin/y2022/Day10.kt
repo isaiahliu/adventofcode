@@ -19,11 +19,13 @@ fun main() {
 
     var signalStrength = 0
     while (instructionIndex < instructions.size) {
-        builder.append(if ((cycle % 40) in (x - 1)..(x + 1)) {
-            "#"
-        } else {
-            "."
-        })
+        builder.append(
+            if ((cycle % 40) in (x - 1)..(x + 1)) {
+                "#"
+            } else {
+                "."
+            }
+        )
 
         cycle++
 

@@ -104,7 +104,12 @@ fun main() {
                         addTask(level + newLevel, portal, true)
                     }
                 } else {
-                    arrayOf(rowIndex - 1 to columnIndex, rowIndex + 1 to columnIndex, rowIndex to columnIndex - 1, rowIndex to columnIndex + 1).filter { (r, c) ->
+                    arrayOf(
+                        rowIndex - 1 to columnIndex,
+                        rowIndex + 1 to columnIndex,
+                        rowIndex to columnIndex - 1,
+                        rowIndex to columnIndex + 1
+                    ).filter { (r, c) ->
                         map[r][c] == '.'
                     }.forEach {
                         addTask(level, it, false)

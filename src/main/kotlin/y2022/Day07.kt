@@ -62,7 +62,6 @@ private class Day07Folder(override val name: String, val parent: Day07Folder?) :
     val childrenFolders = arrayListOf<Day07Folder>()
     val childrenFiles = arrayListOf<Day07File>()
 
-
     override val size: Int
         get() {
             return childrenFolders.sumOf { it.size } + childrenFiles.sumOf { it.size }

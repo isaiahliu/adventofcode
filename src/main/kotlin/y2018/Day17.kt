@@ -41,12 +41,14 @@ fun main() {
         (map.keys.minOf { it.second }..map.keys.maxOf { it.second }).forEach { y ->
             buildString {
                 (map.keys.minOf { it.first }..map.keys.maxOf { it.first }).forEach { x ->
-                    append(when (map[x to y]) {
-                        WALL -> "#"
-                        FLOW_WATER -> "|"
-                        STILL_WATER -> "~"
-                        else -> "."
-                    })
+                    append(
+                        when (map[x to y]) {
+                            WALL -> "#"
+                            FLOW_WATER -> "|"
+                            STILL_WATER -> "~"
+                            else -> "."
+                        }
+                    )
                 }
             }.also { println(it) }
         }
@@ -102,7 +104,6 @@ fun main() {
 
             return tx.takeIf { !drop }
         }
-
 
         //drop
         while (true) {

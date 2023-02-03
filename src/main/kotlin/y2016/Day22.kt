@@ -69,8 +69,12 @@ fun main() {
         }.toTypedArray()
     }.toTypedArray()
 
-
-    fun findPath(fromX: Int, fromY: Int, excludeX: Int = Int.MAX_VALUE, excludeY: Int = Int.MAX_VALUE): Array<IntArray> {
+    fun findPath(
+        fromX: Int,
+        fromY: Int,
+        excludeX: Int = Int.MAX_VALUE,
+        excludeY: Int = Int.MAX_VALUE
+    ): Array<IntArray> {
         val result = Array(mark.size) {
             IntArray(mark[it].size) {
                 Int.MAX_VALUE
@@ -88,25 +92,33 @@ fun main() {
             for ((x, y) in current) {
                 val currentValue = result[y][x]
 
-                result.getOrNull(y - 1)?.getOrNull(x)?.takeIf { !(y - 1 == excludeY && x == excludeX) && mark[y - 1][x] != "#" && it > currentValue + 1 }?.also {
-                    result[y - 1][x] = currentValue + 1
-                    tasks += x to y - 1
-                }
+                result.getOrNull(y - 1)?.getOrNull(x)
+                    ?.takeIf { !(y - 1 == excludeY && x == excludeX) && mark[y - 1][x] != "#" && it > currentValue + 1 }
+                    ?.also {
+                        result[y - 1][x] = currentValue + 1
+                        tasks += x to y - 1
+                    }
 
-                result.getOrNull(y + 1)?.getOrNull(x)?.takeIf { !(y + 1 == excludeY && x == excludeX) && mark[y + 1][x] != "#" && it > currentValue + 1 }?.also {
-                    result[y + 1][x] = currentValue + 1
-                    tasks += x to y + 1
-                }
+                result.getOrNull(y + 1)?.getOrNull(x)
+                    ?.takeIf { !(y + 1 == excludeY && x == excludeX) && mark[y + 1][x] != "#" && it > currentValue + 1 }
+                    ?.also {
+                        result[y + 1][x] = currentValue + 1
+                        tasks += x to y + 1
+                    }
 
-                result.getOrNull(y)?.getOrNull(x - 1)?.takeIf { !(y == excludeY && x - 1 == excludeX) && mark[y][x - 1] != "#" && it > currentValue + 1 }?.also {
-                    result[y][x - 1] = currentValue + 1
-                    tasks += x - 1 to y
-                }
+                result.getOrNull(y)?.getOrNull(x - 1)
+                    ?.takeIf { !(y == excludeY && x - 1 == excludeX) && mark[y][x - 1] != "#" && it > currentValue + 1 }
+                    ?.also {
+                        result[y][x - 1] = currentValue + 1
+                        tasks += x - 1 to y
+                    }
 
-                result.getOrNull(y)?.getOrNull(x + 1)?.takeIf { !(y == excludeY && x + 1 == excludeX) && mark[y][x + 1] != "#" && it > currentValue + 1 }?.also {
-                    result[y][x + 1] = currentValue + 1
-                    tasks += x + 1 to y
-                }
+                result.getOrNull(y)?.getOrNull(x + 1)
+                    ?.takeIf { !(y == excludeY && x + 1 == excludeX) && mark[y][x + 1] != "#" && it > currentValue + 1 }
+                    ?.also {
+                        result[y][x + 1] = currentValue + 1
+                        tasks += x + 1 to y
+                    }
             }
         }
 

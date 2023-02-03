@@ -63,39 +63,39 @@ fun main() {
 
                 'W' -> {
                     map[current.rowIndex to current.columnIndex] = (map[current.rowIndex to current.columnIndex]
-                            ?: 0) or WEST
+                        ?: 0) or WEST
                     current.columnIndex--
                     current.length++
 
                     map[current.rowIndex to current.columnIndex] = (map[current.rowIndex to current.columnIndex]
-                            ?: 0) or EAST
+                        ?: 0) or EAST
                 }
 
                 'S' -> {
                     map[current.rowIndex to current.columnIndex] = (map[current.rowIndex to current.columnIndex]
-                            ?: 0) or SOUTH
+                        ?: 0) or SOUTH
                     current.rowIndex++
                     current.length++
                     map[current.rowIndex to current.columnIndex] = (map[current.rowIndex to current.columnIndex]
-                            ?: 0) or NORTH
+                        ?: 0) or NORTH
                 }
 
                 'N' -> {
                     map[current.rowIndex to current.columnIndex] = (map[current.rowIndex to current.columnIndex]
-                            ?: 0) or NORTH
+                        ?: 0) or NORTH
                     current.rowIndex--
                     current.length++
                     map[current.rowIndex to current.columnIndex] = (map[current.rowIndex to current.columnIndex]
-                            ?: 0) or SOUTH
+                        ?: 0) or SOUTH
                 }
 
                 'E' -> {
                     map[current.rowIndex to current.columnIndex] = (map[current.rowIndex to current.columnIndex]
-                            ?: 0) or EAST
+                        ?: 0) or EAST
                     current.columnIndex++
                     current.length++
                     map[current.rowIndex to current.columnIndex] = (map[current.rowIndex to current.columnIndex]
-                            ?: 0) or WEST
+                        ?: 0) or WEST
                 }
             }
         }

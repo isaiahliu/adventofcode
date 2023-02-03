@@ -80,7 +80,12 @@ private class Humn : IDay21Monkey {
     }
 }
 
-private class Day21Monkey(val monkeys: Map<String, IDay21Monkey>, val leftKey: String, val rightKey: String, val calculator: ICalculator) : IDay21Monkey {
+private class Day21Monkey(
+    val monkeys: Map<String, IDay21Monkey>,
+    val leftKey: String,
+    val rightKey: String,
+    val calculator: ICalculator
+) : IDay21Monkey {
     val left: IDay21Monkey get() = monkeys[leftKey]!!
     val right: IDay21Monkey get() = monkeys[rightKey]!!
 

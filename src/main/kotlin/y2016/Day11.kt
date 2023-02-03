@@ -27,10 +27,10 @@ fun main() {
 
     fun process(inputSpace: IntArray): Int {
         val walked = hashMapOf<Int, MutableSet<String>>(
-                0 to hashSetOf(),
-                1 to hashSetOf(),
-                2 to hashSetOf(),
-                3 to hashSetOf()
+            0 to hashSetOf(),
+            1 to hashSetOf(),
+            2 to hashSetOf(),
+            3 to hashSetOf()
         )
 
         fun IntArray.walked(elevator: Int): Boolean {
@@ -41,8 +41,8 @@ fun main() {
             for (index in 0 until size / 2) {
                 if (this[index] != this[index + size / 2]) {
                     if (this.takeLast(size / 2).any {
-                                it == this[index]
-                            }) {
+                            it == this[index]
+                        }) {
                         return true
                     }
                 }

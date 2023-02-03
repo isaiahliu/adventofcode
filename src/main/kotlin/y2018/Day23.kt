@@ -42,7 +42,10 @@ fun main() {
 
     val regex = "pos=<(-?\\w+),(-?\\w+),(-?\\w+)>, r=(-?\\w+)".toRegex()
 
-    val nanobots = input.mapNotNull { regex.matchEntire(it)?.groupValues?.drop(1)?.map { it.toInt() }?.let { (x, y, z, radius) -> Nanobot(x, y, z, radius) } }
+    val nanobots = input.mapNotNull {
+        regex.matchEntire(it)?.groupValues?.drop(1)?.map { it.toInt() }
+            ?.let { (x, y, z, radius) -> Nanobot(x, y, z, radius) }
+    }
 
     val max = nanobots.maxBy { it.radius }
 

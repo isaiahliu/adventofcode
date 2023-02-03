@@ -3,7 +3,8 @@ package y2015
 import util.input
 
 fun main() {
-    val rsexp = "\\w+: capacity (-?\\d+), durability (-?\\d+), flavor (-?\\d+), texture (-?\\d+), calories (-?\\d+)".toRegex()
+    val rsexp =
+        "\\w+: capacity (-?\\d+), durability (-?\\d+), flavor (-?\\d+), texture (-?\\d+), calories (-?\\d+)".toRegex()
 
     val ingredients = arrayListOf<Ingredient>()
 
@@ -55,4 +56,11 @@ fun main() {
     println(part2Max)
 }
 
-private data class Ingredient(val capacity: Int, val durability: Int, val flavor: Int, val texture: Int, val calories: Int, var teaspoon: Int = 0)
+private data class Ingredient(
+    val capacity: Int,
+    val durability: Int,
+    val flavor: Int,
+    val texture: Int,
+    val calories: Int,
+    var teaspoon: Int = 0
+)

@@ -93,7 +93,13 @@ fun main() {
     println(part2Result)
 }
 
-private data class Player(var hitPoint: Int, var mana: Int, var shieldTurns: Int = 0, var rechargeTurns: Int = 0, var totalCost: Int = 0)
+private data class Player(
+    var hitPoint: Int,
+    var mana: Int,
+    var shieldTurns: Int = 0,
+    var rechargeTurns: Int = 0,
+    var totalCost: Int = 0
+)
 
 private data class Boss(var hitPoint: Int, val damage: Int, var poisonTurns: Int = 0)
 

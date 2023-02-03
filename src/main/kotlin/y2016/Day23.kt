@@ -40,32 +40,33 @@ fun main() {
             }
 
             "tgl" -> {
-                instructions.getOrNull(instructionIndex + instruction[1].evaluate().toInt())?.also { toggleInstruction ->
-                    when (toggleInstruction.size) {
-                        2 -> {
-                            toggleInstruction[0] = when (toggleInstruction[0]) {
-                                "inc" -> "dec"
-                                else -> "inc"
-                            }
-                        }
-
-                        3 -> {
-                            toggleInstruction[0] = when (toggleInstruction[0]) {
-                                "jnz" -> {
-                                    if (toggleInstruction[2].toIntOrNull() == null) {
-                                        "cpy"
-                                    } else {
-                                        toggleInstruction[0]
-                                    }
+                instructions.getOrNull(instructionIndex + instruction[1].evaluate().toInt())
+                    ?.also { toggleInstruction ->
+                        when (toggleInstruction.size) {
+                            2 -> {
+                                toggleInstruction[0] = when (toggleInstruction[0]) {
+                                    "inc" -> "dec"
+                                    else -> "inc"
                                 }
+                            }
 
-                                else -> {
-                                    "jnz"
+                            3 -> {
+                                toggleInstruction[0] = when (toggleInstruction[0]) {
+                                    "jnz" -> {
+                                        if (toggleInstruction[2].toIntOrNull() == null) {
+                                            "cpy"
+                                        } else {
+                                            toggleInstruction[0]
+                                        }
+                                    }
+
+                                    else -> {
+                                        "jnz"
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
                 instructionIndex++
             }

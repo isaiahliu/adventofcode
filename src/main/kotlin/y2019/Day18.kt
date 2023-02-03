@@ -62,7 +62,12 @@ fun main() {
                 for ((p, pass) in current) {
                     val (rowIndex, columnIndex) = p
 
-                    arrayOf(rowIndex - 1 to columnIndex, rowIndex + 1 to columnIndex, rowIndex to columnIndex - 1, rowIndex to columnIndex + 1).filter {
+                    arrayOf(
+                        rowIndex - 1 to columnIndex,
+                        rowIndex + 1 to columnIndex,
+                        rowIndex to columnIndex - 1,
+                        rowIndex to columnIndex + 1
+                    ).filter {
                         it !in visited
                     }.forEach { (r, c) ->
                         when (val node = map[r][c]) {

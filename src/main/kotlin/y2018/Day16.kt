@@ -5,7 +5,24 @@ import util.input
 fun main() {
     var index = 0
 
-    val instructions = arrayOf("addr", "addi", "mulr", "muli", "banr", "bani", "borr", "bori", "setr", "seti", "gtir", "gtri", "gtrr", "eqir", "eqri", "eqrr")
+    val instructions = arrayOf(
+        "addr",
+        "addi",
+        "mulr",
+        "muli",
+        "banr",
+        "bani",
+        "borr",
+        "bori",
+        "setr",
+        "seti",
+        "gtir",
+        "gtri",
+        "gtrr",
+        "eqir",
+        "eqri",
+        "eqrr"
+    )
 
     val map = hashMapOf<Int, MutableSet<String>>()
 
@@ -130,9 +147,10 @@ fun main() {
     }
 
     val result2 = IntArray(4)
-    input.drop(index + 1).filter { it.isNotEmpty() }.map { it.split(" ").map { it.toInt() } }.forEach { (code, a, b, c) ->
-        execute(instructionMap[code]!!, a, b, c, result2)
-    }
+    input.drop(index + 1).filter { it.isNotEmpty() }.map { it.split(" ").map { it.toInt() } }
+        .forEach { (code, a, b, c) ->
+            execute(instructionMap[code]!!, a, b, c, result2)
+        }
 
     println(result2[0])
 }

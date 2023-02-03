@@ -3,7 +3,8 @@ package y2016
 import util.input
 
 fun main() {
-    val ranges = input.map { it.split("-") }.map { IpRange(it[0].toLong(), it[1].toLong()) }.sortedWith(compareBy<IpRange> { it.min }.thenBy { it.max })
+    val ranges = input.map { it.split("-") }.map { IpRange(it[0].toLong(), it[1].toLong()) }
+        .sortedWith(compareBy<IpRange> { it.min }.thenBy { it.max })
 
     var (min, max) = ranges.first()
     var part1Result = min - 1

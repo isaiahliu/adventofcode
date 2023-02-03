@@ -3,7 +3,8 @@ package y2015
 import util.input
 
 fun main() {
-    val regex = "To continue, please consult the code grid in the manual.  Enter the code at row (\\d+), column (\\d+).".toRegex()
+    val regex =
+        "To continue, please consult the code grid in the manual.  Enter the code at row (\\d+), column (\\d+).".toRegex()
 
     val match = regex.matchEntire(input.first()) ?: return
 

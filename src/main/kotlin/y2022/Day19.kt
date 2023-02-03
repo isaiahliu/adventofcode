@@ -16,7 +16,14 @@ fun main() {
         }
     }
 
-    fun walk(minutes: Int, blueprint: Day19Blueprint, robot: Day19Context, materials: Day19Context, target: Int, idleMinutes: Int = 0): Int {
+    fun walk(
+        minutes: Int,
+        blueprint: Day19Blueprint,
+        robot: Day19Context,
+        materials: Day19Context,
+        target: Int,
+        idleMinutes: Int = 0
+    ): Int {
         if (minutes == 0) {
             return materials.geode
         }
@@ -35,7 +42,8 @@ fun main() {
 
             //obsidian
             2 -> {
-                enough = materials.enoughFor(blueprint.obsidianRobot) && !materials.enoughFor(blueprint.obsidianRobot * 2)
+                enough =
+                    materials.enoughFor(blueprint.obsidianRobot) && !materials.enoughFor(blueprint.obsidianRobot * 2)
             }
 
             //geode
@@ -48,31 +56,127 @@ fun main() {
         if (enough) {
             when (target) {
                 0 -> {
-                    results += walk(minutes - 1, blueprint, robot.copy(ore = robot.ore + 1), materials - blueprint.oreRobot + robot, 0)
-                    results += walk(minutes - 1, blueprint, robot.copy(ore = robot.ore + 1), materials - blueprint.oreRobot + robot, 1)
-                    results += walk(minutes - 1, blueprint, robot.copy(ore = robot.ore + 1), materials - blueprint.oreRobot + robot, 2)
-                    results += walk(minutes - 1, blueprint, robot.copy(ore = robot.ore + 1), materials - blueprint.oreRobot + robot, 3)
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(ore = robot.ore + 1),
+                        materials - blueprint.oreRobot + robot,
+                        0
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(ore = robot.ore + 1),
+                        materials - blueprint.oreRobot + robot,
+                        1
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(ore = robot.ore + 1),
+                        materials - blueprint.oreRobot + robot,
+                        2
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(ore = robot.ore + 1),
+                        materials - blueprint.oreRobot + robot,
+                        3
+                    )
                 }
 
                 1 -> {
-                    results += walk(minutes - 1, blueprint, robot.copy(clay = robot.clay + 1), materials - blueprint.clayRobot + robot, 0)
-                    results += walk(minutes - 1, blueprint, robot.copy(clay = robot.clay + 1), materials - blueprint.clayRobot + robot, 1)
-                    results += walk(minutes - 1, blueprint, robot.copy(clay = robot.clay + 1), materials - blueprint.clayRobot + robot, 2)
-                    results += walk(minutes - 1, blueprint, robot.copy(clay = robot.clay + 1), materials - blueprint.clayRobot + robot, 3)
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(clay = robot.clay + 1),
+                        materials - blueprint.clayRobot + robot,
+                        0
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(clay = robot.clay + 1),
+                        materials - blueprint.clayRobot + robot,
+                        1
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(clay = robot.clay + 1),
+                        materials - blueprint.clayRobot + robot,
+                        2
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(clay = robot.clay + 1),
+                        materials - blueprint.clayRobot + robot,
+                        3
+                    )
                 }
 
                 2 -> {
-                    results += walk(minutes - 1, blueprint, robot.copy(obsidian = robot.obsidian + 1), materials - blueprint.obsidianRobot + robot, 0)
-                    results += walk(minutes - 1, blueprint, robot.copy(obsidian = robot.obsidian + 1), materials - blueprint.obsidianRobot + robot, 1)
-                    results += walk(minutes - 1, blueprint, robot.copy(obsidian = robot.obsidian + 1), materials - blueprint.obsidianRobot + robot, 2)
-                    results += walk(minutes - 1, blueprint, robot.copy(obsidian = robot.obsidian + 1), materials - blueprint.obsidianRobot + robot, 3)
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(obsidian = robot.obsidian + 1),
+                        materials - blueprint.obsidianRobot + robot,
+                        0
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(obsidian = robot.obsidian + 1),
+                        materials - blueprint.obsidianRobot + robot,
+                        1
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(obsidian = robot.obsidian + 1),
+                        materials - blueprint.obsidianRobot + robot,
+                        2
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(obsidian = robot.obsidian + 1),
+                        materials - blueprint.obsidianRobot + robot,
+                        3
+                    )
                 }
 
                 3 -> {
-                    results += walk(minutes - 1, blueprint, robot.copy(geode = robot.geode + 1), materials - blueprint.geodeRobot + robot, 0)
-                    results += walk(minutes - 1, blueprint, robot.copy(geode = robot.geode + 1), materials - blueprint.geodeRobot + robot, 1)
-                    results += walk(minutes - 1, blueprint, robot.copy(geode = robot.geode + 1), materials - blueprint.geodeRobot + robot, 2)
-                    results += walk(minutes - 1, blueprint, robot.copy(geode = robot.geode + 1), materials - blueprint.geodeRobot + robot, 3)
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(geode = robot.geode + 1),
+                        materials - blueprint.geodeRobot + robot,
+                        0
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(geode = robot.geode + 1),
+                        materials - blueprint.geodeRobot + robot,
+                        1
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(geode = robot.geode + 1),
+                        materials - blueprint.geodeRobot + robot,
+                        2
+                    )
+                    results += walk(
+                        minutes - 1,
+                        blueprint,
+                        robot.copy(geode = robot.geode + 1),
+                        materials - blueprint.geodeRobot + robot,
+                        3
+                    )
                 }
             }
         } else {
@@ -85,10 +189,11 @@ fun main() {
     fun process(minutes: Int, size: Int): List<Pair<Int, Int>> {
         return blueprints.take(size).mapIndexed { index, blueprint ->
             (index + 1) to listOf(
-                    walk(minutes, blueprint, Day19Context(ore = 1), Day19Context(), 0),
-                    walk(minutes, blueprint, Day19Context(ore = 1), Day19Context(), 1),
-                    walk(minutes, blueprint, Day19Context(ore = 1), Day19Context(), 2),
-                    walk(minutes, blueprint, Day19Context(ore = 1), Day19Context(), 3)).max()
+                walk(minutes, blueprint, Day19Context(ore = 1), Day19Context(), 0),
+                walk(minutes, blueprint, Day19Context(ore = 1), Day19Context(), 1),
+                walk(minutes, blueprint, Day19Context(ore = 1), Day19Context(), 2),
+                walk(minutes, blueprint, Day19Context(ore = 1), Day19Context(), 3)
+            ).max()
         }
     }
 

@@ -7,9 +7,10 @@ fun main() {
 
     data class Star(var px: Int, var py: Int, val vx: Int, val vy: Int)
 
-    val stars = input.mapNotNull { regex.matchEntire(it)?.groupValues?.drop(1)?.map { it.toInt() } }.map { (px, py, vx, vy) ->
-        Star(px, py, vx, vy)
-    }
+    val stars =
+        input.mapNotNull { regex.matchEntire(it)?.groupValues?.drop(1)?.map { it.toInt() } }.map { (px, py, vx, vy) ->
+            Star(px, py, vx, vy)
+        }
 
     var currentSquare: Long = Long.MAX_VALUE
     var seconds = 0

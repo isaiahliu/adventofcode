@@ -3,7 +3,18 @@ package y2015
 import util.input
 
 fun main() {
-    val targetAunt = Aunt(children = 3, cats = 7, samoyeds = 2, pomeranians = 3, akitas = 0, vizslas = 0, goldfish = 5, trees = 3, cars = 2, perfumes = 1)
+    val targetAunt = Aunt(
+        children = 3,
+        cats = 7,
+        samoyeds = 2,
+        pomeranians = 3,
+        akitas = 0,
+        vizslas = 0,
+        goldfish = 5,
+        trees = 3,
+        cars = 2,
+        perfumes = 1
+    )
 
     val regex = "Sue (\\d+): (\\w+): (\\d+), (\\w+): (\\d+), (\\w+): (\\d+)".toRegex()
 
@@ -98,14 +109,14 @@ fun main() {
 }
 
 private data class Aunt(
-        var children: Int,
-        var cats: Int,
-        var samoyeds: Int,
-        var pomeranians: Int,
-        var akitas: Int,
-        var vizslas: Int,
-        var goldfish: Int,
-        var trees: Int,
-        var cars: Int,
-        var perfumes: Int
+    var children: Int,
+    var cats: Int,
+    var samoyeds: Int,
+    var pomeranians: Int,
+    var akitas: Int,
+    var vizslas: Int,
+    var goldfish: Int,
+    var trees: Int,
+    var cars: Int,
+    var perfumes: Int
 )

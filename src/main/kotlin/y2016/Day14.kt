@@ -12,8 +12,8 @@ fun main() {
             val current = this[index]
 
             if ((1 until times).all {
-                        current == this[index + it]
-                    }) {
+                    current == this[index + it]
+                }) {
                 return current
             }
         }

@@ -32,8 +32,8 @@ fun main() {
         }
 
         if (String(name.map {
-                    if (it in 'a'..'z') alphabets[((it - 'a') + roomId) % 26] else ' '
-                }.toCharArray()) == "northpole object storage") {
+                if (it in 'a'..'z') alphabets[((it - 'a') + roomId) % 26] else ' '
+            }.toCharArray()) == "northpole object storage") {
             part2Result = roomId
         }
     }

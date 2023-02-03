@@ -20,10 +20,10 @@ fun main() {
 
         while (true) {
             if (discs.filterIndexed { discIndex, pair ->
-                        val passedSeconds = startTime + discIndex + 1
+                    val passedSeconds = startTime + discIndex + 1
 
-                        (pair.second + passedSeconds) % pair.first > 0
-                    }.isEmpty()) {
+                    (pair.second + passedSeconds) % pair.first > 0
+                }.isEmpty()) {
                 return startTime
             }
 

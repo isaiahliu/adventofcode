@@ -3,7 +3,15 @@ package y2018
 import util.input
 
 fun main() {
-    class BattleGroup(val hpPerUnit: Int, var unitCount: Int, val str: Int, val damageType: String, val speed: Int, val immune: Set<String>, val weak: Set<String>) {
+    class BattleGroup(
+        val hpPerUnit: Int,
+        var unitCount: Int,
+        val str: Int,
+        val damageType: String,
+        val speed: Int,
+        val immune: Set<String>,
+        val weak: Set<String>
+    ) {
         val alive: Boolean get() = unitCount > 0
 
         val effectivePower: Int get() = unitCount * str
@@ -29,7 +37,8 @@ fun main() {
 
         var currentGroup = immuneSystem
 
-        val regex = "(\\d+) units each with (\\d+) hit points (\\(.*\\) )?with an attack that does (\\d+) (\\w+) damage at initiative (\\d+)".toRegex()
+        val regex =
+            "(\\d+) units each with (\\d+) hit points (\\(.*\\) )?with an attack that does (\\d+) (\\w+) damage at initiative (\\d+)".toRegex()
         var additionalStr = 0
         input.forEach {
             when (it) {
@@ -88,13 +97,17 @@ fun main() {
             attackTasks.clear()
 
             repeat(2) {
-                val attackGroup = groups[it].sortedWith(compareByDescending<BattleGroup> { it.effectivePower }.thenByDescending { it.speed })
-                val defendGroup = groups[1 - it].sortedWith(compareByDescending<BattleGroup> { it.effectivePower }.thenByDescending { it.speed }).toMutableList()
+                val attackGroup =
+                    groups[it].sortedWith(compareByDescending<BattleGroup> { it.effectivePower }.thenByDescending { it.speed })
+                val defendGroup =
+                    groups[1 - it].sortedWith(compareByDescending<BattleGroup> { it.effectivePower }.thenByDescending { it.speed })
+                        .toMutableList()
 
                 attackGroup.forEach { attack ->
                     defendGroup.sortedWith(compareByDescending<BattleGroup> { defense ->
                         attack.damageTo(defense)
-                    }.thenByDescending { it.effectivePower }.thenByDescending { it.speed }).firstOrNull()?.takeIf { attack.damageTo(it) > 0 }?.also { defense ->
+                    }.thenByDescending { it.effectivePower }.thenByDescending { it.speed }).firstOrNull()
+                        ?.takeIf { attack.damageTo(it) > 0 }?.also { defense ->
                         attackTasks += attack to defense
                         defendGroup -= defense
                     }

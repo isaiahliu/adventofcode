@@ -101,7 +101,8 @@ fun main() {
     while (move(part2Result)) {
         part2Result++
         if (part2Result == 10) {
-            part1Result = (map.keys.maxOf { it.first } - map.keys.minOf { it.first } + 1) * (map.keys.maxOf { it.second } - map.keys.minOf { it.second } + 1) - map.size
+            part1Result =
+                (map.keys.maxOf { it.first } - map.keys.minOf { it.first } + 1) * (map.keys.maxOf { it.second } - map.keys.minOf { it.second } + 1) - map.size
         }
     }
 

@@ -4,11 +4,24 @@ import util.input
 import kotlin.math.absoluteValue
 
 fun main() {
-    val regex = "p=<\\s*(-?\\d+),\\s*(-?\\d+),\\s*(-?\\d+)>, v=<\\s*(-?\\d+),\\s*(-?\\d+),\\s*(-?\\d+)>, a=<\\s*(-?\\d+),\\s*(-?\\d+),\\s*(-?\\d+)>".toRegex()
+    val regex =
+        "p=<\\s*(-?\\d+),\\s*(-?\\d+),\\s*(-?\\d+)>, v=<\\s*(-?\\d+),\\s*(-?\\d+),\\s*(-?\\d+)>, a=<\\s*(-?\\d+),\\s*(-?\\d+),\\s*(-?\\d+)>".toRegex()
 
-    val particles = input.mapNotNull { regex.matchEntire(it)?.groupValues?.drop(1)?.map { it.toInt() } }.mapIndexed { particleIndex, data ->
-        Day20Particle(particleIndex, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8])
-    }
+    val particles = input.mapNotNull { regex.matchEntire(it)?.groupValues?.drop(1)?.map { it.toInt() } }
+        .mapIndexed { particleIndex, data ->
+            Day20Particle(
+                particleIndex,
+                data[0],
+                data[1],
+                data[2],
+                data[3],
+                data[4],
+                data[5],
+                data[6],
+                data[7],
+                data[8]
+            )
+        }
 
     println(particles.minBy { it.ax.absoluteValue + it.ay.absoluteValue + it.az.absoluteValue }.index)
 
@@ -62,7 +75,18 @@ fun main() {
     println(particles.count { !it.destroyed })
 }
 
-private data class Day20Particle(var index: Int, var px: Int, var py: Int, var pz: Int, var vx: Int, var vy: Int, var vz: Int, val ax: Int, val ay: Int, val az: Int) {
+private data class Day20Particle(
+    var index: Int,
+    var px: Int,
+    var py: Int,
+    var pz: Int,
+    var vx: Int,
+    var vy: Int,
+    var vz: Int,
+    val ax: Int,
+    val ay: Int,
+    val az: Int
+) {
     var destroyed: Boolean = false
 
     fun move(times: Int = 1) {

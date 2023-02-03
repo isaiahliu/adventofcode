@@ -23,10 +23,10 @@ fun main() {
     var result2 = 0
     while (true) {
         if ((0..scanningCycles.keys.max()).none { step ->
-                    scanningCycles[step]?.let { areaCycle ->
-                        ((step + result2) % areaCycle == 0)
-                    } == true
-                }) {
+                scanningCycles[step]?.let { areaCycle ->
+                    ((step + result2) % areaCycle == 0)
+                } == true
+            }) {
             break
         }
 

@@ -4,7 +4,8 @@ import util.input
 
 fun main() {
     val regex = "(\\d+) players; last marble is worth (\\d+) points".toRegex()
-    val (players, points) = input.first().let { regex.matchEntire(it) }?.groupValues?.drop(1)?.map { it.toInt() }.orEmpty()
+    val (players, points) = input.first().let { regex.matchEntire(it) }?.groupValues?.drop(1)?.map { it.toInt() }
+        .orEmpty()
 
     class Day09Node(val value: Int) {
         lateinit var previous: Day09Node

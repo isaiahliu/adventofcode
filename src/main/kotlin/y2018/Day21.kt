@@ -47,7 +47,6 @@ fun main() {
                     registers[args[2]] = registers[args[0]] + registers[args[1]]
                 }
 
-
                 "muli" -> {
                     registers[args[2]] = registers[args[0]] * args[1]
                 }
