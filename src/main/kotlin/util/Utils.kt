@@ -4,18 +4,16 @@ import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
 
+var useSample = false
+
 /**
  * Reads lines from the given input txt file.
  */
 val input by lazy {
     RuntimeException().stackTrace.firstOrNull { it.methodName == "main" }?.className?.removeSuffix("Kt")
-        ?.replace('.', '/')?.let { ClassLoader.getSystemResource("${it}.txt") }?.file?.let { File(it) }?.readLines()
-        .orEmpty()
-}
-val sampleInput by lazy {
-    RuntimeException().stackTrace.firstOrNull { it.methodName == "main" }?.className?.removeSuffix(
-        "Kt"
-    )?.replace('.', '/')?.let { ClassLoader.getSystemResource("${it}-sample.txt") }?.file?.let { File(it) }?.readLines()
+        ?.replace('.', '/')
+        ?.let { ClassLoader.getSystemResource("${it}${if (useSample) "-sample" else ""}.txt") }?.file?.let { File(it) }
+        ?.readLines()
         .orEmpty()
 }
 
