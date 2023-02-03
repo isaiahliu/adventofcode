@@ -65,10 +65,11 @@ fun main() {
                 moveMethod(it).let { it !in eastCucumbers && it !in southCucumbers }
             }.toSet()
 
-            cucumbers -= move
-            cucumbers += move.map(moveMethod)
-
-            done = done && move.isEmpty()
+            if (move.isNotEmpty()) {
+                cucumbers -= move
+                cucumbers += move.map(moveMethod)
+                done = false
+            }
         }
     }
 
