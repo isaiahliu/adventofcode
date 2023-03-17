@@ -30,8 +30,8 @@ fun main() {
 }
 
 private fun CharArray.increase() {
-    this[this.size - 1]++
-    for (index in this.size - 1 downTo 0) {
+    this[this.lastIndex]++
+    for (index in this.lastIndex downTo 0) {
         if (this[index] <= 'z') {
             return
         } else {

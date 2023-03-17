@@ -11,7 +11,7 @@ fun main() {
 
         repeat(it[1].toInt()) {
             rope[0].move(direction)
-            repeat(rope.size - 1) {
+            repeat(rope.lastIndex) {
                 rope[it + 1].follow(rope[it])
             }
         }

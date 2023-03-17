@@ -31,7 +31,7 @@ fun main() {
                 var success = true
 
                 var current = this[0]
-                for (pos in 1 until this.size - 1) {
+                for (pos in 1 until this.lastIndex) {
                     if (p and (1 shl (pos - 1)) > 0) {
                         val t = this[pos]
                         if (t - current > 3) {

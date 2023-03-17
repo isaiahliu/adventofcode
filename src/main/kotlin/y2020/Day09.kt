@@ -25,7 +25,7 @@ fun main() {
     println(result1)
 
     var result2 = 0L
-    loop@ for (firstIndex in 0 until nums.size - 1) {
+    loop@ for (firstIndex in 0 until nums.lastIndex) {
         for (count in 2..nums.size - firstIndex) {
             val subNums = nums.drop(firstIndex).take(count)
             val sum = subNums.sum()

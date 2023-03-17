@@ -24,7 +24,7 @@ fun main() {
             return@forEach
         }
 
-        repeat(nodes.size - 1) { pos ->
+        repeat(nodes.lastIndex) { pos ->
             resultSet1 += buildString {
                 nodes.forEachIndexed { index, node ->
                     if (index > 0) {
@@ -54,7 +54,7 @@ fun main() {
             if (nodes.size == 1) {
                 continue
             }
-            repeat(nodes.size - 1) {
+            repeat(nodes.lastIndex) {
                 val result = buildString {
                     nodes.forEachIndexed { index, node ->
                         if (index > 0) {

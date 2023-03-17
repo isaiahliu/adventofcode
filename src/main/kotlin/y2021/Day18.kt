@@ -105,7 +105,7 @@ fun main() {
 
             while (true) {
                 var foundIndex = -1
-                for (index in 0 until sum.size - 1) {
+                for (index in 0 until sum.lastIndex) {
                     val left = sum[index]
                     val right = sum[index + 1]
                     if (left.depth > 3 && left.left && right.depth == left.depth && right.right) {

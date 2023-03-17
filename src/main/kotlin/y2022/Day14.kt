@@ -31,7 +31,7 @@ fun main() {
     }
 
     walls.forEach {
-        for (index in 0 until it.size - 1) {
+        for (index in 0 until it.lastIndex) {
             val first = it[index]
             val second = it[index + 1]
 

@@ -12,8 +12,8 @@ fun main() {
 
     val portals = hashMapOf<String, MutableList<Pair<Int, Int>>>()
 
-    for (rowIndex in 1 until map.size - 1) {
-        for (columnIndex in 1 until map[rowIndex].size - 1) {
+    for (rowIndex in 1 until map.lastIndex) {
+        for (columnIndex in 1 until map[rowIndex].lastIndex) {
             if (map[rowIndex][columnIndex] in PORTAL_NAME) {
                 var rowOffset = 0
                 var columnOffset = 0

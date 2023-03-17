@@ -53,7 +53,7 @@ fun main() {
                             val pos = this.indexOfFirst { c -> c == instruction[6][0] }
 
                             0 - if (pos % 2 == 0) {
-                                ((pos + this.size - 1) % this.size) / 2 + 6
+                                ((pos + this.lastIndex) % this.size) / 2 + 6
                             } else {
                                 pos / 2 + 1
                             }

@@ -71,7 +71,7 @@ fun main() {
     }
 
     val temp = nanobots.toMutableList()
-    while (temp.any { it.overlaps.size != temp.size - 1 }) {
+    while (temp.any { it.overlaps.size != temp.lastIndex }) {
         val min = temp.minBy { it.overlaps.size }
         temp.remove(min)
 

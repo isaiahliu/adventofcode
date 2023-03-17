@@ -219,7 +219,7 @@ fun main() {
                         }
 
                         '^' -> {
-                            rowIndex = map.size - 1
+                            rowIndex = map.lastIndex
                             columnIndex = currentLine.size
 
                             currentLine += output
@@ -291,11 +291,11 @@ fun main() {
     val map = process().second
 
     var result1 = 0
-    for (rowIndex in 1 until map.size - 1) {
+    for (rowIndex in 1 until map.lastIndex) {
         val previousRow = map[rowIndex - 1]
         val row = map[rowIndex]
         val nextRow = map[rowIndex + 1]
-        for (columnIndex in 1 until row.size - 1) {
+        for (columnIndex in 1 until row.lastIndex) {
             if (row[columnIndex] == '#' && row[columnIndex - 1] == '#' && row[columnIndex + 1] == '#' && previousRow[columnIndex] == '#' && nextRow[columnIndex] == '#') {
                 result1 += rowIndex * columnIndex
             }

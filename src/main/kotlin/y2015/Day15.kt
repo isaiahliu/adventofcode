@@ -25,7 +25,7 @@ fun main() {
 
     fun walk(index: Int) {
         val current = ingredients[index]
-        if (index == ingredients.size - 1) {
+        if (index == ingredients.lastIndex) {
             current.teaspoon = 100 - ingredients.take(index).sumOf { it.teaspoon }
 
             val capacity = ingredients.sumOf { it.capacity * it.teaspoon }.coerceAtLeast(0)

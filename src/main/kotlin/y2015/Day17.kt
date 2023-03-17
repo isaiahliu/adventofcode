@@ -34,7 +34,7 @@ fun main() {
         }.fold(1) { a, b -> a * b }
     }
 
-    var bottleIndex = bottles.size - 1
+    var bottleIndex = bottles.lastIndex
 
     var part1Sum = 0
     while (true) {
@@ -60,7 +60,7 @@ fun main() {
 
             part2[usages.sum()] += possibility
         }
-        bottleIndex = bottles.size - 1
+        bottleIndex = bottles.lastIndex
         usages[bottleIndex]++
     }
 

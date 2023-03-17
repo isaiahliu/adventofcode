@@ -127,7 +127,7 @@ fun main() {
 
     val path = findPath(0, 0)
 
-    var goalX = grids[0].size - 1
+    var goalX = grids[0].lastIndex
     var goalY = 0
     var currentPath = path[goalY][goalX]
 
