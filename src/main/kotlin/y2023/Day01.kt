@@ -19,15 +19,15 @@ fun main() {
     }
 
     val nums = arrayOf(
-        "one" to 1,
-        "two" to 2,
-        "three" to 3,
-        "four" to 4,
-        "five" to 5,
-        "six" to 6,
-        "seven" to 7,
-        "eight" to 8,
-        "nine" to 9,
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
     )
     var part2Result = 0
     input.forEach {
@@ -42,9 +42,9 @@ fun main() {
                 }
 
                 else -> {
-                    for ((s, n) in nums) {
+                    for ((n, s) in nums.withIndex()) {
                         if (it.startsWithAt(s, index)) {
-                            num = n
+                            num = n + 1
                             break
                         }
                     }
