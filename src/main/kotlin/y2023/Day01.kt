@@ -6,6 +6,7 @@ fun main() {
     val part1Result = input.sumOf {
         (it.first { it in '0'..'9' } - '0') * 10 + (it.last { it in '0'..'9' } - '0')
     }
+    println(part1Result)
 
     fun String.startsWithAt(target: String, offset: Int): Boolean {
         target.forEachIndexed { index, c ->
@@ -41,9 +42,10 @@ fun main() {
                 }
 
                 else -> {
-                    nums.forEach { (s, n) ->
+                    for ((s, n) in nums) {
                         if (it.startsWithAt(s, index)) {
                             num = n
+                            break
                         }
                     }
                 }
@@ -58,6 +60,5 @@ fun main() {
         part2Result += first * 10 + last
     }
 
-    println(part1Result)
     println(part2Result)
 }
