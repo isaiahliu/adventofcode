@@ -14,31 +14,25 @@ fun main() {
         var blue = 0
 
         gameRegex.matchEntire(it)?.groupValues?.drop(1)?.also { (id, s) ->
-            var match = true
-            s.split("; ").forEach {
-                it.split(", ").forEach {
-                    colorRegex.matchEntire(it)?.groupValues?.drop(1)?.also { (countStr, color) ->
-                        val count = countStr.toInt()
-                        when (color) {
-                            "red" -> {
-                                match = match && count <= 12
-                                red = maxOf(red, count)
-                            }
+            s.split("; ", ", ").forEach {
+                colorRegex.matchEntire(it)?.groupValues?.drop(1)?.also { (countStr, color) ->
+                    val count = countStr.toInt()
+                    when (color) {
+                        "red" -> {
+                            red = maxOf(red, count)
+                        }
 
-                            "green" -> {
-                                match = match && count <= 13
-                                green = maxOf(green, count)
-                            }
+                        "green" -> {
+                            green = maxOf(green, count)
+                        }
 
-                            "blue" -> {
-                                blue = maxOf(blue, count)
-                                match = match && count <= 14
-                            }
+                        "blue" -> {
+                            blue = maxOf(blue, count)
                         }
                     }
                 }
             }
-            if (match) {
+            if (red <= 12 && green <= 13 && blue <= 14) {
                 part1Result += id.toInt()
             }
         }
