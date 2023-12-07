@@ -45,7 +45,7 @@ fun main() {
             }
         }.toIntArray()
 
-        val sortedIndices = input.indices.sortedWith(compareBy<Int> { types[it] }.thenComparing { a, b ->
+        return input.indices.sortedWith(compareBy<Int> { types[it] }.thenComparing { a, b ->
             val left = this[a].first.map { cards.indexOf(it) }.toIntArray()
             val right = this[b].first.map { cards.indexOf(it) }.toIntArray()
 
@@ -56,9 +56,7 @@ fun main() {
             }
 
             0
-        })
-
-        return sortedIndices.mapIndexed { index, i ->
+        }).mapIndexed { index, i ->
             this[i].second * (index + 1)
         }.sum()
     }
