@@ -17,9 +17,9 @@ fun main() {
         val types = map { (card, _) ->
             val patterns = buildSet {
                 if (wildCard != null && wildCard in card) {
-                    cards.forEach { c ->
-                        if (c != wildCard) {
-                            add(card.replace(wildCard, c))
+                    cards.forEach {
+                        if (it != wildCard) {
+                            add(card.replace(wildCard, it))
                         }
                     }
                 } else {
