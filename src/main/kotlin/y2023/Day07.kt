@@ -11,21 +11,20 @@ fun main() {
     val FOUR_OF_A_KIND = 6
     val FIVE_OF_A_KIND = 7
 
-    val scores = input.map { it.split(" ")[1].toInt() }.toIntArray()
-    val cards = input.map { it.split(" ")[0] }.toTypedArray()
+    val cards = input.map { it.split(" ").let { it[0] to it[1].toInt() } }.toTypedArray()
 
-    fun Array<String>.calculate(cards: CharArray, wildCard: Char? = null): Int {
-        val types = map {
-            val patterns = arrayListOf<String>()
-
-            if (wildCard != null && wildCard in it) {
-                cards.forEach { c ->
-                    if (c != wildCard) {
-                        patterns += it.replace(wildCard, c)
+    fun Array<Pair<String, Int>>.calculate(cards: CharArray, wildCard: Char? = null): Int {
+        val types = map { (card, _) ->
+            val patterns = buildSet {
+                if (wildCard != null && wildCard in card) {
+                    cards.forEach { c ->
+                        if (c != wildCard) {
+                            add(card.replace(wildCard, c))
+                        }
                     }
+                } else {
+                    add(card)
                 }
-            } else {
-                patterns += it
             }
 
             patterns.maxOf { p ->
@@ -47,8 +46,8 @@ fun main() {
         }.toIntArray()
 
         val sortedIndices = input.indices.sortedWith(compareBy<Int> { types[it] }.thenComparing { a, b ->
-            val left = this[a].map { cards.indexOf(it) }.toIntArray()
-            val right = this[b].map { cards.indexOf(it) }.toIntArray()
+            val left = this[a].first.map { cards.indexOf(it) }.toIntArray()
+            val right = this[b].first.map { cards.indexOf(it) }.toIntArray()
 
             for (i in left.indices) {
                 (left[i] - right[i]).takeIf { it != 0 }?.also {
@@ -60,7 +59,7 @@ fun main() {
         })
 
         return sortedIndices.mapIndexed { index, i ->
-            scores[i] * (index + 1)
+            this[i].second * (index + 1)
         }.sum()
     }
 
