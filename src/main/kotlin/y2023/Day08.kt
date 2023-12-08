@@ -37,17 +37,15 @@ fun main() {
     }
 
     val part1Result = walk("AAA", setOf("ZZZ")) * instructions.length
-//    val part2Result = walk(map.keys.filter { it.last() == 'A' }.toSet(), map.keys.filter { it.last() == 'Z' }.toSet())
+
     val ends = map.keys.filter { it.last() == 'Z' }.toSet()
     val steps = map.keys.filter { it.last() == 'A' }.map {
         walk(it, ends).toBigInteger()
     }
 
-    val gcd = steps.reduce { a, b ->
-        a.gcd(b)
-    }
-
-    val part2Result = steps.reduce { a, b -> a * b } / gcd * instructions.length.toBigInteger()
+    val part2Result = steps.reduce { a, b ->
+        a * b / a.gcd(b)
+    } * instructions.length.toBigInteger()
 
     println(part1Result)
     println(part2Result)
