@@ -206,29 +206,33 @@ fun main() {
     val part1Result = step / 2
 
     fun Set<Pair<Int, Int>>.fill(): Int? {
-        val remains = this.toMutableSet()
+        val remains = this.filter { (r, c) ->
+            if (r !in input.indices || c !in input[0].indices) {
+                return null
+            }
 
-        var result = 0
+            !marks[r][c]
+        }.toMutableSet()
+
+        val visited = remains.toMutableSet()
 
         while (remains.isNotEmpty()) {
             remains.toSet().also { remains.clear() }.forEach { (r, c) ->
-                if (marks.getOrNull(r)?.getOrNull(c) != true) {
-                    if (r <= 0 || r >= input.lastIndex || c <= 0 || c >= input[0].lastIndex) {
+                marks[r][c] = true
+
+                arrayOf(r - 1 to c, r + 1 to c, r to c - 1, r to c + 1).forEach {
+                    if (it.first !in input.indices || it.second !in input[0].indices) {
                         return null
                     }
 
-                    marks[r][c] = true
-                    result++
-
-                    remains += r - 1 to c
-                    remains += r + 1 to c
-                    remains += r to c - 1
-                    remains += r to c + 1
+                    if (!marks[it.first][it.second] && visited.add(it)) {
+                        remains.add(it)
+                    }
                 }
             }
         }
 
-        return result
+        return visited.size
     }
 
     val part2Result = lefts.fill() ?: rights.fill()
