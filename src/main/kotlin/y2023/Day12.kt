@@ -46,7 +46,7 @@ fun main() {
 
         part1Result += dfs("$map.", counts)
         part2Result += dfs(
-            "${List(5) { map }.joinToString("?")}.",
+            "${map}?${map}?${map}?${map}?${map}.",
             IntArray(counts.size * 5) { counts[it % counts.size] })
     }
 
