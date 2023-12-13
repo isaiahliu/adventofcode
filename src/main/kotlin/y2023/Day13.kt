@@ -14,7 +14,7 @@ fun main() {
             var index2 = it
 
             var diffCount = 0
-            while (index1 >= 0 && index2 < size) {
+            while (index1 >= 0 && index2 < size && diffCount <= targetDiffCount) {
                 val row1 = this[index1--]
                 val row2 = this[index2++]
 
