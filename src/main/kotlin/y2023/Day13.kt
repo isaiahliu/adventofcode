@@ -19,9 +19,6 @@ fun main() {
                 val row2 = this[index2++]
 
                 diffCount += row1.indices.count { row1[it] != row2[it] }
-                if (diffCount > maxDiff) {
-                    return@firstOrNull false
-                }
             }
 
             diffCount == maxDiff
