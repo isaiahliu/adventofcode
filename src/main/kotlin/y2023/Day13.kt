@@ -8,7 +8,7 @@ fun main() {
 
     val strs = arrayListOf<String>()
 
-    fun Array<CharArray>.findMirror(maxDiff: Int): Int? {
+    fun Array<CharArray>.findMirror(targetDiffCount: Int): Int? {
         return (1 until size).firstOrNull {
             var index1 = it - 1
             var index2 = it
@@ -21,7 +21,7 @@ fun main() {
                 diffCount += row1.indices.count { row1[it] != row2[it] }
             }
 
-            diffCount == maxDiff
+            diffCount == targetDiffCount
         }
     }
 
