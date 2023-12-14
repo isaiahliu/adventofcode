@@ -8,9 +8,9 @@ fun main() {
     }.toTypedArray()
 
     val NORTH = 0
-    val EAST = 1
+    val WEST = 1
     val SOUTH = 2
-    val WEST = 3
+    val EAST = 3
 
     operator fun Array<CharArray>.get(direction: Int, r: Int, c: Int): Char? {
         return when (direction) {
@@ -105,10 +105,10 @@ fun main() {
     process(EAST)
 
     var step = 1
-    var remain = 1000000000
+    val target = 1000000000
 
     val cache = hashMapOf<String, Int>()
-    while (step < remain) {
+    while (step < target) {
         process(NORTH)
         process(WEST)
         process(SOUTH)
@@ -119,7 +119,7 @@ fun main() {
         cache[cacheKey]?.also {
             val diff = step - it
 
-            remain -= (remain - step) / diff * diff
+            step += (target - step) / diff * diff
         } ?: run {
             cache[cacheKey] = step
         }
