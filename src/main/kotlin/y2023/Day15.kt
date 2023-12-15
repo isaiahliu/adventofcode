@@ -16,12 +16,12 @@ fun main() {
 
         val (node, value) = it.split('=', '-')
 
-        val hash = node.hash()
+        val box = boxes[node.hash()]
 
         value.toIntOrNull()?.also {
-            boxes[hash][node] = it
+            box[node] = it
         } ?: run {
-            boxes[hash] -= node
+            box -= node
         }
     }
 
@@ -30,6 +30,7 @@ fun main() {
             value * (nodeIndex + 1) * (boxIndex + 1)
         }.sum()
     }.sum()
+
     println(part1Result)
     println(part2Result)
 }
