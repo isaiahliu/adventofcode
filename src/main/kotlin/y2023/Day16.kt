@@ -33,29 +33,28 @@ fun main() {
             val (r, c) = p
             val type = input.getOrNull(r)?.getOrNull(c) ?: continue
             if (visited.add(p to direction)) {
-
+                val nextDirections = hashSetOf<Int>()
                 when {
                     type == '/' -> {
-                        val nextDirection = direction xor 1
-
-                        current.add(p.next(nextDirection) to nextDirection)
+                        nextDirections += direction xor 1
                     }
 
                     type == '\\' -> {
-                        val nextDirection = direction xor 0b11
-
-                        current.add(p.next(nextDirection) to nextDirection)
+                        nextDirections += direction xor 0b11
                     }
 
                     type == '|' && direction % 2 == 1 || type == '-' && direction % 2 == 0 -> {
-                        arrayOf((direction + 1) % 4, (direction - 1).mod(4)).forEach {
-                            current.add(p.next(it) to it)
-                        }
+                        nextDirections += (direction + 1) % 4
+                        nextDirections += (direction - 1).mod(4)
                     }
 
                     else -> {
-                        current.add(p.next(direction) to direction)
+                        nextDirections += direction
                     }
+                }
+
+                nextDirections.forEach {
+                    current.add(p.next(it) to it)
                 }
             }
         }
