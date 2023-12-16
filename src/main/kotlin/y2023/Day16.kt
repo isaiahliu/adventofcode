@@ -9,18 +9,6 @@ fun main() {
     val DOWN = 2
     val LEFT = 3
 
-    fun Pair<Int, Int>.next(direction: Int): Pair<Int, Int> {
-        var (r, c) = this
-        when (direction) {
-            UP -> r--
-            RIGHT -> c++
-            DOWN -> r++
-            LEFT -> c--
-        }
-
-        return r to c
-    }
-
     fun process(init: Pair<Pair<Int, Int>, Int>): Int {
         val visited = hashSetOf<Pair<Pair<Int, Int>, Int>>()
 
@@ -54,7 +42,12 @@ fun main() {
                 }
 
                 nextDirections.forEach {
-                    current.add(p.next(it) to it)
+                    current += when (it) {
+                        UP -> (r - 1) to c
+                        RIGHT -> r to (c + 1)
+                        DOWN -> (r + 1) to c
+                        else -> r to (c - 1)
+                    } to it
                 }
             }
         }
