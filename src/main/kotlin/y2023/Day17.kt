@@ -54,15 +54,11 @@ fun main() {
                         } ?: return@forEach
                     }
 
-                    queue.offer(
-                        State(
-                            r,
-                            c,
-                            newScore,
-                            step + if (state.direction == nextDirection) state.straightCount else 0,
-                            nextDirection
-                        )
-                    )
+                    var newStep = step
+                    if (state.direction == nextDirection) {
+                        newStep += state.straightCount
+                    }
+                    queue.offer(State(r, c, newScore, newStep, nextDirection))
                 }
             }
         }
