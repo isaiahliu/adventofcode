@@ -9,13 +9,9 @@ fun main() {
     val DOWN = 2
     val RIGHT = 3
 
-    val directions = setOf(UP, LEFT, DOWN, RIGHT)
+    data class State(val r: Int, val c: Int, val score: Int, val straightCount: Int, val direction: Int)
 
-    data class State(val r: Int, val c: Int, val score: Int, val straightCount: Int, val direction: Int) {
-        val num: Int? = input.getOrNull(r)?.getOrNull(c)?.let { it - '0' }
-    }
-
-    fun process(allowStraight: State.() -> Boolean, moveStep: Int): Int {
+    fun process(maxStraightSteps: Int, moveStep: Int): Int {
         val visited = hashMapOf<Pair<Int, Int>, Array<TreeMap<Int, Int>>>()
 
         val queue = PriorityQueue<State>(compareBy { it.score })
@@ -28,18 +24,17 @@ fun main() {
                 return state.score
             }
 
-            val visitedScores =
-                visited.computeIfAbsent(state.r to state.c) { Array(4) { TreeMap() } }[state.direction]
+            val visitedScores = visited.computeIfAbsent(state.r to state.c) { Array(4) { TreeMap() } }[state.direction]
 
             if (visitedScores.floorKey(state.straightCount) == null) {
                 visitedScores[state.straightCount] = state.score
 
                 val nextDirections = hashSetOf<Pair<Int, Int>>()
-                nextDirections.add((state.direction - 1).mod(4) to moveStep)
-                nextDirections.add((state.direction + 1).mod(4) to moveStep)
+                nextDirections += (state.direction - 1).mod(4) to moveStep
+                nextDirections += (state.direction + 1).mod(4) to moveStep
 
-                if (state.allowStraight()) {
-                    nextDirections.add(state.direction to 1)
+                if (state.straightCount < maxStraightSteps) {
+                    nextDirections += state.direction to 1
                 }
 
                 nextDirections.forEach { (nextDirection, step) ->
@@ -64,7 +59,7 @@ fun main() {
                             r,
                             c,
                             newScore,
-                            if (state.direction == nextDirection) (state.straightCount + 1) else step,
+                            step + if (state.direction == nextDirection) state.straightCount else 0,
                             nextDirection
                         )
                     )
@@ -75,8 +70,8 @@ fun main() {
         return 0
     }
 
-    val part1Result = process({ straightCount < 3 }, 1)
-    val part2Result = process({ straightCount < 10 }, 4)
+    val part1Result = process(3, 1)
+    val part2Result = process(10, 4)
 
     println(part1Result)
     println(part2Result)
