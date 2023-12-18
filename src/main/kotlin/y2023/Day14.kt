@@ -1,133 +1,133 @@
 package y2023
 
+import util.expectInt
 import util.input
 
 fun main() {
-    val chars = input.map {
-        it.toCharArray()
-    }.toTypedArray()
+    expectInt {
+        val chars = input.map {
+            it.toCharArray()
+        }.toTypedArray()
 
-    val NORTH = 0
-    val WEST = 1
-    val SOUTH = 2
-    val EAST = 3
+        val NORTH = 0
+        val WEST = 1
+        val SOUTH = 2
+        val EAST = 3
 
-    operator fun Array<CharArray>.get(direction: Int, r: Int, c: Int): Char? {
-        return when (direction) {
-            NORTH -> {
-                getOrNull(r)?.getOrNull(c)
-            }
+        operator fun Array<CharArray>.get(direction: Int, r: Int, c: Int): Char? {
+            return when (direction) {
+                NORTH -> {
+                    getOrNull(r)?.getOrNull(c)
+                }
 
-            WEST -> {
-                getOrNull(this[0].lastIndex - c)?.getOrNull(r)
-            }
+                WEST -> {
+                    getOrNull(this[0].lastIndex - c)?.getOrNull(r)
+                }
 
-            SOUTH -> {
-                getOrNull(this.lastIndex - r)?.getOrNull(this[0].lastIndex - c)
-            }
+                SOUTH -> {
+                    getOrNull(this.lastIndex - r)?.getOrNull(this[0].lastIndex - c)
+                }
 
-            else -> {
-                getOrNull(c)?.getOrNull(this.lastIndex - r)
-            }
-        }
-    }
-
-    operator fun Array<CharArray>.set(direction: Int, r: Int, c: Int, char: Char) {
-        when (direction) {
-            NORTH -> {
-                this[r][c] = char
-            }
-
-            WEST -> {
-                this[this[0].lastIndex - c][r] = char
-            }
-
-            SOUTH -> {
-                this[this.lastIndex - r][this[0].lastIndex - c] = char
-            }
-
-            else -> {
-                this[c][this.lastIndex - r] = char
+                else -> {
+                    getOrNull(c)?.getOrNull(this.lastIndex - r)
+                }
             }
         }
-    }
 
-    fun process(direction: Int) {
-        var columnIndex = 0
+        operator fun Array<CharArray>.set(direction: Int, r: Int, c: Int, char: Char) {
+            when (direction) {
+                NORTH -> {
+                    this[r][c] = char
+                }
 
-        while (chars[direction, 0, columnIndex] != null) {
-            var emptyRowIndex = 0
-            while (true) {
-                when {
-                    chars[direction, emptyRowIndex, columnIndex] == null -> {
-                        break
-                    }
+                WEST -> {
+                    this[this[0].lastIndex - c][r] = char
+                }
 
-                    chars[direction, emptyRowIndex, columnIndex] != '.' -> {
-                        emptyRowIndex++
-                    }
+                SOUTH -> {
+                    this[this.lastIndex - r][this[0].lastIndex - c] = char
+                }
 
-                    else -> {
-                        var checkRowIndex = emptyRowIndex + 1
+                else -> {
+                    this[c][this.lastIndex - r] = char
+                }
+            }
+        }
 
-                        while (true) {
-                            when (chars[direction, checkRowIndex, columnIndex]) {
-                                'O' -> {
-                                    chars[direction, emptyRowIndex, columnIndex] = 'O'
-                                    chars[direction, checkRowIndex, columnIndex] = '.'
-                                    emptyRowIndex++
-                                    checkRowIndex++
-                                }
+        fun process(direction: Int) {
+            var columnIndex = 0
 
-                                '#', null -> {
-                                    emptyRowIndex = checkRowIndex + 1
-                                    break
-                                }
+            while (chars[direction, 0, columnIndex] != null) {
+                var emptyRowIndex = 0
+                while (true) {
+                    when {
+                        chars[direction, emptyRowIndex, columnIndex] == null -> {
+                            break
+                        }
 
-                                '.' -> {
-                                    checkRowIndex++
+                        chars[direction, emptyRowIndex, columnIndex] != '.' -> {
+                            emptyRowIndex++
+                        }
+
+                        else -> {
+                            var checkRowIndex = emptyRowIndex + 1
+
+                            while (true) {
+                                when (chars[direction, checkRowIndex, columnIndex]) {
+                                    'O' -> {
+                                        chars[direction, emptyRowIndex, columnIndex] = 'O'
+                                        chars[direction, checkRowIndex, columnIndex] = '.'
+                                        emptyRowIndex++
+                                        checkRowIndex++
+                                    }
+
+                                    '#', null -> {
+                                        emptyRowIndex = checkRowIndex + 1
+                                        break
+                                    }
+
+                                    '.' -> {
+                                        checkRowIndex++
+                                    }
                                 }
                             }
                         }
                     }
                 }
+
+                columnIndex++
             }
-
-            columnIndex++
         }
-    }
 
-    process(NORTH)
-    val part1Result = chars.mapIndexed { index, row -> row.count { it == 'O' } * (chars.size - index) }.sum()
-
-    process(WEST)
-    process(SOUTH)
-    process(EAST)
-
-    var step = 1
-    val target = 1000000000
-
-    val cache = hashMapOf<String, Int>()
-    while (step < target) {
         process(NORTH)
+        part1Result = chars.mapIndexed { index, row -> row.count { it == 'O' } * (chars.size - index) }.sum()
+
         process(WEST)
         process(SOUTH)
         process(EAST)
 
-        val cacheKey = chars.joinToString("") { it.concatToString() }
+        var step = 1
+        val target = 1000000000
 
-        cache[cacheKey]?.also {
-            val diff = step - it
+        val cache = hashMapOf<String, Int>()
+        while (step < target) {
+            process(NORTH)
+            process(WEST)
+            process(SOUTH)
+            process(EAST)
 
-            step += (target - step) / diff * diff
-        } ?: run {
-            cache[cacheKey] = step
+            val cacheKey = chars.joinToString("") { it.concatToString() }
+
+            cache[cacheKey]?.also {
+                val diff = step - it
+
+                step += (target - step) / diff * diff
+            } ?: run {
+                cache[cacheKey] = step
+            }
+
+            step++
         }
-
-        step++
+        part2Result = chars.mapIndexed { index, row -> row.count { it == 'O' } * (chars.size - index) }.sum()
     }
-    val part2Result = chars.mapIndexed { index, row -> row.count { it == 'O' } * (chars.size - index) }.sum()
-
-    println(part1Result)
-    println(part2Result)
 }
