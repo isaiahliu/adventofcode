@@ -1,24 +1,28 @@
 package y2022
 
+import util.expectInt
 import util.input
 import kotlin.math.absoluteValue
 
 fun main() {
-    val rope = Array(10) { RopeNode(0, 0) }
+    expectInt {
 
-    input.map { it.split(" ") }.forEach {
-        val direction = it[0]
+        val rope = Array(10) { RopeNode(0, 0) }
 
-        repeat(it[1].toInt()) {
-            rope[0].move(direction)
-            repeat(rope.lastIndex) {
-                rope[it + 1].follow(rope[it])
+        input.map { it.split(" ") }.forEach {
+            val direction = it[0]
+
+            repeat(it[1].toInt()) {
+                rope[0].move(direction)
+                repeat(rope.lastIndex) {
+                    rope[it + 1].follow(rope[it])
+                }
             }
         }
-    }
 
-    println(rope[1].visited.size)
-    println(rope.last().visited.size)
+        part1Result = rope[1].visited.size
+        part2Result = rope.last().visited.size
+    }
 }
 
 private class RopeNode(var x: Int, var y: Int) {

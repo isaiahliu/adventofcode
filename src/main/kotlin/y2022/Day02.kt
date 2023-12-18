@@ -1,24 +1,22 @@
 package y2022
 
+import util.expectInt
 import util.input
 
 fun main() {
-    var part1Sum = 0
-    var part2Sum = 0
-    input.map { it.split(" ") }.filter { it.size == 2 }.map {
-        Shape.ofCode(it[0]) to it[1]
-    }.forEach { pair ->
-        val part1Shape = Shape.ofCode(pair.second)
-        part1Sum += part1Shape.score
-        part1Sum += part1Shape.battle(pair.first).score
+    expectInt {
+        input.map { it.split(" ") }.filter { it.size == 2 }.map {
+            Shape.ofCode(it[0]) to it[1]
+        }.forEach { pair ->
+            val r1 = Shape.ofCode(pair.second)
+            part1Result += r1.score
+            part1Result += r1.battle(pair.first).score
 
-        val part2Result = BattleResult.ofCode(pair.second)
-        part2Sum += part2Result.findShapeForTarget(pair.first).score
-        part2Sum += part2Result.score
+            val r2 = BattleResult.ofCode(pair.second)
+            part2Result += r2.findShapeForTarget(pair.first).score
+            part2Result += r2.score
+        }
     }
-
-    println(part1Sum)
-    println(part2Sum)
 }
 
 private enum class BattleResult(val score: Int, val code: String) {

@@ -30,8 +30,12 @@ private fun <T> expect(defaultValue: T, dsl: Results<T>.() -> Unit) {
     measureTimeMillis {
         results.dsl()
     }.also {
-        println("Result1: ${results.part1Result}")
-        println("Result2: ${results.part2Result}")
+        println("Result1: ")
+        println(results.part1Result.toString())
+        println()
+        println("Result2: ")
+        println(results.part2Result.toString())
+        println()
         println("Time cost: ${it}ms")
         println()
     }

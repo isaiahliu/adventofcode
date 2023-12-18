@@ -1,53 +1,56 @@
 package y2022
 
+import util.expectString
 import util.input
 
 fun main() {
-    var x = 1
-    var cycle = 0
+    expectString {
+        var x = 1
+        var cycle = 0
 
-    var instructionIndex = 0
+        var instructionIndex = 0
 
-    val instructions = input.map { it.split(" ") }.map {
-        when (it[0]) {
-            "addx" -> AddX(it[1].toInt())
-            else -> Noop()
-        }
-    }
-
-    val builder = StringBuilder()
-
-    var signalStrength = 0
-    while (instructionIndex < instructions.size) {
-        builder.append(
-            if ((cycle % 40) in (x - 1)..(x + 1)) {
-                "#"
-            } else {
-                "."
+        val instructions = input.map { it.split(" ") }.map {
+            when (it[0]) {
+                "addx" -> AddX(it[1].toInt())
+                else -> Noop()
             }
-        )
-
-        cycle++
-
-        if ((cycle + 20) % 40 == 0) {
-            signalStrength += x * cycle
         }
 
-        if (cycle % 40 == 0) {
-            builder.appendLine()
+        val builder = StringBuilder()
+
+        var signalStrength = 0
+        while (instructionIndex < instructions.size) {
+            builder.append(
+                if ((cycle % 40) in (x - 1)..(x + 1)) {
+                    "#"
+                } else {
+                    "."
+                }
+            )
+
+            cycle++
+
+            if ((cycle + 20) % 40 == 0) {
+                signalStrength += x * cycle
+            }
+
+            if (cycle % 40 == 0) {
+                builder.appendLine()
+            }
+
+            val instruction = instructions[instructionIndex]
+
+            x = instruction.process(x)
+
+            if (instruction.done) {
+                instructionIndex++
+            }
         }
 
-        val instruction = instructions[instructionIndex]
-
-        x = instruction.process(x)
-
-        if (instruction.done) {
-            instructionIndex++
-        }
+        part1Result = signalStrength.toString()
+        part2Result = builder.toString()
     }
-
-    println(signalStrength)
-    println(builder.toString())
 }
 
 private abstract class AbstractInstruction(protected var remainingCycle: Int) {

@@ -1,80 +1,82 @@
 package y2022
 
+import util.expectLong
 import util.input
 
 fun main() {
-    val line = input.firstOrNull() ?: return
+    expectLong {
+        val line = input.first()
 
-    val room = Array(1000000) { BooleanArray(7) }
+        val room = Array(1000000) { BooleanArray(7) }
 
-    var top = -1
+        var top = -1
 
-    var shapeIndex = 0
-    val shapeInitializer = arrayOf(::Shape1, ::Shape2, ::Shape3, ::Shape4, ::Shape5)
+        var shapeIndex = 0
+        val shapeInitializer = arrayOf(::Shape1, ::Shape2, ::Shape3, ::Shape4, ::Shape5)
 
-    var currentShape = shapeInitializer[(shapeIndex++) % 5](room)
-    currentShape.initialize(top)
+        var currentShape = shapeInitializer[(shapeIndex++) % 5](room)
+        currentShape.initialize(top)
 
-    var movementIndex = 0
+        var movementIndex = 0
 
-    val cache1 = StringBuilder()
-    val cache2 = StringBuilder()
+        val cache1 = StringBuilder()
+        val cache2 = StringBuilder()
 
-    var result1 = -1
-    var result2 = -1L
-    var cacheStartTop = 0L
-    val targetRocks = 1000000000000
-    while (result1 < 0 || result2 < 0) {
-        when (line[(movementIndex++) % line.length]) {
-            '<' -> {
-                currentShape.moveLeft()
-            }
+        part1Result = -1
+        part2Result = -1L
+        var cacheStartTop = 0L
+        val targetRocks = 1000000000000
+        while (part1Result < 0 || part2Result < 0) {
+            when (line[(movementIndex++) % line.length]) {
+                '<' -> {
+                    currentShape.moveLeft()
+                }
 
-            '>' -> {
-                currentShape.moveRight()
-            }
-        }
-
-        if (!currentShape.moveDown()) {
-            val topIncrement = (currentShape.top - top).coerceAtLeast(0)
-
-            //Begin caching
-            if (shapeIndex > 500) {
-                val cacheKey = "${shapeIndex % 5}-${movementIndex % line.length}-${topIncrement},"
-
-                if (cache1.isEmpty()) {
-                    cacheStartTop = top.toLong()
-                    cache1.append(cacheKey)
-                } else {
-                    if (!cache1.startsWith(cache2.toString() + cacheKey)) {
-                        cache1.append(cache2)
-                        cache2.clear()
-                    }
-                    cache2.append(cacheKey)
-
-                    if (cache1.contentEquals(cache2)) {
-                        val cacheNodes = cache1.split(",").mapNotNull { it.split("-").getOrNull(2)?.toIntOrNull() }
-                        result2 =
-                            cacheStartTop + (targetRocks - 500) / cacheNodes.size * cacheNodes.sum() + cacheNodes.take(((targetRocks - 500) % cacheNodes.size).toInt())
-                                .sum() + 1
-                    }
+                '>' -> {
+                    currentShape.moveRight()
                 }
             }
 
-            top = top.coerceAtLeast(currentShape.top)
+            if (!currentShape.moveDown()) {
+                val topIncrement = (currentShape.top - top).coerceAtLeast(0)
 
-            currentShape = shapeInitializer[(shapeIndex++) % 5](room)
-            currentShape.initialize(top)
+                //Begin caching
+                if (shapeIndex > 500) {
+                    val cacheKey = "${shapeIndex % 5}-${movementIndex % line.length}-${topIncrement},"
 
-            if (shapeIndex == 2023) {
-                result1 = top + 1
+                    if (cache1.isEmpty()) {
+                        cacheStartTop = top.toLong()
+                        cache1.append(cacheKey)
+                    } else {
+                        if (!cache1.startsWith(cache2.toString() + cacheKey)) {
+                            cache1.append(cache2)
+                            cache2.clear()
+                        }
+                        cache2.append(cacheKey)
+
+                        if (cache1.contentEquals(cache2)) {
+                            val cacheNodes = cache1.split(",").mapNotNull { it.split("-").getOrNull(2)?.toIntOrNull() }
+                            part2Result =
+                                cacheStartTop + (targetRocks - 500) / cacheNodes.size * cacheNodes.sum() + cacheNodes.take(
+                                    ((targetRocks - 500) % cacheNodes.size).toInt()
+                                )
+                                    .sum() + 1
+                        }
+                    }
+                }
+
+                top = top.coerceAtLeast(currentShape.top)
+
+                currentShape = shapeInitializer[(shapeIndex++) % 5](room)
+                currentShape.initialize(top)
+
+                if (shapeIndex == 2023) {
+                    part1Result = top + 1L
 //                result2 = top + 1
+                }
             }
         }
     }
-
-    println(result1)
-    println(result2)
 }
 
 private sealed class AbstractShape(protected val room: Array<BooleanArray>) {

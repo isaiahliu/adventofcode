@@ -1,56 +1,59 @@
 package y2022
 
+import util.expectInt
 import util.input
 
 fun main() {
-    val rootFolder = Day07Folder("root", null)
+    expectInt {
+        val rootFolder = Day07Folder("root", null)
 
-    var currentFolder = rootFolder
+        var currentFolder = rootFolder
 
-    val allFolders = arrayListOf(rootFolder)
+        val allFolders = arrayListOf(rootFolder)
 
-    input.map { it.split(" ") }.forEach { nodes ->
-        when (nodes[0]) {
-            "$" -> {
-                when (nodes[1]) {
-                    "cd" -> {
-                        when (nodes[2]) {
-                            "/" -> {
-                                currentFolder = rootFolder
-                            }
+        input.map { it.split(" ") }.forEach { nodes ->
+            when (nodes[0]) {
+                "$" -> {
+                    when (nodes[1]) {
+                        "cd" -> {
+                            when (nodes[2]) {
+                                "/" -> {
+                                    currentFolder = rootFolder
+                                }
 
-                            ".." -> {
-                                currentFolder.parent?.also { currentFolder = it }
-                            }
+                                ".." -> {
+                                    currentFolder.parent?.also { currentFolder = it }
+                                }
 
-                            else -> {
-                                currentFolder = currentFolder.childrenFolders.first { it.name == nodes[2] }
+                                else -> {
+                                    currentFolder = currentFolder.childrenFolders.first { it.name == nodes[2] }
+                                }
                             }
                         }
-                    }
 
-                    "ls" -> {
+                        "ls" -> {
+                        }
                     }
                 }
-            }
 
-            "dir" -> {
-                Day07Folder(nodes[1], currentFolder).also {
-                    currentFolder.childrenFolders += it
-                    allFolders += it
+                "dir" -> {
+                    Day07Folder(nodes[1], currentFolder).also {
+                        currentFolder.childrenFolders += it
+                        allFolders += it
+                    }
                 }
-            }
 
-            else -> {
-                currentFolder.childrenFiles += Day07File(nodes[1], nodes[0].toInt())
+                else -> {
+                    currentFolder.childrenFiles += Day07File(nodes[1], nodes[0].toInt())
+                }
             }
         }
+
+        part1Result = allFolders.filter { it.parent != null }.map { it.size }.filter { it <= 100000 }.sum()
+
+        val freeSpace = rootFolder.size - (70000000 - 30000000)
+        part2Result = allFolders.map { it.size }.sorted().first { it >= freeSpace }
     }
-
-    println(allFolders.filter { it.parent != null }.map { it.size }.filter { it <= 100000 }.sum())
-
-    val freeSpace = rootFolder.size - (70000000 - 30000000)
-    println(allFolders.map { it.size }.sorted().first { it >= freeSpace })
 }
 
 private sealed interface IDay07File {
