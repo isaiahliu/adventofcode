@@ -8,7 +8,7 @@ fun main() {
         abstract class AbstractExpression {
             abstract fun evaluate(testCase: Map<String, Int>): Boolean
 
-            abstract fun findCombinations(testCase: Map<String, IntRange>): Long
+            abstract fun countCombinations(testCase: Map<String, IntRange>): Long
         }
 
         val accept = object : AbstractExpression() {
@@ -16,7 +16,7 @@ fun main() {
                 return true
             }
 
-            override fun findCombinations(testCase: Map<String, IntRange>): Long {
+            override fun countCombinations(testCase: Map<String, IntRange>): Long {
                 return testCase.values.fold(1L) { a, b ->
                     a * (b.last - b.first + 1)
                 }
@@ -27,7 +27,7 @@ fun main() {
                 return false
             }
 
-            override fun findCombinations(testCase: Map<String, IntRange>): Long {
+            override fun countCombinations(testCase: Map<String, IntRange>): Long {
                 return 0L
             }
         }
@@ -40,18 +40,18 @@ fun main() {
             val rejectExp: AbstractExpression
         ) : AbstractExpression() {
             override fun evaluate(testCase: Map<String, Int>): Boolean {
-                val propertyValue = testCase[checkProperty] ?: 0
-
-                val result = if (operator == '<') propertyValue < value else propertyValue > value
-
-                return if (result) {
+                return testCase[checkProperty]?.takeIf {
+                    if (operator == '<') {
+                        it < value
+                    } else {
+                        it > value
+                    }
+                }?.let {
                     acceptExp.evaluate(testCase)
-                } else {
-                    rejectExp.evaluate(testCase)
-                }
+                } ?: rejectExp.evaluate(testCase)
             }
 
-            override fun findCombinations(testCase: Map<String, IntRange>): Long {
+            override fun countCombinations(testCase: Map<String, IntRange>): Long {
                 val range = testCase[checkProperty] ?: return 0L
                 val min = range.first
                 val max = range.last
@@ -59,27 +59,19 @@ fun main() {
                 var result = 0L
                 if (operator == '<') {
                     if (min < value) {
-                        val case = testCase.toMutableMap()
-                        case[checkProperty] = min until value
-                        result += acceptExp.findCombinations(case)
+                        result += acceptExp.countCombinations(testCase + (checkProperty to (min until value)))
                     }
 
                     if (max >= value) {
-                        val case = testCase.toMutableMap()
-                        case[checkProperty] = value..max
-                        result += rejectExp.findCombinations(case)
+                        result += rejectExp.countCombinations(testCase + (checkProperty to (value..max)))
                     }
                 } else {
                     if (max > value) {
-                        val case = testCase.toMutableMap()
-                        case[checkProperty] = value + 1..max
-                        result += acceptExp.findCombinations(case)
+                        result += acceptExp.countCombinations(testCase + (checkProperty to (value + 1..max)))
                     }
 
                     if (min <= value) {
-                        val case = testCase.toMutableMap()
-                        case[checkProperty] = min..value
-                        result += rejectExp.findCombinations(case)
+                        result += rejectExp.countCombinations(testCase + (checkProperty to (min..value)))
                     }
                 }
                 return result
@@ -91,28 +83,28 @@ fun main() {
             "R" to reject
         )
 
-        class ExpProxy(val name: String) : AbstractExpression() {
+        class NamedExp(val name: String) : AbstractExpression() {
             override fun evaluate(testCase: Map<String, Int>): Boolean {
                 return map[name]?.evaluate(testCase) ?: false
             }
 
-            override fun findCombinations(testCase: Map<String, IntRange>): Long {
-                return map[name]?.findCombinations(testCase) ?: 0L
+            override fun countCombinations(testCase: Map<String, IntRange>): Long {
+                return map[name]?.countCombinations(testCase) ?: 0L
             }
         }
 
         val expRegex = "(\\w+)([<>])(\\d+):(\\w+),(.*)".toRegex()
-        fun parse(detail: String): AbstractExpression {
+        fun parseExp(detail: String): AbstractExpression {
             return expRegex.matchEntire(detail)?.groupValues?.drop(1)?.let { (prop, op, v, a, r) ->
-                Exp(prop, op[0], v.toInt(), parse(a), parse(r))
-            } ?: ExpProxy(detail)
+                Exp(prop, op[0], v.toInt(), parseExp(a), parseExp(r))
+            } ?: NamedExp(detail)
         }
 
         val criteriaRegex = "(\\w+)\\{(.*)}".toRegex()
         val testcaseRegex = "\\{(.*)}".toRegex()
         input.forEach {
             criteriaRegex.matchEntire(it)?.groupValues?.drop(1)?.also { (name, detail) ->
-                map[name] = parse(detail)
+                map[name] = parseExp(detail)
             } ?: testcaseRegex.matchEntire(it)?.groupValues?.drop(1)?.also { (detail) ->
                 val testcase = detail.split(",").associate {
                     it.split("=").let { (key, value) -> key to value.toInt() }
@@ -125,7 +117,7 @@ fun main() {
         }
 
         val initRange = 1..4000
-        map["in"]?.findCombinations(
+        map["in"]?.countCombinations(
             mapOf(
                 "x" to initRange,
                 "m" to initRange,
