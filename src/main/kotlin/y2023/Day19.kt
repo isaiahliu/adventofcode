@@ -103,19 +103,9 @@ fun main() {
 
         val expRegex = "(\\w+)([<>])(\\d+):(\\w+),(.*)".toRegex()
         fun parse(detail: String): AbstractExpression {
-            val match = expRegex.matchEntire(detail)?.groupValues?.drop(1)
-
-            return when {
-                match != null -> {
-                    val (prop, op, v, a, r) = match
-
-                    Exp(prop, op[0], v.toInt(), parse(a), parse(r))
-                }
-
-                else -> {
-                    ExpProxy(detail)
-                }
-            }
+            return expRegex.matchEntire(detail)?.groupValues?.drop(1)?.let { (prop, op, v, a, r) ->
+                Exp(prop, op[0], v.toInt(), parse(a), parse(r))
+            } ?: ExpProxy(detail)
         }
 
         val criteriaRegex = "(\\w+)\\{(.*)\\}".toRegex()
