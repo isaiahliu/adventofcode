@@ -108,15 +108,15 @@ fun main() {
             } ?: ExpProxy(detail)
         }
 
-        val criteriaRegex = "(\\w+)\\{(.*)\\}".toRegex()
-        val testcaseRegex = "\\{(.*)\\}".toRegex()
+        val criteriaRegex = "(\\w+)\\{(.*)}".toRegex()
+        val testcaseRegex = "\\{(.*)}".toRegex()
         input.forEach {
             criteriaRegex.matchEntire(it)?.groupValues?.drop(1)?.also { (name, detail) ->
                 map[name] = parse(detail)
             } ?: testcaseRegex.matchEntire(it)?.groupValues?.drop(1)?.also { (detail) ->
-                val testcase = detail.split(",").map {
+                val testcase = detail.split(",").associate {
                     it.split("=").let { (key, value) -> key to value.toInt() }
-                }.toMap()
+                }
 
                 map["in"]?.evaluate(testcase)?.takeIf { it }?.also {
                     part1Result += testcase.values.sum()
