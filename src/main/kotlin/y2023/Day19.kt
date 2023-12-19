@@ -86,7 +86,10 @@ fun main() {
             }
         }
 
-        val map = hashMapOf<String, AbstractExpression>()
+        val map = hashMapOf(
+            "A" to accept,
+            "R" to reject
+        )
 
         class ExpProxy(val name: String) : AbstractExpression() {
             override fun evaluate(testCase: Map<String, Int>): Boolean {
@@ -107,14 +110,6 @@ fun main() {
                     val (prop, op, v, a, r) = match
 
                     Exp(prop, op[0], v.toInt(), parse(a), parse(r))
-                }
-
-                detail == "A" -> {
-                    accept
-                }
-
-                detail == "R" -> {
-                    reject
                 }
 
                 else -> {
@@ -139,7 +134,15 @@ fun main() {
             }
         }
 
-        map["in"]?.findCombinations(mapOf("x" to 1..4000, "m" to 1..4000, "a" to 1..4000, "s" to 1..4000))?.also {
+        val initRange = 1..4000
+        map["in"]?.findCombinations(
+            mapOf(
+                "x" to initRange,
+                "m" to initRange,
+                "a" to initRange,
+                "s" to initRange
+            )
+        )?.also {
             part2Result = it
         }
     }
