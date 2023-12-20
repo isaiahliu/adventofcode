@@ -95,7 +95,7 @@ fun main() {
                 val (to, pulse) = pair
 
                 if (to == rxParentEntry.key && pulse == 1) {
-                    firstTurns[from] = firstTurns[from]?.takeIf { it.toInt() < loop } ?: loop.toBigInteger()
+                    firstTurns[from] = firstTurns[from] ?: loop.toBigInteger()
 
                     if (firstTurns.size == parentSize) {
                         part2Result = firstTurns.values.reduce { a, b ->
