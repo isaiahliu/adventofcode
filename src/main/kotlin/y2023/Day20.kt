@@ -10,11 +10,11 @@ fun main() {
         abstract class AbstractModule(val children: Array<String>) {
             abstract fun receive(from: String, pulse: Int): List<Pair<String, Int>>
 
-            open fun registerParent(parent: String) {
+            val outputs = Array(2) { p ->
+                children.map { it to p }
             }
 
-            protected fun send(pulse: Int): List<Pair<String, Int>> {
-                return children.map { it to pulse }
+            open fun registerParent(parent: String) {
             }
         }
 
@@ -24,7 +24,7 @@ fun main() {
             override fun receive(from: String, pulse: Int): List<Pair<String, Int>> {
                 return if (pulse == 0) {
                     status = status xor 1
-                    send(status)
+                    outputs[status]
                 } else {
                     emptyList()
                 }
@@ -41,17 +41,13 @@ fun main() {
             override fun receive(from: String, pulse: Int): List<Pair<String, Int>> {
                 rem[from] = pulse
 
-                return if (rem.values.all { it == 1 }) {
-                    send(0)
-                } else {
-                    send(1)
-                }
+                return outputs[rem.values.reduce { a, b -> a and b } xor 1]
             }
         }
 
         class Simple(children: Array<String>) : AbstractModule(children) {
             override fun receive(from: String, pulse: Int): List<Pair<String, Int>> {
-                return send(pulse)
+                return outputs[pulse]
             }
         }
 
