@@ -18,11 +18,19 @@ fun main() {
             }
         }
 
-        fun process(starts: Set<Pair<Int, Int>>, step: Int): Int {
-            val visited = starts.toMutableSet()
+        fun process(step: Int): Int {
+            val visited = hashSetOf<Pair<Int, Int>>()
+            if (step % 2 == 0) {
+                visited += start
+            } else {
+                visited += start.first - 1 to start.second
+                visited += start.first + 1 to start.second
+                visited += start.first to start.second - 1
+                visited += start.first to start.second + 1
+            }
 
             val current = LinkedList<Pair<Int, Int>>()
-            current += starts
+            current += visited
 
             repeat(step / 2) {
                 repeat(current.size) {
@@ -67,19 +75,13 @@ fun main() {
             return visited.size
         }
 
-        part1Result = process(setOf(start), 64).toLong()
+        part1Result = process(64).toLong()
 
-        val oddStart = setOf(
-            start.first - 1 to start.second,
-            start.first + 1 to start.second,
-            start.first to start.second - 1,
-            start.first to start.second + 1,
-        )
         val target = 26501365L
         val x = (target - 65) / 131
-        val y0 = process(oddStart, 65)
-        val y1 = process(setOf(start), 65 + 131)
-        val y2 = process(oddStart, 65 + 131 * 2)
+        val y0 = process(65)
+        val y1 = process(65 + 131)
+        val y2 = process(65 + 131 * 2)
 
         val c = y0
         val a = (y2 - 2L * y1 + y0) / 2L
