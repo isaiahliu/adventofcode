@@ -22,31 +22,27 @@ fun main() {
                 }
             }
 
-            val children = hashSetOf<Brick>()
             val parents = hashSetOf<Brick>()
         }
 
-        val bricks = arrayListOf<Brick>()
-        input.forEach { bricks.add(Brick(it)) }
-        bricks.sortBy { it.z.first() }
+        val bricks = input.map { Brick(it) }.sortedBy { it.z.first() }
 
         val lowest = bricks[0].z.first - 1
 
         val heights = hashMapOf<Pair<Int, Int>, Brick>()
 
         bricks.forEach { brick ->
-            val parents = hashSetOf<Brick>()
             var maxZ = lowest
             brick.x.forEach { x ->
                 brick.y.forEach { y ->
                     heights[x to y]?.also {
                         if (it.z.last > maxZ) {
                             maxZ = it.z.last
-                            parents.clear()
+                            brick.parents.clear()
                         }
 
                         if (it.z.last == maxZ) {
-                            parents.add(it)
+                            brick.parents.add(it)
                         }
                     }
 
@@ -56,9 +52,6 @@ fun main() {
 
             val zSize = brick.z.last - brick.z.first
             brick.z = maxZ + 1..maxZ + 1 + zSize
-
-            parents.forEach { it.children += brick }
-            brick.parents += parents
         }
 
         bricks.forEachIndexed { index, brick ->
