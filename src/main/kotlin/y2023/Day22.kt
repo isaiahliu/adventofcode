@@ -12,9 +12,9 @@ fun main() {
             var z: IntRange
 
             init {
-                line.split("~").also {
-                    val (x1, y1, z1) = it[0].split(",").map { it.toInt() }
-                    val (x2, y2, z2) = it[1].split(",").map { it.toInt() }
+                line.split("~").also { (from, to) ->
+                    val (x1, y1, z1) = from.split(",").map { it.toInt() }
+                    val (x2, y2, z2) = to.split(",").map { it.toInt() }
 
                     x = x1..x2
                     y = y1..y2
@@ -27,15 +27,15 @@ fun main() {
 
         val bricks = input.map { Brick(it) }.sortedBy { it.z.first() }
 
-        val lowest = bricks[0].z.first - 1
+        val GROUND = bricks[0].z.first - 1
 
-        val heights = hashMapOf<Pair<Int, Int>, Brick>()
+        val floors = hashMapOf<Pair<Int, Int>, Brick>()
 
         bricks.forEach { brick ->
-            var maxZ = lowest
+            var maxZ = GROUND
             brick.x.forEach { x ->
                 brick.y.forEach { y ->
-                    heights[x to y]?.also {
+                    floors[x to y]?.also {
                         if (it.z.last > maxZ) {
                             maxZ = it.z.last
                             brick.parents.clear()
@@ -46,12 +46,11 @@ fun main() {
                         }
                     }
 
-                    heights[x to y] = brick
+                    floors[x to y] = brick
                 }
             }
 
-            val zSize = brick.z.last - brick.z.first
-            brick.z = maxZ + 1..maxZ + 1 + zSize
+            brick.z = maxZ + 1..maxZ + 1 + brick.z.last - brick.z.first
         }
 
         bricks.forEachIndexed { index, brick ->
