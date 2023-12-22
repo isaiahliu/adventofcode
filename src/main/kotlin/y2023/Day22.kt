@@ -27,12 +27,10 @@ fun main() {
 
         val bricks = input.map { Brick(it) }.sortedBy { it.z.first() }
 
-        val GROUND = bricks[0].z.first - 1
-
         val floors = hashMapOf<Pair<Int, Int>, Brick>()
 
         bricks.forEach { brick ->
-            var maxZ = GROUND
+            var maxZ = 0
             brick.x.forEach { x ->
                 brick.y.forEach { y ->
                     floors[x to y]?.also {
