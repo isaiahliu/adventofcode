@@ -1,10 +1,10 @@
 package y2023
 
-import util.expectInt
+import util.expect
 import util.input
 
 fun main() {
-    expectInt {
+    expect(0) {
         val scores = input.map {
             it.split(": ")[1].split('|').map { it.split(' ').mapNotNull { it.toIntOrNull() } }.let {
                 it[0].intersect(it[1].toSet()).size

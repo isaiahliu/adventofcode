@@ -1,12 +1,11 @@
 package y2022
 
-import util.expectInt
+import util.expect
 import util.input
 import java.util.*
 
 fun main() {
-    expectInt {
-
+    expect(0) {
         val regex = "\\d+".toRegex()
 
         fun parse(line: String): List<Any> {

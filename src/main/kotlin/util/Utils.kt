@@ -23,10 +23,10 @@ val input by lazy {
 val String.md5
     get() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray())).toString(16).padStart(32, '0')
 
-data class Results<T>(var part1Result: T, var part2Result: T)
+data class Results<T1, T2>(var part1Result: T1, var part2Result: T2)
 
-private fun <T> expect(defaultValue: T, dsl: Results<T>.() -> Unit) {
-    val results = Results(defaultValue, defaultValue)
+fun <T1, T2> expect(defaultValue1: T1, defaultValue2: T2, dsl: Results<T1, T2>.() -> Unit) {
+    val results = Results(defaultValue1, defaultValue2)
     measureTimeMillis {
         results.dsl()
     }.also {
@@ -41,14 +41,6 @@ private fun <T> expect(defaultValue: T, dsl: Results<T>.() -> Unit) {
     }
 }
 
-fun expectInt(dsl: Results<Int>.() -> Unit) {
-    expect(0, dsl)
-}
-
-fun expectLong(dsl: Results<Long>.() -> Unit) {
-    expect(0L, dsl)
-}
-
-fun expectString(dsl: Results<String>.() -> Unit) {
-    expect("", dsl)
+fun <T> expect(defaultValue: T, dsl: Results<T, T>.() -> Unit) {
+    return expect(defaultValue, defaultValue, dsl)
 }

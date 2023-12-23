@@ -1,10 +1,10 @@
 package y2022
 
-import util.expectLong
+import util.expect
 import util.input
 
 fun main() {
-    expectLong {
+    expect(0L) {
         fun process(maxRound: Int, initProcessor: (Long, Long) -> Long): Long {
             val monkeyMap = hashMapOf<Int, Monkey>()
 

@@ -1,10 +1,10 @@
 package y2023
 
-import util.expectLong
+import util.expect
 import util.input
 
 fun main() {
-    expectLong {
+    expect(0, 0L) {
         val instructions = input[0]
 
         val map = hashMapOf<String, Pair<String, String>>()
@@ -38,7 +38,7 @@ fun main() {
             return result
         }
 
-        part1Result = walk("AAA", setOf("ZZZ")) * instructions.length.toLong()
+        part1Result = walk("AAA", setOf("ZZZ")) * instructions.length
 
         val ends = map.keys.filter { it.last() == 'Z' }.toSet()
         val steps = map.keys.filter { it.last() == 'A' }.map {

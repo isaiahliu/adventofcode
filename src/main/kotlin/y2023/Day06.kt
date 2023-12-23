@@ -1,10 +1,10 @@
 package y2023
 
-import util.expectLong
+import util.expect
 import util.input
 
 fun main() {
-    expectLong {
+    expect(0L) {
         val times = input[0].split(" ").mapNotNull { it.toLongOrNull() }
         val distances = input[1].split(" ").mapNotNull { it.toLongOrNull() }
 

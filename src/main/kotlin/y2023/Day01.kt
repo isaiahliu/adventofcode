@@ -1,10 +1,10 @@
 package y2023
 
-import util.expectInt
+import util.expect
 import util.input
 
 fun main() {
-    expectInt {
+    expect(0) {
         part1Result = input.sumOf {
             (it.first { it in '0'..'9' } - '0') * 10 + (it.last { it in '0'..'9' } - '0')
         }

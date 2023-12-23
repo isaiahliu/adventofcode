@@ -1,12 +1,12 @@
 package y2023
 
-import util.expectLong
+import util.expect
 import util.input
 import java.math.BigInteger
 import java.util.*
 
 fun main() {
-    expectLong {
+    expect(0L) {
         abstract class AbstractModule(val children: Array<String>) {
             abstract fun receive(from: String, pulse: Int): List<Pair<String, Int>>
 
@@ -102,7 +102,7 @@ fun main() {
                             a * b / a.gcd(b)
                         }.toLong()
 
-                        return@expectLong
+                        return@expect
                     }
                 }
 

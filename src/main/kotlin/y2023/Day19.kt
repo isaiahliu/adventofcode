@@ -1,10 +1,10 @@
 package y2023
 
-import util.expectLong
+import util.expect
 import util.input
 
 fun main() {
-    expectLong {
+    expect(0L) {
         abstract class AbstractExpression {
             abstract fun evaluate(testCase: Map<Char, Int>): Boolean
 

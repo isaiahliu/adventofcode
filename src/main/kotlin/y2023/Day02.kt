@@ -1,10 +1,10 @@
 package y2023
 
-import util.expectInt
+import util.expect
 import util.input
 
 fun main() {
-    expectInt {
+    expect(0) {
         val gameRegex = "Game (\\d+): (.*)".toRegex()
         val colorRegex = "(\\d+) (.*)".toRegex()
         input.forEach {

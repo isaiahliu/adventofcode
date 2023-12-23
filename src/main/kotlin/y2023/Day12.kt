@@ -1,10 +1,10 @@
 package y2023
 
-import util.expectLong
+import util.expect
 import util.input
 
 fun main() {
-    expectLong {
+    expect(0L) {
         fun dfs(
             map: String,
             counts: IntArray,

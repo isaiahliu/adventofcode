@@ -1,11 +1,11 @@
 package y2023
 
-import util.expectInt
+import util.expect
 import util.input
 import java.util.*
 
 fun main() {
-    expectInt {
+    expect(0) {
         val UP = 0
         val RIGHT = 1
         val DOWN = 2

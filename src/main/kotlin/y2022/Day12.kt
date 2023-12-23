@@ -1,10 +1,10 @@
 package y2022
 
-import util.expectInt
+import util.expect
 import util.input
 
 fun main() {
-    expectInt {
+    expect(0) {
         var startRow = 0
         var startColumn = 0
 

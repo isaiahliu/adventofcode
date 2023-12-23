@@ -1,10 +1,10 @@
 package y2022
 
-import util.expectInt
+import util.expect
 import util.input
 
 fun main() {
-    expectInt {
+    expect(0) {
         val trees = input.map {
             it.toCharArray().map { it - '0' }.toIntArray()
         }.toTypedArray()

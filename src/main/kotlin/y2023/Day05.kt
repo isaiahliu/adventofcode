@@ -1,10 +1,10 @@
 package y2023
 
-import util.expectLong
+import util.expect
 import util.input
 
 fun main() {
-    expectLong {
+    expect(0L) {
         var currentMaps = arrayListOf<Pair<Pair<Long, Long>, Long>>()
         val fullMap = arrayListOf(currentMaps)
 

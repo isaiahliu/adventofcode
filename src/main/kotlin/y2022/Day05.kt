@@ -1,10 +1,10 @@
 package y2022
 
-import util.expectString
+import util.expect
 import util.input
 
 fun main() {
-    expectString {
+    expect("") {
         val stackSize = (input.first().length + 1) / 4
 
         val stacksPart1 = Array(stackSize) { arrayListOf<String>() }

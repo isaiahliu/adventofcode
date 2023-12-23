@@ -1,10 +1,10 @@
 package y2022
 
-import util.expectString
+import util.expect
 import util.input
 
 fun main() {
-    expectString {
+    expect(0, "") {
         var x = 1
         var cycle = 0
 
@@ -48,7 +48,7 @@ fun main() {
             }
         }
 
-        part1Result = signalStrength.toString()
+        part1Result = signalStrength
         part2Result = builder.toString()
     }
 }

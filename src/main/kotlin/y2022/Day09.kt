@@ -1,12 +1,11 @@
 package y2022
 
-import util.expectInt
+import util.expect
 import util.input
 import kotlin.math.absoluteValue
 
 fun main() {
-    expectInt {
-
+    expect(0) {
         val rope = Array(10) { RopeNode(0, 0) }
 
         input.map { it.split(" ") }.forEach {

@@ -1,11 +1,11 @@
 package y2023
 
-import util.expectLong
+import util.expect
 import util.input
 import kotlin.math.absoluteValue
 
 fun main() {
-    expectLong {
+    expect(0L) {
         val rows = BooleanArray(input.size)
         val columns = BooleanArray(input[0].length)
 

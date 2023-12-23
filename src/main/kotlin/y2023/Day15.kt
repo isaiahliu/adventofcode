@@ -1,10 +1,10 @@
 package y2023
 
-import util.expectInt
+import util.expect
 import util.input
 
 fun main() {
-    expectInt {
+    expect(0) {
         fun String.hash(): Int {
             return fold(0) { a, b ->
                 (a + b.code) * 17 % 256

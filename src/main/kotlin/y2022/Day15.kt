@@ -1,11 +1,11 @@
 package y2022
 
-import util.expectLong
+import util.expect
 import util.input
 import kotlin.math.absoluteValue
 
 fun main() {
-    expectLong {
+    expect(0, 0L) {
         val regex = "Sensor at x=(-?\\d+), y=(-?\\d+): closest beacon is at x=(-?\\d+), y=(-?\\d+)".toRegex()
 
         fun process(targetRow: Int): List<IntRange> {
@@ -46,7 +46,7 @@ fun main() {
             return preparedRanges
         }
 
-        part1Result = process(2000000).sumOf { it.last - it.first }.toLong()
+        part1Result = process(2000000).sumOf { it.last - it.first }
 
         for (row in 0..4000000) {
             val ranges = process(row)

@@ -1,11 +1,11 @@
 package y2023
 
-import util.expectInt
+import util.expect
 import util.input
 import kotlin.math.sign
 
 fun main() {
-    expectInt {
+    expect(0) {
         class Brick(line: String) {
             var x: IntRange
             var y: IntRange

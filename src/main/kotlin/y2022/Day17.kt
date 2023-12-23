@@ -1,10 +1,10 @@
 package y2022
 
-import util.expectLong
+import util.expect
 import util.input
 
 fun main() {
-    expectLong {
+    expect(0L) {
         val line = input.first()
 
         val room = Array(1000000) { BooleanArray(7) }

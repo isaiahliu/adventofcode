@@ -1,10 +1,10 @@
 package y2022
 
-import util.expectInt
+import util.expect
 import util.input
 
 fun main() {
-    expectInt {
+    expect(0) {
         input.map { it.split(" ") }.filter { it.size == 2 }.map {
             Shape.ofCode(it[0]) to it[1]
         }.forEach { pair ->

@@ -1,10 +1,10 @@
 package y2023
 
-import util.expectInt
+import util.expect
 import util.input
 
 fun main() {
-    expectInt {
+    expect(0) {
         val HIGH_CARD = 1
         val ONE_PAIR = 2
         val TWO_PAIR = 3

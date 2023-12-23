@@ -1,10 +1,10 @@
 package y2023
 
-import util.expectLong
+import util.expect
 import util.input
 
 fun main() {
-    expectLong {
+    expect(0L) {
         val JOIN_BOTH = 0
         val JOIN_UP = 1
         val JOIN_DOWN = 2

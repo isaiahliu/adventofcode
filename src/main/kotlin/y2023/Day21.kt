@@ -1,11 +1,11 @@
 package y2023
 
-import util.expectLong
+import util.expect
 import util.input
 import java.util.*
 
 fun main() {
-    expectLong {
+    expect(0, 0L) {
         val start = input.indices.firstNotNullOf { r ->
             input[r].indices.firstOrNull { input[r][it] == 'S' }?.let { r to it }
         }
@@ -75,7 +75,7 @@ fun main() {
             return visited.size
         }
 
-        part1Result = process(64).toLong()
+        part1Result = process(64)
 
         val target = 26501365L
         val x = (target - 65) / 131

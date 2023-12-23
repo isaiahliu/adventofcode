@@ -1,10 +1,10 @@
 package y2022
 
-import util.expectInt
+import util.expect
 import util.input
 
 fun main() {
-    expectInt {
+    expect(0) {
         val regex = "(\\d+)-(\\d+),(\\d+)-(\\d+)".toRegex()
         input.forEach {
             val match = regex.matchEntire(it) ?: return@forEach

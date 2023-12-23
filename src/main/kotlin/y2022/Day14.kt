@@ -1,10 +1,10 @@
 package y2022
 
-import util.expectInt
+import util.expect
 import util.input
 
 fun main() {
-    expectInt {
+    expect(0) {
         val walls = input.map { it.split(" -> ").map { it.split(",").let { it[0].toInt() to it[1].toInt() } } }
 
         val space: MutableMap<Int, MutableMap<Int, Char>> = hashMapOf()
