@@ -47,11 +47,10 @@ fun main() {
             }
         }
 
-        for (i in connections.indices) {
-            val (from1, to1) = connections[i]
-
+        for ((from1, to1) in connections) {
             val availableConnections = connections.toMutableSet()
-            availableConnections -= connections[i]
+            availableConnections -= from1 to to1
+
             fun bfs(): Set<Pair<String, String>>? {
                 val timestamps = hashMapOf<String, Int>()
                 val tasks = LinkedList<String>()
@@ -106,7 +105,7 @@ fun main() {
             availableConnections.removeAll(thirds)
 
             if (bfs() == null) {
-
+                //from1 to to1 is disconnected by removing seconds and thirds paths.
                 for ((from2, to2) in seconds) {
                     for ((from3, to3) in thirds) {
                         val groups = hashMapOf<String, Group>()
