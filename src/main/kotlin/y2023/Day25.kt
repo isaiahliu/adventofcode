@@ -47,6 +47,14 @@ fun main() {
             }
         }
 
+        /**
+         * 枚举第一对点, 假设它是需要移除的通路, 那移除后, from和to之间只应存在两条最小通路
+         * 用BFS找出from到to的一条from到to的最短通路, 将其移除, 然后再用BFS找出一条最短通路移除
+         * 如果这时from和to断开了, 说明第一对点是正确的, 第二第三对点也在两次BFS的路径中
+         * 后面应该有更好的方法找到正确的两对点, 但是我懒得写了, 直接暴力枚举
+         * 将枚举的三对点从连接中移除, 基于此使用并查集来统计分组顺便计数
+         * 如果并查集有两组, 则返回group1.size * group2.size即可
+         */
         for ((from1, to1) in connections) {
             val availableConnections = connections.toMutableSet()
             availableConnections -= from1 to to1
