@@ -38,22 +38,26 @@ fun main() {
                 val last = line[i - 1]
                 val lastDp = dp[i - 1]
 
-                if (cur - last in 1..3) {
-                    curDp[0][0] = lastDp[0][0]
-                    curDp[0][1] = lastDp[0][1]
+                when {
+                    cur - last in 1..3 -> {
+                        curDp[0][0] = lastDp[0][0]
+                        curDp[0][1] = lastDp[0][1]
+                    }
+
+                    cur - last in -3..-1 -> {
+                        curDp[1][0] = lastDp[1][0]
+                        curDp[1][1] = lastDp[1][1]
+                    }
                 }
 
-                if (cur - line[i - 2] in 1..3) {
-                    curDp[0][1] = curDp[0][1] || dp[i - 2][0][0]
-                }
+                when {
+                    cur - line[i - 2] in 1..3 -> {
+                        curDp[0][1] = curDp[0][1] || dp[i - 2][0][0]
+                    }
 
-                if (cur - last in -3..-1) {
-                    curDp[1][0] = lastDp[1][0]
-                    curDp[1][1] = lastDp[1][1]
-                }
-
-                if (cur - line[i - 2] in -3..-1) {
-                    curDp[1][1] = curDp[1][1] || dp[i - 2][1][0]
+                    cur - line[i - 2] in -3..-1 -> {
+                        curDp[1][1] = curDp[1][1] || dp[i - 2][1][0]
+                    }
                 }
             }
 
