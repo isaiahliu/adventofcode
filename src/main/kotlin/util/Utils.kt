@@ -17,9 +17,6 @@ val input by lazy {
         ?.readLines().orEmpty()
 }
 
-/**
- * Converts string to util.getMd5 hash.
- */
 val String.md5
     get() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray())).toString(16).padStart(32, '0')
 
