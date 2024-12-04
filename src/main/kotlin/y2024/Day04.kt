@@ -26,7 +26,7 @@ fun main() {
                                 'M' -> 0b10.toInt()
                                 'S' -> 0b01.toInt()
                                 else -> 0b00.toInt()
-                            } shl ((deltaR * deltaC) + 1)
+                            } shl (deltaR * deltaC + 1)
                         } xor 0b1111).sign xor 1
                     }
                 }
