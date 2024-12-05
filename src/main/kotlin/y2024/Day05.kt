@@ -41,7 +41,7 @@ fun main() {
                             }
                         }
 
-                        val correct = arrayListOf<Int>()
+                        val sorted = arrayListOf<Int>()
 
                         while (degrees.isNotEmpty()) {
                             degrees.filter { it.value == 0 }.keys.forEach { num ->
@@ -52,11 +52,11 @@ fun main() {
                                 }
 
                                 degrees -= num
-                                correct += num
+                                sorted += num
                             }
                         }
 
-                        part2Result += correct[correct.size / 2]
+                        part2Result += sorted[sorted.size / 2]
                     }
                 }
 
