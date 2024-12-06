@@ -64,6 +64,7 @@ fun main() {
 
                 !routes[state.direction].add(state.pos) -> {
                     state.obstacle?.also { validObstacles += it }
+                    stack.pop()
                 }
 
                 forward.node == null -> {
