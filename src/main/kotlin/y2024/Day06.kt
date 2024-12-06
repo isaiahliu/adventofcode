@@ -20,16 +20,12 @@ fun main() {
             val pos = r to c
 
             fun forward(): State {
-                var newR = r
-                var newC = c
-                when (direction) {
-                    0 -> newR--
-                    1 -> newC++
-                    2 -> newR++
-                    3 -> newC--
+                return when (direction) {
+                    0 -> copy(r = r - 1)
+                    1 -> copy(c = c + 1)
+                    2 -> copy(r = r + 1)
+                    else -> copy(c = c - 1)
                 }
-
-                return copy(r = newR, c = newC)
             }
 
             fun turnRight(): State {
