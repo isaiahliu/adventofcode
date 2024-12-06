@@ -71,7 +71,6 @@ fun main() {
                 }
 
                 forward.node == null -> {
-                    part1Result = visited.size
                 }
 
                 forward.node == '#' || forward.pos == state.obstacle -> {
@@ -87,6 +86,7 @@ fun main() {
             }
         }
 
+        part1Result = visited.size
         part2Result = validObstacles.size
     }
 }
