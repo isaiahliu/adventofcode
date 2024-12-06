@@ -6,10 +6,6 @@ import java.util.*
 
 fun main() {
     expect(0, 0) {
-        val validObstacles = hashSetOf<Pair<Int, Int>>()
-        val visited = hashSetOf<Pair<Int, Int>>()
-        val routes = Array(4) { hashSetOf<Pair<Int, Int>>() }
-
         data class State(val r: Int, val c: Int, val direction: Int, val obstacle: Pair<Int, Int>?) {
             private var _visited: Boolean = false
 
@@ -42,6 +38,10 @@ fun main() {
 
             val node: Char? = input.getOrNull(r)?.getOrNull(c)
         }
+
+        val validObstacles = hashSetOf<Pair<Int, Int>>()
+        val visited = hashSetOf<Pair<Int, Int>>()
+        val routes = Array(4) { hashSetOf<Pair<Int, Int>>() }
 
         val stack = LinkedList<State>()
 
