@@ -14,16 +14,20 @@ fun main() {
                     s > sum -> false
                     dfs(s + nums[index], index + 1, useCombine) -> true
                     dfs(s * nums[index], index + 1, useCombine) -> true
-                    useCombine -> dfs("${s}${nums[index]}".toLong(), index + 1, useCombine)
+                    useCombine -> dfs("${s}${nums[index]}".toLong(), index + 1, true)
                     else -> false
                 }
             }
 
-            if (dfs(nums[0], 1, false)) {
-                part1Result += sum
-                part2Result += sum
-            } else if (dfs(nums[0], 1, true)) {
-                part2Result += sum
+            when {
+                dfs(nums[0], 1, false) -> {
+                    part1Result += sum
+                    part2Result += sum
+                }
+
+                dfs(nums[0], 1, true) -> {
+                    part2Result += sum
+                }
             }
         }
     }
