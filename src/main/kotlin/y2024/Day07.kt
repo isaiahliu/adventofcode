@@ -9,23 +9,24 @@ fun main() {
             left.toLong() to right.split(" ").mapNotNull { it.toLongOrNull() }
         }.forEach { (sum, nums) ->
             fun dfs(s: Long, index: Int, useCombine: Boolean): Boolean {
+                val num = nums[index]
                 return when {
-                    index == nums.size -> s == sum
-                    s > sum -> false
-                    dfs(s + nums[index], index + 1, useCombine) -> true
-                    dfs(s * nums[index], index + 1, useCombine) -> true
-                    useCombine -> dfs("${s}${nums[index]}".toLong(), index + 1, true)
-                    else -> false
+                    index == 0 -> s == num
+                    s >= num && dfs(s - num, index - 1, useCombine) -> true
+                    s % num == 0L && dfs(s / num, index - 1, useCombine) -> true
+                    else -> useCombine
+                            && (s - num).toString().let { it.length - maxOf(it.trimEnd('0').length, 1) } >= num.toString().length
+                            && dfs(s.toString().dropLast(num.toString().length).toLong(), index - 1, true)
                 }
             }
 
             when {
-                dfs(nums[0], 1, false) -> {
+                dfs(sum, nums.lastIndex, false) -> {
                     part1Result += sum
                     part2Result += sum
                 }
 
-                dfs(nums[0], 1, true) -> {
+                dfs(sum, nums.lastIndex, true) -> {
                     part2Result += sum
                 }
             }
