@@ -18,12 +18,14 @@ fun main() {
 
         val antinodes = Array(2) { hashSetOf<Pair<Int, Int>>() }
         antennas.values.forEach {
+            if (it.size > 1) {
+                antinodes[1] += it
+            }
+
             for (i in it.indices) {
                 val (r1, c1) = it[i]
-                antinodes[1] += r1 to c1
                 for (j in i + 1 until it.size) {
                     val (r2, c2) = it[j]
-                    antinodes[1] += r2 to c2
 
                     val deltaR = r2 - r1
                     val deltaC = c2 - c1
