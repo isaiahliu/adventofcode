@@ -48,25 +48,25 @@ fun main() {
 
         part1Result += rightIndex / 2L * (diskIndex + diskIndex + remainingSize - 1) * remainingSize / 2
 
-        class SegNode(val leftNodeIndex: Int, val rightNodeIndex: Int) {
+        class SegNode(val leftBlockIndex: Int, val rightBlockIndex: Int) {
             var maxFreeSpace: Int = 0
             var startDiskIndex: Long = 0
 
             val children by lazy {
                 arrayOf(
-                    SegNode(leftNodeIndex, (leftNodeIndex + rightNodeIndex) / 2), SegNode((leftNodeIndex + rightNodeIndex) / 2 + 1, rightNodeIndex)
+                    SegNode(leftBlockIndex, (leftBlockIndex + rightBlockIndex) / 2), SegNode((leftBlockIndex + rightBlockIndex) / 2 + 1, rightBlockIndex)
                 )
             }
 
-            fun setFreeSpace(nodeIndex: Int, freeSpace: Int, startDiskIndex: Long) {
+            fun setBlock(blockIndex: Int, freeSpace: Int, startDiskIndex: Long) {
                 when {
-                    nodeIndex > rightNodeIndex || nodeIndex < leftNodeIndex -> {
+                    blockIndex > rightBlockIndex || blockIndex < leftBlockIndex -> {
                         return
                     }
 
-                    leftNodeIndex < rightNodeIndex -> {
+                    leftBlockIndex < rightBlockIndex -> {
                         children.forEach {
-                            it.setFreeSpace(nodeIndex, freeSpace, startDiskIndex)
+                            it.setBlock(blockIndex, freeSpace, startDiskIndex)
                         }
 
                         maxFreeSpace = children.maxOf { it.maxFreeSpace }
@@ -79,18 +79,18 @@ fun main() {
                 }
             }
 
-            fun firstAvailableNode(freeSpace: Int): SegNode? {
+            fun findFirstAvailableBlock(freeSpace: Int): SegNode? {
                 return when {
                     maxFreeSpace < freeSpace -> {
                         null
                     }
 
-                    leftNodeIndex == rightNodeIndex -> {
+                    leftBlockIndex == rightBlockIndex -> {
                         this
                     }
 
                     else -> {
-                        children[0].firstAvailableNode(freeSpace) ?: children[1].firstAvailableNode(freeSpace)
+                        children[0].findFirstAvailableBlock(freeSpace) ?: children[1].findFirstAvailableBlock(freeSpace)
                     }
                 }
             }
@@ -99,29 +99,29 @@ fun main() {
         val root = SegNode(0, line.lastIndex)
 
         diskIndex = 0
-        line.forEachIndexed { index, ch ->
+        line.forEachIndexed { blockIndex, ch ->
             val size = ch - '0'
 
-            root.setFreeSpace(index, size * (index % 2), diskIndex)
+            root.setBlock(blockIndex, size * (blockIndex % 2), diskIndex)
 
             diskIndex += size
         }
 
-        for (index in line.lastIndex downTo 0) {
-            val ch = line[index]
+        for (blockIndex in line.lastIndex downTo 0) {
+            val ch = line[blockIndex]
             val size = ch - '0'
 
             diskIndex -= size
 
-            if (index % 2 == 0) {
-                val node = root.firstAvailableNode(size)?.takeIf { it.leftNodeIndex < index }
+            if (blockIndex % 2 == 0) {
+                val block = root.findFirstAvailableBlock(size)?.takeIf { it.leftBlockIndex < blockIndex }
 
-                val moveToDiskIndex = node?.startDiskIndex ?: diskIndex
+                val moveToDiskIndex = block?.startDiskIndex ?: diskIndex
 
-                part2Result += index / 2L * (moveToDiskIndex * 2 + size - 1) * size / 2
+                part2Result += blockIndex / 2L * (moveToDiskIndex * 2 + size - 1) * size / 2
 
-                node?.also {
-                    root.setFreeSpace(it.leftNodeIndex, it.maxFreeSpace - size, it.startDiskIndex + size)
+                block?.also {
+                    root.setBlock(it.leftBlockIndex, it.maxFreeSpace - size, it.startDiskIndex + size)
                 }
             }
         }
