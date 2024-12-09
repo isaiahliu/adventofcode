@@ -20,7 +20,7 @@ fun main() {
                     leftIndex % 2 == 0 -> {
                         val size = line[leftIndex] - '0'
 
-                        part1Result += leftIndex / 2L * (diskIndex * 2 + size - 1) * size / 2
+                        part1Result += leftIndex / 2 * (diskIndex * 2 + size - 1) * size / 2
 
                         diskIndex += size
                         freeSpace = line[++leftIndex] - '0'
@@ -38,7 +38,7 @@ fun main() {
                     else -> {
                         val size = minOf(freeSpace, remainingSize)
 
-                        part1Result += rightIndex / 2L * (diskIndex * 2 + size - 1) * size / 2
+                        part1Result += rightIndex / 2 * (diskIndex * 2 + size - 1) * size / 2
 
                         freeSpace -= size
                         remainingSize -= size
@@ -47,7 +47,7 @@ fun main() {
                 }
             }
 
-            part1Result += rightIndex / 2L * (diskIndex + diskIndex + remainingSize - 1) * remainingSize / 2
+            part1Result += rightIndex / 2 * (diskIndex + diskIndex + remainingSize - 1) * remainingSize / 2
         }
 
         run {
@@ -63,10 +63,7 @@ fun main() {
 
                 fun setBlock(blockIndex: Int, freeSpace: Int, startDiskIndex: Long) {
                     when {
-                        blockIndex > rightBlockIndex || blockIndex < leftBlockIndex -> {
-                            return
-                        }
-
+                        blockIndex > rightBlockIndex || blockIndex < leftBlockIndex -> return
                         leftBlockIndex < rightBlockIndex -> {
                             children.forEach {
                                 it.setBlock(blockIndex, freeSpace, startDiskIndex)
@@ -82,19 +79,12 @@ fun main() {
                     }
                 }
 
-                fun findFirstAvailableBlock(freeSpace: Int): SegNode? {
+                fun findFirstAvailableBlock(freeSpace: Int, maxBlockIndex: Int): SegNode? {
                     return when {
-                        maxFreeSpace < freeSpace -> {
-                            null
-                        }
-
-                        leftBlockIndex == rightBlockIndex -> {
-                            this
-                        }
-
-                        else -> {
-                            children[0].findFirstAvailableBlock(freeSpace) ?: children[1].findFirstAvailableBlock(freeSpace)
-                        }
+                        maxFreeSpace < freeSpace -> null
+                        maxBlockIndex < leftBlockIndex -> null
+                        leftBlockIndex == rightBlockIndex -> this
+                        else -> children[0].findFirstAvailableBlock(freeSpace, maxBlockIndex) ?: children[1].findFirstAvailableBlock(freeSpace, maxBlockIndex)
                     }
                 }
             }
@@ -103,28 +93,27 @@ fun main() {
 
             var diskIndex = 0L
             line.forEachIndexed { blockIndex, ch ->
-                val size = ch - '0'
+                val blockSize = ch - '0'
 
-                root.setBlock(blockIndex, size * (blockIndex % 2), diskIndex)
+                root.setBlock(blockIndex, blockSize * (blockIndex % 2), diskIndex)
 
-                diskIndex += size
+                diskIndex += blockSize
             }
 
             for (blockIndex in line.lastIndex downTo 0) {
-                val ch = line[blockIndex]
-                val size = ch - '0'
+                val blockSize = line[blockIndex] - '0'
 
-                diskIndex -= size
+                diskIndex -= blockSize
 
                 if (blockIndex % 2 == 0) {
-                    val block = root.findFirstAvailableBlock(size)?.takeIf { it.leftBlockIndex < blockIndex }
+                    val block = root.findFirstAvailableBlock(blockSize, blockIndex)
 
                     val moveToDiskIndex = block?.startDiskIndex ?: diskIndex
 
-                    part2Result += blockIndex / 2L * (moveToDiskIndex * 2 + size - 1) * size / 2
+                    part2Result += blockIndex / 2 * (moveToDiskIndex * 2 + blockSize - 1) * blockSize / 2
 
                     block?.also {
-                        root.setBlock(it.leftBlockIndex, it.maxFreeSpace - size, it.startDiskIndex + size)
+                        root.setBlock(it.leftBlockIndex, it.maxFreeSpace - blockSize, it.startDiskIndex + blockSize)
                     }
                 }
             }
