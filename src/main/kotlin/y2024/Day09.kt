@@ -102,9 +102,7 @@ fun main() {
         line.forEachIndexed { index, ch ->
             val size = ch - '0'
 
-            if (index % 2 == 1) {
-                root.setFreeSpace(index, size, diskIndex)
-            }
+            root.setFreeSpace(index, size * (index % 2), diskIndex)
 
             diskIndex += size
         }
