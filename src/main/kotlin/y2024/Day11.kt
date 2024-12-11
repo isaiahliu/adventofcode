@@ -12,19 +12,13 @@ fun main() {
 
             return numCache[depth] ?: run {
                 when {
-                    num == 0L -> {
-                        dfs(1L, depth - 1)
+                    num == 0L -> dfs(1L, depth - 1)
+
+                    num.toString().length % 2 == 0 -> num.toString().let {
+                        dfs(it.take(it.length / 2).toLong(), depth - 1) + dfs(it.drop(it.length / 2).toLong(), depth - 1)
                     }
 
-                    num.toString().length % 2 == 0 -> {
-                        val str = num.toString()
-
-                        dfs(str.take(str.length / 2).toLong(), depth - 1) + dfs(str.drop(str.length / 2).toLong(), depth - 1)
-                    }
-
-                    else -> {
-                        dfs(num * 2024, depth - 1)
-                    }
+                    else -> dfs(num * 2024, depth - 1)
                 }.also {
                     numCache[depth] = it
                 }
