@@ -23,12 +23,10 @@ fun main() {
             }
         }
 
-        run {
-            input[0].split(" ").forEach {
-                it.toLongOrNull()?.also {
-                    part1Result += dfs(it, 25)
-                    part2Result += dfs(it, 75)
-                }
+        input[0].split(" ").forEach {
+            it.toLongOrNull()?.also {
+                part1Result += dfs(it, 25)
+                part2Result += dfs(it, 75)
             }
         }
     }
