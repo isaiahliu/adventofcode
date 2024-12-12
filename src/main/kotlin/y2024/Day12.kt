@@ -6,7 +6,7 @@ import util.input
 fun main() {
     expect(0, 0) {
         class Group {
-            var size = 0
+            var size = 1
 
             var innerParent: Group? = null
                 private set
@@ -32,12 +32,8 @@ fun main() {
             }
         }
 
-        val grids = Array(input.size) { r ->
-            Array(input[0].length) { c ->
-                Group().also {
-                    it.size++
-                }
-            }
+        val grids = Array(input.size) {
+            Array(input[0].length) { Group() }
         }
 
         grids.forEachIndexed { r, row ->
