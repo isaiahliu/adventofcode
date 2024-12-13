@@ -16,13 +16,13 @@ fun main() {
         var by = 0L
 
         input.forEach {
-            regexA.matchEntire(it)?.groupValues?.drop(1)?.also { (x, y) ->
+            regexA.matchEntire(it)?.groupValues?.also { (_, x, y) ->
                 ax = x.toLong()
                 ay = y.toLong()
-            } ?: regexB.matchEntire(it)?.groupValues?.drop(1)?.also { (x, y) ->
+            } ?: regexB.matchEntire(it)?.groupValues?.also { (_, x, y) ->
                 bx = x.toLong()
                 by = y.toLong()
-            } ?: regexPrize.matchEntire(it)?.groupValues?.drop(1)?.also { (x, y) ->
+            } ?: regexPrize.matchEntire(it)?.groupValues?.also { (_, x, y) ->
                 var px = x.toLong()
                 var py = y.toLong()
 
