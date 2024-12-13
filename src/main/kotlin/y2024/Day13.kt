@@ -16,68 +16,54 @@ fun main() {
         var bx = BigInteger.ZERO
         var by = BigInteger.ZERO
 
-        var px = BigInteger.ZERO
-        var py = BigInteger.ZERO
 
         input.forEach {
-            when {
-                regexA.matches(it) -> {
-                    regexA.matchEntire(it)?.groupValues?.drop(1)?.also { (x, y) ->
-                        ax = x.toBigInteger()
-                        ay = y.toBigInteger()
-                    }
-                }
+            regexA.matchEntire(it)?.groupValues?.drop(1)?.also { (x, y) ->
+                ax = x.toBigInteger()
+                ay = y.toBigInteger()
+            } ?: regexB.matchEntire(it)?.groupValues?.drop(1)?.also { (x, y) ->
+                bx = x.toBigInteger()
+                by = y.toBigInteger()
+            } ?: regexPrize.matchEntire(it)?.groupValues?.drop(1)?.also { (x, y) ->
+                var px = x.toBigInteger()
+                var py = y.toBigInteger()
 
-                regexB.matches(it) -> {
-                    regexB.matchEntire(it)?.groupValues?.drop(1)?.also { (x, y) ->
-                        bx = x.toBigInteger()
-                        by = y.toBigInteger()
-                    }
-                }
+                (bx to by).also { (mulx, muly) ->
+                    ax *= muly
+                    bx *= muly
 
-                regexPrize.matches(it) -> {
-                    regexPrize.matchEntire(it)?.groupValues?.drop(1)?.also { (x, y) ->
-                        px = x.toBigInteger()
-                        py = y.toBigInteger()
-                    }
+                    ay *= mulx
+                    by *= mulx
 
-                    (bx to by).also { (mulx, muly) ->
-                        ax *= muly
-                        bx *= muly
+                    val diff = ax - ay
 
-                        ay *= mulx
-                        by *= mulx
+                    if (diff != BigInteger.ZERO) {
+                        px *= muly
+                        py *= mulx
 
-                        val diff = ax - ay
+                        if ((px - py) % diff == BigInteger.ZERO) {
+                            val a = (px - py) / diff
 
-                        if (diff != BigInteger.ZERO) {
-                            px *= muly
-                            py *= mulx
+                            if (bx != BigInteger.ZERO && (px - ax * a) % bx == BigInteger.ZERO) {
+                                val b = (px - ax * a) / bx
 
-                            if ((px - py) % diff == BigInteger.ZERO) {
-                                val a = (px - py) / diff
-
-                                if (bx != BigInteger.ZERO && (px - ax * a) % bx == BigInteger.ZERO) {
-                                    val b = (px - ax * a) / bx
-
-                                    if (b >= BigInteger.ZERO) {
-                                        part1Result += (a * 3.toBigInteger() + b).toLong()
-                                    }
+                                if (b >= BigInteger.ZERO) {
+                                    part1Result += (a * 3.toBigInteger() + b).toLong()
                                 }
                             }
+                        }
 
-                            px += 10000000000000.toBigInteger() * muly
-                            py += 10000000000000.toBigInteger() * mulx
+                        px += 10000000000000.toBigInteger() * muly
+                        py += 10000000000000.toBigInteger() * mulx
 
-                            if ((px - py) % diff == BigInteger.ZERO) {
-                                val a = (px - py) / diff
+                        if ((px - py) % diff == BigInteger.ZERO) {
+                            val a = (px - py) / diff
 
-                                if (bx != BigInteger.ZERO && (px - ax * a) % bx == BigInteger.ZERO) {
-                                    val b = (px - ax * a) / bx
+                            if (bx != BigInteger.ZERO && (px - ax * a) % bx == BigInteger.ZERO) {
+                                val b = (px - ax * a) / bx
 
-                                    if (b >= BigInteger.ZERO) {
-                                        part2Result += (a * 3.toBigInteger() + b).toLong()
-                                    }
+                                if (b >= BigInteger.ZERO) {
+                                    part2Result += (a * 3.toBigInteger() + b).toLong()
                                 }
                             }
                         }
