@@ -41,22 +41,18 @@ fun main() {
                         py = y.toBigInteger()
                     }
 
-                    //94a + 22b = 8400
-                    //34a + 67b = 5400
-//ax * a + bx * b = px
-//ay * a + by + b = py
-                    arrayOf(bx, by).also {
-                        ax *= it[1]
-                        bx *= it[1]
+                    (bx to by).also { (mulx, muly) ->
+                        ax *= muly
+                        bx *= muly
 
-                        ay *= it[0]
-                        by *= it[0]
+                        ay *= mulx
+                        by *= mulx
 
                         val diff = ax - ay
 
                         if (diff != BigInteger.ZERO) {
-                            px *= it[1]
-                            py *= it[0]
+                            px *= muly
+                            py *= mulx
 
                             if ((px - py) % diff == BigInteger.ZERO) {
                                 val a = (px - py) / diff
@@ -70,8 +66,8 @@ fun main() {
                                 }
                             }
 
-                            px += 10000000000000.toBigInteger() * it[1]
-                            py += 10000000000000.toBigInteger() * it[0]
+                            px += 10000000000000.toBigInteger() * muly
+                            py += 10000000000000.toBigInteger() * mulx
 
                             if ((px - py) % diff == BigInteger.ZERO) {
                                 val a = (px - py) / diff
