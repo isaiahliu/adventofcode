@@ -41,11 +41,11 @@ fun main() {
                 y = (y + vy).mod(HEIGHT)
             }
 
-            fun quadrant(): Int? = when {
-                x < WIDTH / 2 && y < HEIGHT / 2 -> 1
-                x > WIDTH / 2 && y < HEIGHT / 2 -> 2
-                x > WIDTH / 2 && y > HEIGHT / 2 -> 3
-                x < WIDTH / 2 && y > HEIGHT / 2 -> 4
+            fun quadrant(second: Int): Int? = when {
+                (x + vx * second).mod(WIDTH) < WIDTH / 2 && (y + vy * second).mod(HEIGHT) < HEIGHT / 2 -> 1
+                (x + vx * second).mod(WIDTH) > WIDTH / 2 && (y + vy * second).mod(HEIGHT) < HEIGHT / 2 -> 2
+                (x + vx * second).mod(WIDTH) > WIDTH / 2 && (y + vy * second).mod(HEIGHT) > HEIGHT / 2 -> 3
+                (x + vx * second).mod(WIDTH) < WIDTH / 2 && (y + vy * second).mod(HEIGHT) > HEIGHT / 2 -> 4
                 else -> null
             }
         }
@@ -55,6 +55,8 @@ fun main() {
                 Robot(px, py, vx, vy)
             }
         }
+
+        part1Result = robots.mapNotNull { it.quadrant(100) }.groupingBy { it }.eachCount().values.fold(1) { a, b -> a * b }
 
         var second = 0
 
@@ -91,10 +93,6 @@ fun main() {
                     }.also { println(it) }
                 }
                 break
-            }
-
-            if (second == 100) {
-                part1Result = robots.mapNotNull { it.quadrant() }.groupingBy { it }.eachCount().values.fold(1) { a, b -> a * b }
             }
         }
     }
