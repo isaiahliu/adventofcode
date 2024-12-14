@@ -35,7 +35,21 @@ fun main() {
         val HEIGHT = 103
         val regex = """^p=(\d+),(\d+) v=(-?\d+),(-?\d+)$""".toRegex()
 
-        data class Robot(var x: Int, var y: Int, val vx: Int, val vy: Int) {
+        class Robot(str: String) {
+            var x: Int
+            var y: Int
+            val vx: Int
+            val vy: Int
+
+            init {
+                regex.matchEntire(str)?.groupValues?.drop(1)?.map { it.toInt() }.orEmpty().also {
+                    x = it.getOrElse(0) { 0 }
+                    y = it.getOrElse(1) { 0 }
+                    vx = it.getOrElse(2) { 0 }
+                    vy = it.getOrElse(3) { 0 }
+                }
+            }
+
             fun move() {
                 x = (x + vx).mod(WIDTH)
                 y = (y + vy).mod(HEIGHT)
@@ -50,10 +64,8 @@ fun main() {
             }
         }
 
-        val robots = input.mapNotNull {
-            regex.matchEntire(it)?.groupValues?.drop(1)?.map { it.toInt() }?.let { (px, py, vx, vy) ->
-                Robot(px, py, vx, vy)
-            }
+        val robots = input.map {
+            Robot(it)
         }
 
         part1Result = robots.mapNotNull { it.quadrant(100) }.groupingBy { it }.eachCount().values.fold(1) { a, b -> a * b }
