@@ -60,18 +60,15 @@ fun main() {
         var minSize = Int.MAX_VALUE
         repeat(10000) {
             val groups = Array(101) { arrayOfNulls<Group>(103) }
+
             robots.forEach {
                 it.move()
 
-                groups[it.x][it.y] = groups[it.x][it.y] ?: Group()
-            }
-
-            for (x in groups.indices) {
-                for (y in groups[x].indices) {
-                    groups[x][y]?.also {
-                        groups.getOrNull(x - 1)?.getOrNull(y)?.join(it)
-                        groups.getOrNull(x)?.getOrNull(y - 1)?.join(it)
-                    }
+                groups[it.x][it.y] = groups[it.x][it.y] ?: Group().also { group ->
+                    groups.getOrNull(it.x - 1)?.getOrNull(it.y)?.join(group)
+                    groups.getOrNull(it.x + 1)?.getOrNull(it.y)?.join(group)
+                    groups.getOrNull(it.x)?.getOrNull(it.y - 1)?.join(group)
+                    groups.getOrNull(it.x)?.getOrNull(it.y + 1)?.join(group)
                 }
             }
 
