@@ -31,19 +31,21 @@ fun main() {
             }
         }
 
+        val WIDTH = 101
+        val HEIGHT = 103
         val regex = """^p=(\d+),(\d+) v=(-?\d+),(-?\d+)$""".toRegex()
 
         data class Robot(var x: Int, var y: Int, val vx: Int, val vy: Int) {
             fun move() {
-                x = (x + vx).mod(101)
-                y = (y + vy).mod(103)
+                x = (x + vx).mod(WIDTH)
+                y = (y + vy).mod(HEIGHT)
             }
 
             fun quadrant(): Int? = when {
-                x < 50 && y < 51 -> 1
-                x > 50 && y < 51 -> 2
-                x > 50 && y > 51 -> 3
-                x < 50 && y > 51 -> 4
+                x < WIDTH / 2 && y < HEIGHT / 2 -> 1
+                x > WIDTH / 2 && y < HEIGHT / 2 -> 2
+                x > WIDTH / 2 && y > HEIGHT / 2 -> 3
+                x < WIDTH / 2 && y > HEIGHT / 2 -> 4
                 else -> null
             }
         }
@@ -54,8 +56,8 @@ fun main() {
             }
         }
 
-        var pic = ""
         var second = 0
+
         while (true) {
             second++
             val groups = hashMapOf<Pair<Int, Int>, Group>()
@@ -78,15 +80,16 @@ fun main() {
 
             if (maxSize > 100) {
                 part2Result = second
-                pic = buildString {
-                    repeat(101) { x ->
-                        repeat(103) { y ->
-                            append(groups[x to y]?.let { "." } ?: " ")
+                doAfter {
+                    buildString {
+                        repeat(WIDTH) { x ->
+                            repeat(HEIGHT) { y ->
+                                append(groups[x to y]?.let { "." } ?: " ")
+                            }
+                            appendLine()
                         }
-                        appendLine()
-                    }
+                    }.also { println(it) }
                 }
-
                 break
             }
 
@@ -94,6 +97,5 @@ fun main() {
                 part1Result = robots.mapNotNull { it.quadrant() }.groupingBy { it }.eachCount().values.fold(1) { a, b -> a * b }
             }
         }
-        println(pic)
     }
 }
