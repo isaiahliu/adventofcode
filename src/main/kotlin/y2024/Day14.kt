@@ -96,8 +96,8 @@ fun main() {
                 part2Result = second
                 doAfter {
                     buildString {
-                        repeat(WIDTH) { x ->
-                            repeat(HEIGHT) { y ->
+                        repeat(HEIGHT) { y ->
+                            repeat(WIDTH) { x ->
                                 append(groups[x to y]?.let { "." } ?: " ")
                             }
                             appendLine()
