@@ -58,27 +58,32 @@ fun main() {
         var second = 0
         while (true) {
             second++
-            val groups = Array(101) { arrayOfNulls<Group>(103) }
+            val groups = hashMapOf<Pair<Int, Int>, Group>()
 
             var maxSize = 0
             robots.forEach {
                 it.move()
 
-                groups[it.x][it.y] = groups[it.x][it.y] ?: Group().also { group ->
-                    groups.getOrNull(it.x - 1)?.getOrNull(it.y)?.join(group)
-                    groups.getOrNull(it.x + 1)?.getOrNull(it.y)?.join(group)
-                    groups.getOrNull(it.x)?.getOrNull(it.y - 1)?.join(group)
-                    groups.getOrNull(it.x)?.getOrNull(it.y + 1)?.join(group)
+                groups.computeIfAbsent(it.x to it.y) { (x, y) ->
+                    Group().also { group ->
+                        groups[x - 1 to y]?.join(group)
+                        groups[x + 1 to y]?.join(group)
+                        groups[x to y - 1]?.join(group)
+                        groups[x to y + 1]?.join(group)
 
-                    maxSize = maxOf(maxSize, group.parent.size)
+                        maxSize = maxOf(maxSize, group.parent.size)
+                    }
                 }
             }
 
             if (maxSize > 100) {
                 part2Result = second
-                pic = groups.joinToString("\n") {
-                    it.joinToString("") {
-                        it?.let { "." } ?: " "
+                pic = buildString {
+                    repeat(101) { x ->
+                        repeat(103) { y ->
+                            append(groups[x to y]?.let { "." } ?: " ")
+                        }
+                        appendLine()
                     }
                 }
 
