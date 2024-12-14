@@ -6,12 +6,14 @@ import util.input
 fun main() {
     expect(0, 0) {
         class Group {
+            var size = 1
             var innerParent: Group? = null
                 private set
 
             var parent: Group
                 set(value) {
                     innerParent = value
+                    value.size += size
                 }
                 get() {
                     return innerParent?.parent?.also {
@@ -52,11 +54,13 @@ fun main() {
             }
         }
 
-        var minSize = Int.MAX_VALUE
         var pic = ""
-        repeat(10000) {
+        var second = 0
+        while (true) {
+            second++
             val groups = Array(101) { arrayOfNulls<Group>(103) }
 
+            var maxSize = 0
             robots.forEach {
                 it.move()
 
@@ -65,22 +69,23 @@ fun main() {
                     groups.getOrNull(it.x + 1)?.getOrNull(it.y)?.join(group)
                     groups.getOrNull(it.x)?.getOrNull(it.y - 1)?.join(group)
                     groups.getOrNull(it.x)?.getOrNull(it.y + 1)?.join(group)
+
+                    maxSize = maxOf(maxSize, group.parent.size)
                 }
             }
 
-            val size = groups.map { it.mapNotNull { it?.parent } }.flatten().distinct().size
-
-            if (size < minSize) {
-                minSize = size
-                part2Result = it + 1
+            if (maxSize > 100) {
+                part2Result = second
                 pic = groups.joinToString("\n") {
                     it.joinToString("") {
                         it?.let { "." } ?: " "
                     }
                 }
+
+                break
             }
 
-            if (it == 99) {
+            if (second == 100) {
                 part1Result = robots.mapNotNull { it.quadrant() }.groupingBy { it }.eachCount().values.fold(1) { a, b -> a * b }
             }
         }
