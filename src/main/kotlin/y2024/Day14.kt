@@ -31,11 +31,6 @@ fun main() {
 
         val regex = """^p=(\d+),(\d+) v=(-?\d+),(-?\d+)$""".toRegex()
 
-        var q1 = 0
-        var q2 = 0
-        var q3 = 0
-        var q4 = 0
-
         data class Robot(var x: Int, var y: Int, val vx: Int, val vy: Int) {
             fun move() {
                 x = (x + vx).mod(101)
@@ -58,6 +53,7 @@ fun main() {
         }
 
         var minSize = Int.MAX_VALUE
+        var pic = ""
         repeat(10000) {
             val groups = Array(101) { arrayOfNulls<Group>(103) }
 
@@ -77,16 +73,17 @@ fun main() {
             if (size < minSize) {
                 minSize = size
                 part2Result = it + 1
-//                groups.forEach {
-//                    println(it.joinToString("") {
-//                        it?.let { "#" } ?: "."
-//                    })
-//                }
+                pic = groups.joinToString("\n") {
+                    it.joinToString("") {
+                        it?.let { "." } ?: " "
+                    }
+                }
             }
 
             if (it == 99) {
                 part1Result = robots.mapNotNull { it.quadrant() }.groupingBy { it }.eachCount().values.fold(1) { a, b -> a * b }
             }
         }
+        println(pic)
     }
 }
