@@ -38,15 +38,15 @@ fun main() {
         class Robot(str: String) {
             var x: Int
             var y: Int
-            val vx: Int
-            val vy: Int
+            private val vx: Int
+            private val vy: Int
 
             init {
-                regex.matchEntire(str)?.groupValues?.drop(1)?.map { it.toInt() }.orEmpty().also {
-                    x = it.getOrElse(0) { 0 }
-                    y = it.getOrElse(1) { 0 }
-                    vx = it.getOrElse(2) { 0 }
-                    vy = it.getOrElse(3) { 0 }
+                regex.matchEntire(str)?.groupValues?.drop(1)?.map { it.toInt() }.also {
+                    x = it?.getOrNull(0) ?: 0
+                    y = it?.getOrNull(1) ?: 0
+                    vx = it?.getOrNull(2) ?: 0
+                    vy = it?.getOrNull(3) ?: 0
                 }
             }
 
@@ -55,12 +55,17 @@ fun main() {
                 y = (y + vy).mod(HEIGHT)
             }
 
-            fun quadrant(second: Int): Int? = when {
-                (x + vx * second).mod(WIDTH) < WIDTH / 2 && (y + vy * second).mod(HEIGHT) < HEIGHT / 2 -> 1
-                (x + vx * second).mod(WIDTH) > WIDTH / 2 && (y + vy * second).mod(HEIGHT) < HEIGHT / 2 -> 2
-                (x + vx * second).mod(WIDTH) > WIDTH / 2 && (y + vy * second).mod(HEIGHT) > HEIGHT / 2 -> 3
-                (x + vx * second).mod(WIDTH) < WIDTH / 2 && (y + vy * second).mod(HEIGHT) > HEIGHT / 2 -> 4
-                else -> null
+            fun quadrant(second: Int): Int? {
+                val px = (x + vx * second).mod(WIDTH)
+                val py = (y + vy * second).mod(HEIGHT)
+
+                return when {
+                    px < WIDTH / 2 && py < HEIGHT / 2 -> 1
+                    px > WIDTH / 2 && py < HEIGHT / 2 -> 2
+                    px > WIDTH / 2 && py > HEIGHT / 2 -> 3
+                    px < WIDTH / 2 && py > HEIGHT / 2 -> 4
+                    else -> null
+                }
             }
         }
 
