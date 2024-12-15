@@ -13,9 +13,7 @@ fun main() {
         val LEFT = 3
 
         class Warehouse {
-            val walls = hashSetOf<Pair<Int, Int>>()
-
-            val boxes = hashMapOf<Pair<Int, Int>, Int?>()
+            val nodes = hashMapOf<Pair<Int, Int>, Int>()
 
             var robot = 0 to 0
 
@@ -26,18 +24,6 @@ fun main() {
             }
 
             private fun dfs(node: Pair<Int, Int>, direction: Int, move: Boolean, visited: MutableSet<Pair<Int, Int>>): Boolean {
-                if (node in walls) {
-                    return false
-                }
-
-                if (node !in boxes && node != robot) {
-                    return true
-                }
-
-                if (!visited.add(node)) {
-                    return true
-                }
-
                 val target = when (direction) {
                     UP -> node.first - 1 to node.second
                     DOWN -> node.first + 1 to node.second
@@ -45,33 +31,48 @@ fun main() {
                     else -> node.first to node.second + 1
                 }
 
-                if (direction % 2 == 0) {
-                    boxes[target]?.also { o ->
-                        if (!dfs(target.first to target.second + o, direction, move, visited)) {
-                            return false
-                        }
+                return when {
+                    nodes[node] == Int.MAX_VALUE -> {
+                        false
                     }
-                }
 
-                if (!dfs(target, direction, move, visited)) {
-                    return false
-                }
+                    nodes[node] == null && node != robot -> {
+                        true
+                    }
 
-                if (move) {
-                    if (node == robot) {
+                    !visited.add(node) -> {
+                        true
+                    }
+
+                    direction % 2 == 0 && nodes[target]?.let { dfs(target.first to target.second + it, direction, move, visited) } == false -> {
+                        false
+                    }
+
+                    !dfs(target, direction, move, visited) -> {
+                        false
+                    }
+
+                    move && node == robot -> {
                         robot = target
-                    } else {
-                        boxes[target] = boxes[node]
-                        boxes -= node
+                        true
+                    }
+
+                    move -> {
+                        nodes.remove(node)?.also {
+                            nodes[target] = it
+                        }
+                        true
+                    }
+
+                    else -> {
+                        true
                     }
                 }
-
-                return true
             }
 
             val score: Int
                 get() {
-                    return boxes.filter { it.value?.takeIf { it < 0 } == null }.keys.sumOf { (r, c) ->
+                    return nodes.filter { it.value in 0..1 }.keys.sumOf { (r, c) ->
                         r * 100 + c
                     }
                 }
@@ -80,6 +81,7 @@ fun main() {
 
         val warehouse1 = Warehouse()
         val warehouse2 = Warehouse()
+
         input.forEachIndexed { r, line ->
             when {
                 line.isEmpty() -> {
@@ -90,16 +92,15 @@ fun main() {
                     line.forEachIndexed { c, ch ->
                         when (ch) {
                             '#' -> {
-                                warehouse1.walls += r to c
-                                warehouse2.walls += r to c * 2
-                                warehouse2.walls += r to c * 2 + 1
+                                warehouse1.nodes[r to c] = Int.MAX_VALUE
+                                warehouse2.nodes[r to c * 2] = Int.MAX_VALUE
+                                warehouse2.nodes[r to c * 2 + 1] = Int.MAX_VALUE
                             }
 
                             'O' -> {
-                                warehouse1.boxes[r to c] = null
-
-                                warehouse2.boxes[r to c * 2] = 1
-                                warehouse2.boxes[r to c * 2 + 1] = -1
+                                warehouse1.nodes[r to c] = 0
+                                warehouse2.nodes[r to c * 2] = 1
+                                warehouse2.nodes[r to c * 2 + 1] = -1
 
                             }
 
