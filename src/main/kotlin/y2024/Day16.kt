@@ -25,12 +25,13 @@ fun main() {
             }
         }
 
+        val bestRoutes = hashSetOf<Pair<Int, Int>>()
+
         data class Node(val r: Int, val c: Int, val direction: Int, val point: Int) {
             val pos = r to c
             val state = pos to direction
 
-            var parents = hashSetOf<Node>()
-
+            val parents: MutableSet<Node> = hashSetOf()
             fun forward(): Node {
                 return when (direction) {
                     NORTH -> copy(r = r - 1, point = point + 1).also { it.parents += this }
@@ -48,16 +49,13 @@ fun main() {
                 return copy(direction = (direction + 1).mod(4), point = point + 1000).also { it.parents += this }
             }
 
-            val routes: Set<Pair<Int, Int>>
-                get() {
-                    return buildSet {
-                        add(pos)
-
-                        parents.forEach {
-                            addAll(it.routes)
-                        }
-                    }
+            fun fillBestRoutes() {
+                bestRoutes += pos
+                
+                parents.forEach {
+                    it.fillBestRoutes()
                 }
+            }
         }
 
         val visited = hashMapOf<Pair<Pair<Int, Int>, Int>, Node>()
@@ -65,7 +63,6 @@ fun main() {
         queue.add(Node(start.first, start.second, EAST, 0))
 
         var maxPoint = Int.MAX_VALUE
-        val bestRoutes = hashSetOf<Pair<Int, Int>>()
         while (queue.isNotEmpty()) {
             val node = queue.poll()
             val visitedNode = visited[node.state]
@@ -75,7 +72,7 @@ fun main() {
                 node.pos == end -> {
                     part1Result = node.point
                     maxPoint = node.point
-                    bestRoutes += node.routes
+                    node.fillBestRoutes()
                 }
 
                 visitedNode?.point == node.point -> {
@@ -84,9 +81,9 @@ fun main() {
 
                 visitedNode == null -> {
                     visited[node.state] = node
-                    queue.add(node.forward())
-                    queue.add(node.turnLeft())
-                    queue.add(node.turnRight())
+                    node.forward().takeIf { it.pos !in walls }?.also { queue.add(it) }
+                    node.turnLeft().takeIf { it.pos !in walls }?.also { queue.add(it) }
+                    node.turnRight().takeIf { it.pos !in walls }?.also { queue.add(it) }
                 }
             }
         }
