@@ -32,6 +32,7 @@ fun main() {
             val state = pos to direction
 
             val parents: MutableSet<Node> = hashSetOf()
+            var filled = false
             fun forward(): Node {
                 return when (direction) {
                     NORTH -> copy(r = r - 1, point = point + 1).also { it.parents += this }
@@ -50,10 +51,13 @@ fun main() {
             }
 
             fun fillBestRoutes() {
-                bestRoutes += pos
-                
-                parents.forEach {
-                    it.fillBestRoutes()
+                if (!filled) {
+                    bestRoutes += pos
+
+                    parents.forEach {
+                        it.fillBestRoutes()
+                    }
+                    filled = true
                 }
             }
         }
