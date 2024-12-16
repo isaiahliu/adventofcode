@@ -73,7 +73,6 @@ fun main() {
                 node.point > maxPoint -> break
                 node.pos in walls -> {}
                 node.pos == end -> {
-                    println("result")
                     part1Result = node.point
                     maxPoint = node.point
                     bestRoutes += node.routes
