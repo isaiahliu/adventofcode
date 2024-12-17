@@ -6,53 +6,59 @@ import util.input
 fun main() {
     expect("", 0L) {
         val instructions = arrayOf("adv", "bxl", "bst", "jnz", "bxc", "out", "bdv", "cdv")
-        fun process(program: IntArray, registers: LongArray, jump: Boolean, sendOutput: (Long) -> Unit): LongArray {
+
+        val program = arrayListOf<Int>()
+        fun LongArray.process(jump: Boolean, sendOutput: (Int) -> Unit) {
             var instIndex = 0
 
+            fun literalOperand(): Int {
+                return program[instIndex + 1]
+            }
+
+            fun comboOperand(): Long {
+                return literalOperand().let { it.takeIf { it < 4 }?.toLong() ?: this.getOrNull(it - 4) ?: throw Exception("Error") }
+            }
+
             while (instIndex < program.size) {
-                val inst = instructions[program[instIndex++]]
-                val literalParam = program[instIndex++]
-                val comboParam = literalParam.takeIf { it < 4 }?.toLong() ?: registers.getOrNull(literalParam - 4) ?: 0
-
-                when (inst) {
+                when (val inst = instructions[program[instIndex]]) {
                     "adv", "bdv", "cdv" -> {
-                        var pow = comboParam
+                        var pow = comboOperand()
 
-                        registers[inst[0] - 'a'] = registers[0]
+                        this[inst[0] - 'a'] = this[0]
 
-                        while (pow-- > 0 && registers[inst[0] - 'a'] > 0) {
-                            registers[inst[0] - 'a'] /= 2L
+                        while (pow-- > 0 && this[inst[0] - 'a'] > 0) {
+                            this[inst[0] - 'a'] /= 2L
                         }
 
                     }
 
                     "bxl" -> {
-                        registers[1] = registers[1] xor literalParam.toLong()
+                        this[1] = this[1] xor literalOperand().toLong()
                     }
 
                     "bst" -> {
-                        registers[1] = comboParam and 0b111
+                        this[1] = comboOperand() and 0b111
                     }
 
                     "jnz" -> {
-                        if (registers[0] > 0 && jump) {
-                            instIndex = literalParam
+                        if (this[0] > 0 && jump) {
+                            instIndex = literalOperand() - 2
                         }
                     }
 
                     "bxc" -> {
-                        registers[1] = registers[1] xor registers[2]
+                        this[1] = this[1] xor this[2]
                     }
 
                     "out" -> {
-                        sendOutput(comboParam and 0b111L)
+                        sendOutput((comboOperand() and 0b111).toInt())
                     }
 
                     else -> throw Exception("Error")
                 }
-            }
 
-            return registers
+                instIndex += 2
+            }
         }
 
         val registerRegex = "Register (\\w): (\\d+)".toRegex()
@@ -62,9 +68,11 @@ fun main() {
         input.forEach {
             registerRegex.matchEntire(it)?.groupValues?.drop(1)?.also { (index, value) ->
                 registers[index[0] - 'A'] = value.toLong()
-            } ?: programRegex.matchEntire(it)?.groupValues?.getOrNull(1)?.split(",")?.map { it.toInt() }?.toIntArray()?.also { program ->
+            } ?: programRegex.matchEntire(it)?.groupValues?.getOrNull(1)?.split(",")?.map { it.toInt() }?.also {
+                program += it
+
                 part1Result = buildString {
-                    process(program, registers, true) {
+                    registers.process(true) {
                         if (this.isNotEmpty()) {
                             append(",")
                         }
@@ -81,15 +89,19 @@ fun main() {
                     val target = program[index]
 
                     for (a in 0L..0b111L) {
-                        val result = process(program, longArrayOf((base shl 3) + a, 0, 0), false) {}
+                        var output = 0
+                        longArrayOf((base shl 3) + a, 0, 0).process(false) {
+                            output = it
+                        }
 
-                        if (result[1] and 0b111L == target.toLong()) {
+                        if (output == target) {
                             val newBase = (base shl 3) + a
 
                             var matchIndex = index
                             var success = true
-                            process(program, longArrayOf(newBase, 0, 0), true) {
-                                if (success && it.toInt() != program[matchIndex++]) {
+
+                            longArrayOf(newBase, 0, 0).process(true) {
+                                if (success && it != program[matchIndex++]) {
                                     success = false
                                 }
                             }
