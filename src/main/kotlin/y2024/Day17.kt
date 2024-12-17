@@ -86,15 +86,13 @@ fun main() {
                         return base
                     }
 
-                    val target = program[index]
-
                     for (a in 0L..0b111L) {
                         var output = 0
                         longArrayOf((base shl 3) + a, 0, 0).process(true) {
                             output = it
                         }
 
-                        if (output == target) {
+                        if (output == program[index]) {
                             val newBase = (base shl 3) + a
 
                             var matchIndex = index
