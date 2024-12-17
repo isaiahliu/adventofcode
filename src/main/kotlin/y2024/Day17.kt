@@ -8,7 +8,7 @@ fun main() {
         val instructions = arrayOf("adv", "bxl", "bst", "jnz", "bxc", "out", "bdv", "cdv")
 
         val program = arrayListOf<Int>()
-        fun LongArray.process(jump: Boolean, sendOutput: (Int) -> Unit) {
+        fun LongArray.process(suppressJump: Boolean = false, sendOutput: (Int) -> Unit) {
             var instIndex = 0
 
             fun literalOperand(): Int {
@@ -41,7 +41,7 @@ fun main() {
                     }
 
                     "jnz" -> {
-                        if (this[0] > 0 && jump) {
+                        if (this[0] > 0 && !suppressJump) {
                             instIndex = literalOperand() - 2
                         }
                     }
@@ -72,7 +72,7 @@ fun main() {
                 program += it
 
                 part1Result = buildString {
-                    registers.process(true) {
+                    registers.process {
                         if (this.isNotEmpty()) {
                             append(",")
                         }
@@ -90,7 +90,7 @@ fun main() {
 
                     for (a in 0L..0b111L) {
                         var output = 0
-                        longArrayOf((base shl 3) + a, 0, 0).process(false) {
+                        longArrayOf((base shl 3) + a, 0, 0).process(true) {
                             output = it
                         }
 
@@ -100,7 +100,7 @@ fun main() {
                             var matchIndex = index
                             var success = true
 
-                            longArrayOf(newBase, 0, 0).process(true) {
+                            longArrayOf(newBase, 0, 0).process {
                                 if (success && it != program[matchIndex++]) {
                                     success = false
                                 }
