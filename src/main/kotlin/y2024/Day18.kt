@@ -33,10 +33,8 @@ fun main() {
             }
         }
 
-        val top = Group()
-        val bottom = Group()
-        val right = Group()
-        val left = Group()
+        val topRight = Group()
+        val bottomLeft = Group()
 
         val corrupts = hashMapOf<Pair<Int, Int>, Group>()
 
@@ -48,25 +46,25 @@ fun main() {
 
                 when (pos.first) {
                     0 -> {
-                        it.join(left)
+                        it.join(bottomLeft)
                     }
 
                     UPPER_BOUND -> {
-                        it.join(right)
+                        it.join(topRight)
                     }
                 }
                 when (pos.second) {
                     0 -> {
-                        it.join(top)
+                        it.join(topRight)
                     }
 
                     UPPER_BOUND -> {
-                        it.join(bottom)
+                        it.join(bottomLeft)
                     }
                 }
             }
 
-            if (top.parent == left.parent || bottom.parent == right.parent) {
+            if (topRight.parent == bottomLeft.parent) {
                 part2Result = "${pos.first},${pos.second}"
                 break
             }
