@@ -45,22 +45,13 @@ fun main() {
                 }
 
                 when (pos.first) {
-                    0 -> {
-                        it.join(bottomLeft)
-                    }
-
-                    UPPER_BOUND -> {
-                        it.join(topRight)
-                    }
+                    0 -> it.join(bottomLeft)
+                    UPPER_BOUND -> it.join(topRight)
                 }
-                when (pos.second) {
-                    0 -> {
-                        it.join(topRight)
-                    }
 
-                    UPPER_BOUND -> {
-                        it.join(bottomLeft)
-                    }
+                when (pos.second) {
+                    0 -> it.join(topRight)
+                    UPPER_BOUND -> it.join(bottomLeft)
                 }
             }
 
