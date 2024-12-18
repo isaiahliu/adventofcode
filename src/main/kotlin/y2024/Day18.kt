@@ -6,6 +6,7 @@ import java.util.*
 
 fun main() {
     val UPPER_BOUND = 70
+    val FIRST_PART_SIZE = 1024
 
     expect(0, "") {
         class Group {
@@ -70,7 +71,7 @@ fun main() {
                 break
             }
 
-            if (corrupts.size == 1024) {
+            if (corrupts.size == FIRST_PART_SIZE) {
                 val queue = PriorityQueue<Pair<Pair<Int, Int>, Int>>(compareBy { it.second })
                 queue.add(0 to 0 to 0)
                 val visited = hashSetOf<Pair<Int, Int>>()
