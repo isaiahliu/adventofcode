@@ -37,12 +37,38 @@ fun main() {
         val right = Group()
         val left = Group()
 
-        val groups = hashMapOf<Pair<Int, Int>, Group>()
-
-        val corrupts = hashSetOf<Pair<Int, Int>>()
+        val corrupts = hashMapOf<Pair<Int, Int>, Group>()
 
         for (pos in input.map { it.split(",").let { it[0].toInt() to it[1].toInt() } }) {
-            corrupts += pos
+            corrupts[pos] = Group().also {
+                arrayOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1).forEach { (dx, dy) ->
+                    corrupts[pos.first + dx to pos.second + dy]?.join(it)
+                }
+
+                when (pos.first) {
+                    0 -> {
+                        it.join(left)
+                    }
+
+                    UPPER_BOUND -> {
+                        it.join(right)
+                    }
+                }
+                when (pos.second) {
+                    0 -> {
+                        it.join(top)
+                    }
+
+                    UPPER_BOUND -> {
+                        it.join(bottom)
+                    }
+                }
+            }
+
+            if (top.parent == left.parent || bottom.parent == right.parent) {
+                part2Result = "${pos.first},${pos.second}"
+                break
+            }
 
             if (corrupts.size == 1024) {
                 val queue = PriorityQueue<Pair<Pair<Int, Int>, Int>>(compareBy { it.second })
@@ -69,38 +95,6 @@ fun main() {
                         }
                     }
                 }
-            }
-
-
-
-            groups[pos] = Group().also {
-                arrayOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1).forEach { (dx, dy) ->
-                    groups[pos.first + dx to pos.second + dy]?.join(it)
-                }
-
-                when (pos.first) {
-                    0 -> {
-                        it.join(left)
-                    }
-
-                    UPPER_BOUND -> {
-                        it.join(right)
-                    }
-                }
-                when (pos.second) {
-                    0 -> {
-                        it.join(top)
-                    }
-
-                    UPPER_BOUND -> {
-                        it.join(bottom)
-                    }
-                }
-            }
-
-            if (top.parent == left.parent || bottom.parent == right.parent) {
-                part2Result = "${pos.first},${pos.second}"
-                break
             }
         }
     }
