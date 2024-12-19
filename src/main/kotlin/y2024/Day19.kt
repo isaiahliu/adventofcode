@@ -33,23 +33,27 @@ fun main() {
         val words = hashSetOf<String>()
 
         var readTarget = false
-        input.forEach { target ->
+        input.forEach {
             when {
-                target.isEmpty() -> {
+                it.isEmpty() -> {
                     readTarget = true
                 }
 
-                readTarget -> {
-                    val endsWithWordCount = Array(target.length + 1) {
+                !readTarget -> {
+                    words += it.split(", ")
+                }
+
+                else -> {
+                    val endsWithWordCount = Array(it.length + 1) {
                         hashMapOf<Int, Int>()
                     }
 
                     words.forEach { word ->
-                        target.prefixFunction(word).forEach {
+                        it.prefixFunction(word).forEach {
                             endsWithWordCount[it][word.length] = (endsWithWordCount[it][word.length] ?: 0) + 1
                         }
                     }
-                    val dp = LongArray(target.length + 1) { 1L - it.sign }
+                    val dp = LongArray(it.length + 1) { 1L - it.sign }
                     for (i in 1 until dp.size) {
                         endsWithWordCount[i].forEach { (length, count) ->
                             dp[i] += dp[i - length] * count
@@ -61,12 +65,7 @@ fun main() {
                         part2Result += it
                     }
                 }
-
-                else -> {
-                    words += target.split(", ")
-                }
             }
         }
-
     }
 }
