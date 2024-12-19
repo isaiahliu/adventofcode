@@ -5,7 +5,6 @@ import util.input
 import kotlin.math.sign
 
 fun main() {
-
     expect(0, 0L) {
         fun String.prefixFunction(word: String): Set<Int> {
             return buildSet {
@@ -45,18 +44,18 @@ fun main() {
 
                 else -> {
                     val endsWithWordCount = Array(it.length + 1) {
-                        hashMapOf<Int, Int>()
+                        hashSetOf<Int>()
                     }
 
                     words.forEach { word ->
                         it.prefixFunction(word).forEach {
-                            endsWithWordCount[it][word.length] = (endsWithWordCount[it][word.length] ?: 0) + 1
+                            endsWithWordCount[it] += word.length
                         }
                     }
                     val dp = LongArray(it.length + 1) { 1L - it.sign }
                     for (i in 1 until dp.size) {
-                        endsWithWordCount[i].forEach { (length, count) ->
-                            dp[i] += dp[i - length] * count
+                        endsWithWordCount[i].forEach { length ->
+                            dp[i] += dp[i - length]
                         }
                     }
 
