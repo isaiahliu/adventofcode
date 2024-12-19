@@ -7,9 +7,9 @@ import kotlin.math.sign
 fun main() {
 
     expect(0, 0L) {
-        fun String.endsWithPrefixIndices(word: String): Set<Int> {
+        fun String.prefixFunction(word: String): Set<Int> {
             return buildSet {
-                val s = "$word#$this"
+                val s = "$word#${this@prefixFunction}"
                 val pi = IntArray(s.length)
                 for (i in 1 until s.length) {
                     var j = pi[i - 1]
@@ -24,7 +24,7 @@ fun main() {
                     pi[i] = j
 
                     if (j == word.length) {
-                        add(i - word.length - 1)
+                        add(i - word.length)
                     }
                 }
             }
@@ -40,24 +40,19 @@ fun main() {
                 }
 
                 readTarget -> {
-                    val endsWithWordCount = Array(target.length) {
+                    val endsWithWordCount = Array(target.length + 1) {
                         hashMapOf<Int, Int>()
                     }
 
                     words.forEach { word ->
-                        target.endsWithPrefixIndices(word).forEach {
+                        target.prefixFunction(word).forEach {
                             endsWithWordCount[it][word.length] = (endsWithWordCount[it][word.length] ?: 0) + 1
                         }
                     }
-                    val dp = LongArray(target.length) {
-                        endsWithWordCount[it][it + 1]?.toLong() ?: 0L
-                    }
-
+                    val dp = LongArray(target.length + 1) { 1L - it.sign }
                     for (i in 1 until dp.size) {
                         endsWithWordCount[i].forEach { (length, count) ->
-                            dp.getOrNull(i - length)?.also {
-                                dp[i] += it * count
-                            }
+                            dp[i] += dp[i - length] * count
                         }
                     }
 
