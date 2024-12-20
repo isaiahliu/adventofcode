@@ -2,81 +2,44 @@ package y2024
 
 import util.expect
 import util.input
-import java.util.*
 import kotlin.math.absoluteValue
 
 fun main() {
     expect(0, 0L) {
-        data class State(val r: Int, val c: Int, val steps: Int) {
-            val pos = r to c
-        }
-
-        fun calculateSteps(start: Pair<Int, Int>, end: Pair<Int, Int>): Array<IntArray> {
-            val queue = PriorityQueue<State>(compareBy { it.steps })
-            queue.add(State(start.first, start.second, 0))
-
-            val visited = hashSetOf<Pair<Int, Int>>()
-            val result = Array(input.size) {
-                IntArray(input[0].length) {
-                    99999999
-                }
-            }
-
-            while (queue.isNotEmpty()) {
-                val state = queue.poll()
-                val ch = input.getOrNull(state.r)?.getOrNull(state.c)
-                when {
-                    ch == null -> {}
-                    ch == '#' -> {}
-                    visited.add(state.pos) -> {
-                        result[state.r][state.c] = state.steps
-
-                        queue.add(state.copy(r = state.r - 1, steps = state.steps + 1))
-                        queue.add(state.copy(r = state.r + 1, steps = state.steps + 1))
-                        queue.add(state.copy(c = state.c - 1, steps = state.steps + 1))
-                        queue.add(state.copy(c = state.c + 1, steps = state.steps + 1))
-                    }
-                }
-            }
-
-            return result
-        }
-
-        lateinit var start: Pair<Int, Int>
-        lateinit var end: Pair<Int, Int>
-
-        input.forEachIndexed { r, row ->
-            row.forEachIndexed { c, ch ->
+        val routes = arrayListOf<Pair<Int, Int>>()
+        init@ for ((r, row) in input.withIndex()) {
+            for ((c, ch) in row.withIndex()) {
                 when (ch) {
-                    'S' -> start = r to c
-                    'E' -> end = r to c
-                }
-            }
-        }
+                    'S' -> {
+                        var curR = r
+                        var curC = c
 
-        val dis1 = calculateSteps(start, end)
-        val dis2 = calculateSteps(end, start)
+                        var direction = 0
+                        val delta = arrayOf(-1 to 0, 0 to 1, 1 to 0, 0 to -1)
+                        routes += r to c
 
-        val maxSteps = dis1[end.first][end.second]
+                        while (true) {
+                            val (dr, dc) = delta[direction]
+                            curR += dr
+                            curC += dc
 
-        input.forEachIndexed { r, row ->
-            row.forEachIndexed { c, _ ->
-                for (dr in -20..20) {
-                    val absR = dr.absoluteValue
-                    val from = dis1.getOrNull(r)?.getOrNull(c)?.takeIf { it < maxSteps } ?: continue
-                    for (dc in -20 + absR..20 - absR) {
-                        val absC = dc.absoluteValue
+                            when (input.getOrNull(curR)?.getOrNull(curC)) {
+                                '#', null -> {
+                                    curR -= dr
+                                    curC -= dc
+                                    direction = (direction + 1) % 4
+                                }
 
-                        val to = dis2.getOrNull(r + dr)?.getOrNull(c + dc)?.takeIf { it < maxSteps } ?: continue
+                                'E' -> {
+                                    routes += curR to curC
+                                    break@init
+                                }
 
-                        val save = maxSteps - from - to - absR - absC
+                                else -> {
+                                    routes += curR to curC
 
-                        if (save >= 100) {
-                            if (absR + absC <= 2) {
-                                part1Result++
-                                part2Result++
-                            } else {
-                                part2Result++
+                                    direction = (direction + 3) % 4
+                                }
                             }
                         }
                     }
@@ -84,5 +47,28 @@ fun main() {
             }
         }
 
+        routes.forEachIndexed { i, (sr, sc) ->
+            for (j in i + 1 until routes.size) {
+                val (er, ec) = routes[j]
+
+                val originalDistance = j - i
+
+                val distance = (sr - er).absoluteValue + (sc - ec).absoluteValue
+
+                when {
+                    originalDistance - distance < 100 -> {}
+                    
+                    distance <= 2 -> {
+                        part1Result++
+                    }
+
+                    distance <= 20 -> {
+                        part2Result++
+                    }
+                }
+            }
+        }
+
+        part2Result += part1Result
     }
 }
