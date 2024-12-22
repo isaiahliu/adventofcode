@@ -17,16 +17,14 @@ fun main() {
             return this.process { it * 64 }.process { it / 32 }.process { it * 2048 }
         }
 
-        data class Changes(val c1: Int?, val c2: Int?, val c3: Int?, val c4: Int?)
+        val map = hashMapOf<Int, MutableMap<Int, MutableMap<Int, MutableMap<Int, IntArray>>>>()
 
-        val total = hashMapOf<Changes, Int>()
+        input.forEachIndexed { index, str ->
+            var map1: MutableMap<Int, MutableMap<Int, MutableMap<Int, IntArray>>>? = null
+            var map2: MutableMap<Int, MutableMap<Int, IntArray>>? = null
+            var map3: MutableMap<Int, IntArray>? = null
 
-        input.forEach {
-            val visited = hashSetOf<Changes>()
-
-            var sec = it.toLong()
-
-            var changes = Changes(null, null, null, null)
+            var sec = str.toLong()
 
             var prevPrice = (sec % 10).toInt()
 
@@ -35,20 +33,25 @@ fun main() {
 
                 val price = (sec % 10).toInt()
 
-                changes = changes.copy(c1 = changes.c2, c2 = changes.c3, c3 = changes.c4, c4 = price - prevPrice)
+                val diff = price - prevPrice
 
-                if (changes.c1 != null) {
-                    if (visited.add(changes)) {
-                        total[changes] = (total[changes] ?: 0) + price
+                map3?.computeIfAbsent(diff) { intArrayOf(-1, 0) }?.also {
+                    if (it[0] < index) {
+                        it[0] = index
+                        it[1] += price
+
+                        part2Result = maxOf(part2Result, it[1])
                     }
                 }
+
+                map3 = map2?.computeIfAbsent(diff) { hashMapOf() }
+                map2 = map1?.computeIfAbsent(diff) { hashMapOf() }
+                map1 = map.computeIfAbsent(diff) { hashMapOf() }
 
                 prevPrice = price
             }
 
             part1Result += sec
         }
-
-        part2Result = total.values.max()
     }
 }
