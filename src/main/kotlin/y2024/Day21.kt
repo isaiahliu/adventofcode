@@ -82,8 +82,8 @@ fun main() {
             val lastDp = dp[i - 1]
             val curDp = dp[i]
 
-            for (from in 0 until 5) {
-                for (to in 0 until 5) {
+            repeat(5) { from ->
+                repeat(5) { to ->
                     route(robotPad[from], robotPad[to], 1 to 0).reduce { last, cur ->
                         curDp[from][to] += lastDp[last.operatorIndex()][cur.operatorIndex()]
                         cur
@@ -121,17 +121,17 @@ fun main() {
             return result * str.filter { it in '0'..'9' }.toCharArray().concatToString().toInt()
         }
 
-        input.forEach { str ->
-            val strNum = str.filter { it in '0'..'9' }.toCharArray().concatToString().toInt()
+        input.forEach {
+            val strNum = it.filter { it in '0'..'9' }.toCharArray().concatToString().toInt()
 
-            str.fold('A') { cur, target ->
-                route(doorPad[cur] ?: (0 to 0), doorPad[target] ?: (0 to 0), 0 to 0).reduce { last, cur ->
+            it.fold('A') { last, cur ->
+                route(doorPad[last] ?: (0 to 0), doorPad[cur] ?: (0 to 0), 0 to 0).reduce { last, cur ->
                     part1Result += dp[2][last.operatorIndex()][cur.operatorIndex()] * strNum
                     part2Result += dp[25][last.operatorIndex()][cur.operatorIndex()] * strNum
                     cur
                 }
 
-                target
+                cur
             }
         }
     }
