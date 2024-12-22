@@ -79,13 +79,10 @@ fun main() {
         }
 
         for (i in 1 until dp.size) {
-            val lastDp = dp[i - 1]
-            val curDp = dp[i]
-
             repeat(5) { from ->
                 repeat(5) { to ->
                     route(robotPad[from], robotPad[to], 1 to 0).reduce { last, cur ->
-                        curDp[from][to] += lastDp[last.operatorIndex()][cur.operatorIndex()]
+                        dp[i][from][to] += dp[i - 1][last.operatorIndex()][cur.operatorIndex()]
                         cur
                     }
                 }
@@ -105,21 +102,6 @@ fun main() {
             '8' to (3 to 1),
             '9' to (3 to 2),
         )
-
-        fun process(str: String, intermediateRobotCount: Int): Long {
-            var result = 0L
-
-            str.fold('A') { cur, target ->
-                route(doorPad[cur] ?: (0 to 0), doorPad[target] ?: (0 to 0), 0 to 0).reduce { last, cur ->
-                    result += dp[intermediateRobotCount][last.operatorIndex()][cur.operatorIndex()]
-                    cur
-                }
-
-                target
-            }
-
-            return result * str.filter { it in '0'..'9' }.toCharArray().concatToString().toInt()
-        }
 
         input.forEach {
             val strNum = it.filter { it in '0'..'9' }.toCharArray().concatToString().toInt()
