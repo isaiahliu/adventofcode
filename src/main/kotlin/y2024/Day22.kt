@@ -2,7 +2,6 @@ package y2024
 
 import util.expect
 import util.input
-import java.util.*
 
 fun main() {
     expect(0L, 0) {
@@ -18,7 +17,7 @@ fun main() {
             return this.process { it * 64 }.process { it / 32 }.process { it * 2048 }
         }
 
-        data class Changes(val c1: Int, val c2: Int, val c3: Int, val c4: Int)
+        data class Changes(val c1: Int?, val c2: Int?, val c3: Int?, val c4: Int?)
 
         val total = hashMapOf<Changes, Int>()
 
@@ -27,21 +26,18 @@ fun main() {
 
             var sec = it.toLong()
 
+            var changes = Changes(null, null, null, null)
+
             var prevPrice = (sec % 10).toInt()
-            val prices = LinkedList<Int>()
+
             repeat(2000) {
                 sec = sec.next()
 
                 val price = (sec % 10).toInt()
 
-                prices.add(price - prevPrice)
-                if (prices.size > 4) {
-                    prices.poll()
-                }
+                changes = changes.copy(c1 = changes.c2, c2 = changes.c3, c3 = changes.c4, c4 = price - prevPrice)
 
-                if (prices.size == 4) {
-                    val changes = Changes(prices[0], prices[1], prices[2], prices[3])
-
+                if (changes.c1 != null) {
                     if (visited.add(changes)) {
                         total[changes] = (total[changes] ?: 0) + price
                     }
