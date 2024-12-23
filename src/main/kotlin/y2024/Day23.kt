@@ -5,15 +5,17 @@ import util.input
 
 fun main() {
     expect(0, "") {
-        val adjacent = hashMapOf<String, MutableSet<String>>()
+        val lt = hashMapOf<String, MutableSet<String>>()
+        val gt = hashMapOf<String, MutableSet<String>>()
 
         input.map { it.split("-") }.forEach { (from, to) ->
-            adjacent.computeIfAbsent(from) { hashSetOf() } += to
-            adjacent.computeIfAbsent(to) { hashSetOf() } += from
+            lt.computeIfAbsent(maxOf(from, to)) { hashSetOf() } += minOf(from, to)
+            gt.computeIfAbsent(minOf(from, to)) { hashSetOf() } += maxOf(from, to)
         }
+
         var maxSize = 0
 
-        class Trie(val node: String, val parent: Trie? = null, val size: Int) {
+        class Node(val node: String, val parent: Node? = null, val size: Int) {
             fun match(adj: Set<String>): Boolean {
                 return node.isEmpty() || node in adj && parent?.match(adj) == true
             }
@@ -36,16 +38,16 @@ fun main() {
                     part1Result++
                 }
 
-                adjacent[node]?.forEach { child ->
-                    if (child > node && match(adjacent[child].orEmpty())) {
-                        Trie(child, this, size + 1).dfs()
+                gt[node]?.forEach {
+                    if (match(lt[it].orEmpty())) {
+                        Node(it, this, size + 1).dfs()
                     }
                 }
             }
         }
 
-        adjacent[""] = adjacent.keys.toMutableSet()
+        gt[""] = gt.keys.toMutableSet()
 
-        Trie("", null, 0).dfs()
+        Node("", null, 0).dfs()
     }
 }
