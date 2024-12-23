@@ -2,68 +2,78 @@ package y2024
 
 import util.expect
 import util.input
-import java.util.*
 
 fun main() {
     expect(0, "") {
-        val adjacent = hashMapOf<String, SortedSet<String>>()
+        val adjacent = hashMapOf<String, MutableSet<String>>()
 
         input.map { it.split("-") }.forEach { (from, to) ->
-            adjacent.computeIfAbsent(from) { sortedSetOf() } += to
-            adjacent.computeIfAbsent(to) { sortedSetOf() } += from
+            adjacent.computeIfAbsent(from) { hashSetOf() } += to
+            adjacent.computeIfAbsent(to) { hashSetOf() } += from
         }
 
-        adjacent.forEach { (node1, adj) ->
-            val match1 = node1[0] == 't'
+        class Trie(val node: String, val parent: Trie? = null, val size: Int) {
+            val children by lazy { hashMapOf<String, Trie>() }
 
-            val adjArray = adj.toTypedArray()
-            for (i in adjArray.indices) {
-                val node2 = adjArray[i]
-                val match2 = node2[0] == 't'
-                for (j in i + 1 until adjArray.size) {
-                    val node3 = adjArray[j]
-                    val match3 = node3[0] == 't'
+            var maxSize = Int.MAX_VALUE
 
-                    if (match1 || match2 || match3) {
-                        if (adjacent[node2]?.contains(node3) == true) {
-                            if (node1 < node2 && node2 < node3) {
-                                part1Result++
-                            }
+            fun match(adj: Set<String>): Boolean {
+                return node.isEmpty() || node in adj && parent?.match(adj) == true
+            }
+
+            fun asString(): String {
+                return parent?.asString()?.let { "$it," }.orEmpty() + node
+            }
+
+            fun markMaxSize(size: Int?) {
+                size?.also { maxSize = it } ?: run {
+                    maxSize = children.values.maxOf { it.maxSize }
+                }
+
+                parent?.markMaxSize(null)
+            }
+
+            fun startsWithT(): Boolean {
+                return node.firstOrNull() == 't' || parent?.startsWithT() == true
+            }
+        }
+
+        var maxSize = 0
+        fun dfs(trie: Trie) {
+            if (trie.size > maxSize) {
+                maxSize = trie.size
+                part2Result = trie.asString().drop(1)
+            }
+
+            if (trie.size == 3 && trie.startsWithT()) {
+                part1Result++
+            }
+
+            when {
+                trie.maxSize < maxSize -> {
+                    return
+                }
+
+                else -> {
+                    adjacent[trie.node]?.forEach { child ->
+                        if (child > trie.node && trie.match(adjacent[child].orEmpty())) {
+                            val childTrie = trie.children.computeIfAbsent(child) { Trie(child, trie, trie.size + 1) }
+
+                            dfs(childTrie)
                         }
+                    }
+
+                    if (trie.children.isEmpty()) {
+                        trie.markMaxSize(trie.size)
                     }
                 }
             }
         }
-        var left = 1
-        var right = adjacent.size
 
-        val sortedNodes = adjacent.keys.sorted().toTypedArray()
+        val root = Trie("", null, 0)
 
-        fun dfs(visited: List<String>, index: Int, targetSize: Int): Boolean {
-            if (visited.size == targetSize) {
-                part2Result = visited.joinToString(",")
-                return true
-            }
+        adjacent[""] = adjacent.keys.toMutableSet()
 
-            for (i in index until sortedNodes.size) {
-                val adj = adjacent[sortedNodes[i]].orEmpty()
-
-                if (visited.all { it in adj } && dfs(visited + sortedNodes[i], i + 1, targetSize)) {
-                    return true
-                }
-            }
-
-            return false
-        }
-
-        while (left <= right) {
-            val mid = (left + right) / 2
-
-            if (dfs(emptyList(), 0, mid)) {
-                left = mid + 1
-            } else {
-                right = mid - 1
-            }
-        }
+        dfs(root)
     }
 }
