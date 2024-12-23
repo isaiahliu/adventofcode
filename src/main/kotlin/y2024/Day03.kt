@@ -10,7 +10,7 @@ fun main() {
         """(mul)\((\d{1,3}),(\d{1,3})\)|(do)\(\)|(don't)\(\)""".toRegex().findAll(input.joinToString()).forEach {
             when {
                 it.groupValues[1] == "mul" -> {
-                    (it.groupValues[2].toInt().toInt() * it.groupValues[3].toInt().toInt()).also {
+                    (it.groupValues[2].toInt() * it.groupValues[3].toInt()).also {
                         part1Result += it
                         part2Result += it * t
                     }

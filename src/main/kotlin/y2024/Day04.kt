@@ -23,9 +23,9 @@ fun main() {
                     'A' -> {
                         part2Result += (arrayOf(-1 to -1, -1 to 1, 1 to -1, 1 to 1).sumOf { (deltaR, deltaC) ->
                             when (input.getOrNull(r + deltaR)?.getOrNull(c + deltaC)) {
-                                'M' -> 0b10.toInt()
-                                'S' -> 0b01.toInt()
-                                else -> 0b00.toInt()
+                                'M' -> 0b10
+                                'S' -> 0b01
+                                else -> 0b00
                             } shl (deltaR * deltaC + 1)
                         } xor 0b1111).sign xor 1
                     }
