@@ -76,23 +76,23 @@ fun main() {
         }
 
         val dp = Array(zSize) {
-            arrayOf(
-                "(x${it.twoDigitStr()} XOR y${it.twoDigitStr()})", "(x${it.twoDigitStr()} AND y${it.twoDigitStr()})"
-            )
+            it.twoDigitStr().let {
+                arrayOf("(x$it XOR y$it)", "(x$it AND y$it)")
+            }
         }
 
         for (i in 1 until dp.size) {
             dp[i][0] = "(${dp[i - 1][1]} XOR ${dp[i][0]})"
-            dp[i][1] = "((${dp[i - 1][1]} AND (x${i.twoDigitStr()} XOR y${i.twoDigitStr()})) OR ${dp[i][1]})"
+
+            val d = i.twoDigitStr()
+            dp[i][1] = "((${dp[i - 1][1]} AND (x$d XOR y$d)) OR ${dp[i][1]})"
         }
 
         while (replacement.size < 8) {
             val strMap = gates.values.associateBy { it.asString(true) }
 
-            var index = -1
-
-            while (true) {
-                val zGateName = "z${(++index).twoDigitStr()}".let { replacement[it] ?: it }
+            for (index in 0 until zSize) {
+                val zGateName = "z${index.twoDigitStr()}".let { replacement[it] ?: it }
                 val gate = gates[zGateName]?.let { it as? ExpGate }?.takeIf { it.asString() != dp[index][0] } ?: continue
 
                 val targetGate = strMap[dp[index][0]]
