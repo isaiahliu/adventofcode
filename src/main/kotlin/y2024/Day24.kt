@@ -77,8 +77,7 @@ fun main() {
 
         val dp = Array(zSize) {
             arrayOf(
-                "(x${it.twoDigitStr()} XOR y${it.twoDigitStr()})",
-                "(x${it.twoDigitStr()} AND y${it.twoDigitStr()})"
+                "(x${it.twoDigitStr()} XOR y${it.twoDigitStr()})", "(x${it.twoDigitStr()} AND y${it.twoDigitStr()})"
             )
         }
 
@@ -87,7 +86,7 @@ fun main() {
             dp[i][1] = "((${dp[i - 1][1]} AND (x${i.twoDigitStr()} XOR y${i.twoDigitStr()})) OR ${dp[i][1]})"
         }
 
-        next@ while (replacement.size < 8) {
+        while (replacement.size < 8) {
             val strMap = gates.values.associateBy { it.asString(true) }
 
             var index = -1
@@ -103,7 +102,7 @@ fun main() {
                         replacement[gate.name] = targetGate.name
                         replacement[targetGate.name] = gate.name
 
-                        continue@next
+                        break
                     }
 
                     gate.op == "XOR" -> {
@@ -116,7 +115,7 @@ fun main() {
                                 replacement[r.name] = gate.right
                                 replacement[gate.right] = r.name
 
-                                continue@next
+                                break
                             }
 
                             validParts.remove(gates[gate.right]?.asString()) -> {
@@ -125,7 +124,7 @@ fun main() {
                                 replacement[r.name] = gate.left
                                 replacement[gate.left] = r.name
 
-                                continue@next
+                                break
                             }
 
                             else -> {
