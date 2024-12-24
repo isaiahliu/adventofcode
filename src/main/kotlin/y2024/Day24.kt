@@ -29,10 +29,13 @@ fun main() {
         class ExpGate(name: String, var op: String, var left: String, var right: String) : AbstractGate(name) {
             override val value: Int
                 get() {
+                    val leftValue = gates[left]?.value ?: throw Exception("Error")
+                    val rightValue = gates[right]?.value ?: throw Exception("Error")
+
                     return when (op) {
-                        "AND" -> (gates[left]?.value ?: 0) and (gates[right]?.value ?: 0)
-                        "OR" -> (gates[left]?.value ?: 0) or (gates[right]?.value ?: 0)
-                        "XOR" -> (gates[left]?.value ?: 0) xor (gates[right]?.value ?: 0)
+                        "AND" -> leftValue and rightValue
+                        "OR" -> leftValue or rightValue
+                        "XOR" -> leftValue xor rightValue
                         else -> throw Exception("Error")
                     }
                 }
@@ -101,8 +104,6 @@ fun main() {
                     targetGate != null -> {
                         replacement[gate.name] = targetGate.name
                         replacement[targetGate.name] = gate.name
-
-                        break
                     }
 
                     gate.op == "XOR" -> {
@@ -110,21 +111,17 @@ fun main() {
 
                         when {
                             validParts.remove(gates[gate.left]?.asString()) -> {
-                                val r = strMap[validParts.first()] ?: throw Exception("Error")
-
-                                replacement[r.name] = gate.right
-                                replacement[gate.right] = r.name
-
-                                break
+                                strMap[validParts.first()]?.also {
+                                    replacement[it.name] = gate.right
+                                    replacement[gate.right] = it.name
+                                } ?: throw Exception("Error")
                             }
 
                             validParts.remove(gates[gate.right]?.asString()) -> {
-                                val r = strMap[validParts.first()] ?: throw Exception("Error")
-
-                                replacement[r.name] = gate.left
-                                replacement[gate.left] = r.name
-
-                                break
+                                strMap[validParts.first()]?.also {
+                                    replacement[it.name] = gate.left
+                                    replacement[gate.left] = it.name
+                                } ?: throw Exception("Error")
                             }
 
                             else -> {
@@ -137,6 +134,8 @@ fun main() {
                         throw Exception("Error")
                     }
                 }
+                
+                break
             }
         }
 
