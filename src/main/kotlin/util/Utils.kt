@@ -42,10 +42,12 @@ fun <T1, T2> expect(defaultValue1: T1, defaultValue2: T2, dsl: Results<T1, T2>.(
             it()
             println()
         }
-        
+
         println("Time cost: ${it}ms")
         println()
     }
+    
+    Thread.sleep(500L)
 }
 
 fun <T> expect(defaultValue: T, dsl: Results<T, T>.() -> Unit) {
