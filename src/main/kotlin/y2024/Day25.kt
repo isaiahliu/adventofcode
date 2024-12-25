@@ -11,21 +11,17 @@ fun main() {
             var count: Int = 0
 
             fun add(index: Int, lock: IntArray) {
-                if (index == lock.size) {
-                    count++
-                } else {
-                    (0 until 8 - lock[index]).forEach {
+                lock.getOrNull(index)?.also {
+                    (0 until 8 - it).forEach {
                         children[it].add(index + 1, lock)
                     }
-                }
+                } ?: count++
             }
 
             fun query(index: Int, key: IntArray): Int {
-                return if (index == key.size) {
-                    count
-                } else {
-                    children[key[index]].query(index + 1, key)
-                }
+                return key.getOrNull(index)?.let {
+                    children[it].query(index + 1, key)
+                } ?: count
             }
         }
 
