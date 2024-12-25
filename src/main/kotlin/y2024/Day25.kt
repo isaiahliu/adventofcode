@@ -17,17 +17,10 @@ fun main() {
                     }
                 } ?: count++
             }
-
-            fun query(index: Int, key: IntArray): Int {
-                return key.getOrNull(index)?.let {
-                    children[it].query(index + 1, key)
-                } ?: count
-            }
         }
 
-        val keys = arrayListOf<IntArray>()
-
-        val rootLock = Trie()
+        val root = Trie()
+        val keys = arrayListOf<Trie>()
 
         (input.indices step 8).forEach {
             val item = IntArray(5)
@@ -41,12 +34,13 @@ fun main() {
             }
 
             if (input[it][0] == '#') {
-                keys += item
+                root.add(0, item)
             } else {
-                rootLock.add(0, item)
+                keys += item.fold(root) { p, index -> p.children[index] }
             }
         }
-        part1Result = keys.sumOf { rootLock.query(0, it) }
+
+        part1Result = keys.sumOf { it.count }
         part2Result = "Merry Christmas!"
     }
 }
