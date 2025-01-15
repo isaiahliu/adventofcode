@@ -1,34 +1,24 @@
 package y2015
 
+import util.expect
 import util.input
 import util.md5
 
 fun main() {
-    var num = 1
+    expect(0, 0) {
+        var num = 0
 
-    var fiveFound = false
-    var sixFound = false
+        while (true) {
+            val md5 = "${input[0]}${++num}".md5
 
-    var fiveResult = 0
-    var sixResult = 0
-    while (!fiveFound || !sixFound) {
-        val md5 = "$input$num".md5
+            if (part1Result == 0 && md5.startsWith("00000")) {
+                part1Result = num
+            }
 
-        if (!fiveFound && md5.startsWith("00000")) {
-            fiveFound = true
-
-            fiveResult = num
+            if (md5.startsWith("000000")) {
+                part2Result = num
+                break
+            }
         }
-
-        if (!sixFound && md5.startsWith("000000")) {
-            sixFound = true
-
-            sixResult = num
-        }
-
-        num++
     }
-
-    println(fiveResult)
-    println(sixResult)
 }
