@@ -35,10 +35,7 @@ fun main() {
             }
 
             houses1 += pos1[0] to pos1[1]
-
-            pos2.forEach {
-                houses2 += it[0] to it[1]
-            }
+            houses2 += pos2[index % 2][0] to pos2[index % 2][1]
         }
 
         part1Result = houses1.size
