@@ -1,21 +1,18 @@
 package y2015
 
+import util.expect
 import util.input
 
 fun main() {
-    val input = input.first()
+    expect(0, Int.MAX_VALUE) {
+        var found = false
+        input.first().forEachIndexed { index, c ->
+            part1Result += if (c == '(') 1 else -1
 
-    val steps = input.toCharArray().map { if (it == '(') 1 else -1 }
-
-    println(steps.sum())
-
-    var sum = 0
-    for ((index, i) in steps.withIndex()) {
-        sum += i
-
-        if (sum < 0) {
-            println(index + 1)
-            break
+            if (!found && part1Result < 0) {
+                part2Result = index + 1
+                found = true
+            }
         }
     }
 }
