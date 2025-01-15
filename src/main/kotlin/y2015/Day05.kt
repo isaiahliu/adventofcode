@@ -11,7 +11,7 @@ fun main() {
             it[1] to it[0]
         }
 
-        input.filter { it.isNotBlank() }.forEach {
+        input.forEach {
             var vowelCount = 0
             var double = false
             var disallowExists = false
