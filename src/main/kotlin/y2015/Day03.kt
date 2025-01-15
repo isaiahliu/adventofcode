@@ -1,78 +1,47 @@
 package y2015
 
+import util.expect
 import util.input
 
 fun main() {
-    val part1Positions = hashSetOf<String>()
-    val part2Positions = hashSetOf<String>()
+    expect(0, 0) {
+        val part1Positions = hashSetOf(0 to 0)
+        val part2Positions = hashSetOf(0 to 0)
 
-    var part1X = 0
-    var part1Y = 0
+        val part1 = intArrayOf(0, 0)
+        val part2 = arrayOf(intArrayOf(0, 0), intArrayOf(0, 0))
 
-    fun part1Position(): String {
-        return "${part1X}_${part1Y}"
-    }
+        input.first().toCharArray().forEachIndexed { index, direction ->
+            when (direction) {
+                '^' -> {
+                    part1[1]++
+                    part2[index % 2][1]++
+                }
 
-    var part2X1 = 0
-    var part2Y1 = 0
-    var part2X2 = 0
-    var part2Y2 = 0
+                '>' -> {
+                    part1[0]++
+                    part2[index % 2][0]++
+                }
 
-    fun part2Position1(): String {
-        return "${part2X1}_${part2Y1}"
-    }
+                'v' -> {
+                    part1[1]--
+                    part2[index % 2][1]--
+                }
 
-    fun part2Position2(): String {
-        return "${part2X2}_${part2Y2}"
-    }
-
-    part1Positions += part1Position()
-    part2Positions += part2Position1()
-
-    input.first().toCharArray().forEachIndexed { index, direction ->
-        when (direction) {
-            '^' -> {
-                part1Y++
-
-                when (index % 2) {
-                    0 -> part2Y1++
-                    1 -> part2Y2++
+                '<' -> {
+                    part1[0]--
+                    part2[index % 2][0]--
                 }
             }
 
-            '>' -> {
-                part1X++
+            part1Positions += part1[0] to part1[1]
 
-                when (index % 2) {
-                    0 -> part2X1++
-                    1 -> part2X2++
-                }
-            }
-
-            'v' -> {
-                part1Y--
-
-                when (index % 2) {
-                    0 -> part2Y1--
-                    1 -> part2Y2--
-                }
-            }
-
-            '<' -> {
-                part1X--
-
-                when (index % 2) {
-                    0 -> part2X1--
-                    1 -> part2X2--
-                }
+            part2.forEach {
+                part2Positions += it[0] to it[1]
             }
         }
 
-        part1Positions += part1Position()
-        part2Positions += part2Position1()
-        part2Positions += part2Position2()
+        part1Result = part1Positions.size
+        part2Result = part2Positions.size
     }
-
-    println(part1Positions.size)
-    println(part2Positions.size)
 }
