@@ -1,63 +1,59 @@
 package y2015
 
+import util.expect
 import util.input
-import kotlin.streams.toList
 
 fun main() {
-    var part1Sum = 0
-    var part2Sum = 0
+    expect(0, 0) {
+        val vowels = "aeiou".toSet()
 
-    val vowels = "aeiou".chars().toList()
+        val disallowMap = listOf("ab", "cd", "pq", "xy").associate {
+            it[1] to it[0]
+        }
 
-    val disallowMap = listOf("ab", "cd", "pq", "xy").associate {
-        it[1].code to it[0].code
+        input.filter { it.isNotBlank() }.forEach {
+            var vowelCount = 0
+            var double = false
+            var disallowExists = false
+
+            var previousChar = Char(0)
+            var previousChar2 = Char(0)
+
+            var abaExists = false
+            val doubleSet = hashMapOf<String, MutableList<Int>>()
+
+            it.forEachIndexed { index, ch ->
+                if (ch in vowels) {
+                    vowelCount++
+                }
+
+                if (previousChar == ch) {
+                    double = true
+                }
+
+                if (disallowMap[ch] == previousChar) {
+                    disallowExists = true
+                }
+
+                if (ch == previousChar2) {
+                    abaExists = true
+                }
+
+                "${previousChar}${ch}".also {
+                    doubleSet.computeIfAbsent(it) { arrayListOf() } += index
+                }
+
+                previousChar2 = previousChar
+                previousChar = ch
+            }
+
+            if (vowelCount >= 3 && double && !disallowExists) {
+                part1Result++
+            }
+
+            if (abaExists && doubleSet.values.any { it.last() - it.first() > 1 }) {
+                part2Result++
+            }
+        }
     }
-
-    input.filter { it.isNotBlank() }.forEach {
-        var vowelCount = 0
-        var double = false
-        var disallowExists = false
-
-        var previousChar = 0
-        var previousChar2 = 0
-
-        var abaExists = false
-        val doubleSet = arrayListOf<String>()
-
-        it.chars().forEach {
-            if (it in vowels) {
-                vowelCount++
-            }
-
-            if (previousChar == it) {
-                double = true
-            }
-
-            if (disallowMap[it] == previousChar) {
-                disallowExists = true
-            }
-
-            if (it == previousChar2) {
-                abaExists = true
-            }
-
-            doubleSet.add("${previousChar}_${it}")
-
-            previousChar2 = previousChar
-            previousChar = it
-        }
-
-        if (vowelCount >= 3 && double && !disallowExists) {
-            part1Sum++
-        }
-
-        if (abaExists && doubleSet.mapIndexed { index, s -> s to index }.groupBy({ it.first }, { it.second }).filter {
-                it.value.max() - it.value.min() > 1
-            }.isNotEmpty()) {
-            part2Sum++
-        }
-    }
-
-    println(part1Sum)
-    println(part2Sum)
 }
