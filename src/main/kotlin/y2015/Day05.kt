@@ -20,28 +20,17 @@ fun main() {
             var previousChar2 = Char(0)
 
             var abaExists = false
-            val doubleSet = hashMapOf<String, MutableList<Int>>()
+            val pairIndices = hashMapOf<String, MutableList<Int>>()
 
             it.forEachIndexed { index, ch ->
                 if (ch in vowels) {
                     vowelCount++
                 }
 
-                if (previousChar == ch) {
-                    double = true
-                }
-
-                if (disallowMap[ch] == previousChar) {
-                    disallowExists = true
-                }
-
-                if (ch == previousChar2) {
-                    abaExists = true
-                }
-
-                "${previousChar}${ch}".also {
-                    doubleSet.computeIfAbsent(it) { arrayListOf() } += index
-                }
+                double = double || previousChar == ch
+                disallowExists = disallowExists || disallowMap[ch] == previousChar
+                abaExists = abaExists || ch == previousChar2
+                pairIndices.computeIfAbsent("${previousChar}${ch}") { arrayListOf() } += index
 
                 previousChar2 = previousChar
                 previousChar = ch
@@ -51,7 +40,7 @@ fun main() {
                 part1Result++
             }
 
-            if (abaExists && doubleSet.values.any { it.last() - it.first() > 1 }) {
+            if (abaExists && pairIndices.values.any { it.last() - it.first() > 1 }) {
                 part2Result++
             }
         }
