@@ -5,43 +5,43 @@ import util.input
 
 fun main() {
     expect(0, 0) {
-        val part1Positions = hashSetOf(0 to 0)
-        val part2Positions = hashSetOf(0 to 0)
+        val houses1 = hashSetOf(0 to 0)
+        val houses2 = hashSetOf(0 to 0)
 
-        val part1 = intArrayOf(0, 0)
-        val part2 = arrayOf(intArrayOf(0, 0), intArrayOf(0, 0))
+        val pos1 = intArrayOf(0, 0)
+        val pos2 = arrayOf(intArrayOf(0, 0), intArrayOf(0, 0))
 
         input.first().toCharArray().forEachIndexed { index, direction ->
             when (direction) {
                 '^' -> {
-                    part1[1]++
-                    part2[index % 2][1]++
+                    pos1[1]++
+                    pos2[index % 2][1]++
                 }
 
                 '>' -> {
-                    part1[0]++
-                    part2[index % 2][0]++
+                    pos1[0]++
+                    pos2[index % 2][0]++
                 }
 
                 'v' -> {
-                    part1[1]--
-                    part2[index % 2][1]--
+                    pos1[1]--
+                    pos2[index % 2][1]--
                 }
 
                 '<' -> {
-                    part1[0]--
-                    part2[index % 2][0]--
+                    pos1[0]--
+                    pos2[index % 2][0]--
                 }
             }
 
-            part1Positions += part1[0] to part1[1]
+            houses1 += pos1[0] to pos1[1]
 
-            part2.forEach {
-                part2Positions += it[0] to it[1]
+            pos2.forEach {
+                houses2 += it[0] to it[1]
             }
         }
 
-        part1Result = part1Positions.size
-        part2Result = part2Positions.size
+        part1Result = houses1.size
+        part2Result = houses2.size
     }
 }
