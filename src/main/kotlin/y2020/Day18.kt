@@ -71,7 +71,7 @@ fun main() {
                     }
                 }
 
-                numbersStack.first
+                numbersStack.first()
             }
     }
 
