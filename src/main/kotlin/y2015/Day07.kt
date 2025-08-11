@@ -1,63 +1,65 @@
 package y2015
 
+import util.expect
 import util.input
 
 fun main() {
-    val exp = "(.*) -> (\\w+)".toRegex()
+    expect(0, 0) {
+        val exp = "(.*) -> (\\w+)".toRegex()
 
-    val part1 = hashMapOf<String, Node>()
+        val expressions = hashMapOf<String, Node>()
 
-    input.mapNotNull { exp.matchEntire(it) }.forEach {
-        val left = it.groupValues[1]
-        val right = it.groupValues[2]
+        input.mapNotNull { exp.matchEntire(it) }.forEach {
+            val left = it.groupValues[1]
+            val right = it.groupValues[2]
 
-        val rightNode = part1.computeIfAbsent(right) { Node() }
+            val rightNode = expressions.computeIfAbsent(right) { Node() }
 
-        val tokens = left.split(" ")
+            val tokens = left.split(" ")
 
-        rightNode.expression = when (tokens.size) {
-            3 -> {
-                when (tokens[1]) {
-                    "OR" -> {
-                        OrExp(part1.toExpression(tokens[0]), part1.toExpression(tokens[2]))
-                    }
+            rightNode.expression = when (tokens.size) {
+                3 -> {
+                    when (tokens[1]) {
+                        "OR" -> {
+                            OrExp(expressions.toExpression(tokens[0]), expressions.toExpression(tokens[2]))
+                        }
 
-                    "LSHIFT" -> {
-                        ShiftLExp(part1.toExpression(tokens[0]), part1.toExpression(tokens[2]))
-                    }
+                        "LSHIFT" -> {
+                            ShiftLExp(expressions.toExpression(tokens[0]), expressions.toExpression(tokens[2]))
+                        }
 
-                    "RSHIFT" -> {
-                        ShiftRExp(part1.toExpression(tokens[0]), part1.toExpression(tokens[2]))
-                    }
+                        "RSHIFT" -> {
+                            ShiftRExp(expressions.toExpression(tokens[0]), expressions.toExpression(tokens[2]))
+                        }
 
-                    else -> {
-                        AndExp(part1.toExpression(tokens[0]), part1.toExpression(tokens[2]))
+                        else -> {
+                            AndExp(expressions.toExpression(tokens[0]), expressions.toExpression(tokens[2]))
+                        }
                     }
                 }
-            }
 
-            2 -> {
-                NotExp(part1.toExpression(tokens[1]))
-            }
+                2 -> {
+                    NotExp(expressions.toExpression(tokens[1]))
+                }
 
-            else -> {
-                part1.toExpression(tokens[0])
+                else -> {
+                    expressions.toExpression(tokens[0])
+                }
             }
         }
-    }
 
-    val part1Result = part1["a"]?.value ?: 0
+        part1Result = expressions["a"]?.value ?: 0
 
-    part1.forEach { (key, node) ->
-        node.clear()
+        expressions.forEach { (key, node) ->
+            node.clear()
 
-        if (key == "b") {
-            node.expression = ConstantExp(part1Result)
+            if (key == "b") {
+                node.expression = ConstantExp(part1Result)
+            }
         }
-    }
 
-    println(part1Result)
-    println(part1["a"]?.value)
+        part2Result = expressions["a"]?.value ?: 0
+    }
 }
 
 private class Node {
@@ -84,13 +86,9 @@ private sealed interface IExpression {
 }
 
 private fun MutableMap<String, Node>.toExpression(key: String): IExpression {
-    val const = key.toIntOrNull()
-
-    return if (const != null) {
-        ConstantExp(const)
-    } else {
-        VariableExp(computeIfAbsent(key) { Node() })
-    }
+    return key.toIntOrNull()?.let {
+        ConstantExp(it)
+    } ?: VariableExp(computeIfAbsent(key) { Node() })
 }
 
 private class AndExp(private val param1: IExpression, private val param2: IExpression) : IExpression {
