@@ -5,11 +5,11 @@ import util.input
 
 fun main() {
     expect(0, 0) {
-        val vowels = "aeiou".toSet()
+        val vowels = setOf('a', 'e', 'i', 'o', 'u')
 
-        val disallowMap = listOf("ab", "cd", "pq", "xy").associate {
-            it[1] to it[0]
-        }
+        val disallowMap = mapOf(
+            'b' to 'a', 'd' to 'c', 'q' to 'p', 'y' to 'x'
+        )
 
         input.forEach {
             var vowelCount = 0
