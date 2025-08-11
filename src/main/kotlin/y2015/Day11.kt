@@ -9,30 +9,7 @@ fun main() {
 
         val chars = input.first().toCharArray()
 
-        fun CharArray.valid(): Boolean {
-            var seq = false
-            val dup = hashSetOf<Char>()
-            var diff2 = -1
-            var prev = Char(0)
-            for (c in this) {
-                when (c) {
-                    prev -> {
-                        dup += c
-                    }
-
-                    prev + 1 -> {
-                        seq = diff2 == 1
-                    }
-                }
-
-                diff2 = c - prev
-                prev = c
-            }
-
-            return seq && dup.size >= 2
-        }
-
-        fun CharArray.increase() {
+        fun CharArray.increase(): String {
             do {
                 this[this.lastIndex]++
 
@@ -51,14 +28,36 @@ fun main() {
                         }
                     }
                 }
-            } while (!valid())
+
+                var seq = false
+                val dup = hashSetOf<Char>()
+                var diff2 = -1
+                var prev = Char(0)
+                for (c in this) {
+                    when (c) {
+                        prev -> {
+                            dup += c
+                        }
+
+                        prev + 1 -> {
+                            seq = diff2 == 1
+                        }
+                    }
+
+                    diff2 = c - prev
+                    prev = c
+                }
+
+                if (seq && dup.size >= 2) {
+                    break
+                }
+            } while (true)
+
+            return concatToString()
         }
 
-        chars.increase()
-        part1Result = chars.concatToString()
-
-        chars.increase()
-        part2Result = chars.concatToString()
+        part1Result = chars.increase()
+        part2Result = chars.increase()
     }
 }
 
