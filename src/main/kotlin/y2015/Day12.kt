@@ -13,9 +13,8 @@ fun main() {
         var prev1 = Char(0)
 
         val lefts = LinkedList<Char>()
-        var depth = 0
-        val sums = arrayOfNulls<Int>(999)
-        sums[0] = 0
+        val sums = LinkedList<Int?>()
+        sums.push(0)
 
         input.first().forEach {
             if (it in '0'..'9') {
@@ -27,43 +26,41 @@ fun main() {
             if (num != 0) {
                 part1Result += num
 
-                sums[depth] = sums[depth]?.let { it + num }
+                sums.push(sums.poll()?.let { it + num })
                 num = 0
                 neg = 1
             }
 
-            when (it) {
-                '-' -> {
+            when {
+                it == '-' -> {
                     neg = -1
                 }
 
-                '{' -> {
-                    depth++
+                it == '{' -> {
                     lefts.push(it)
-                    sums[depth] = 0
+                    sums.push(0)
                 }
 
-                '}' -> {
+                it == '}' -> {
                     lefts.poll()
 
-                    sums[depth]?.also { add ->
-                        sums[depth - 1] = sums[depth - 1]?.let { it + add }
+                    sums.poll()?.also { sum ->
+                        sums.push(sums.poll()?.let { it + sum })
+
                     }
-                    depth--
                 }
 
-                '[' -> {
+                it == '[' -> {
                     lefts.push(it)
                 }
 
-                ']' -> {
+                it == ']' -> {
                     lefts.poll()
                 }
 
-                'd' -> {
-                    if (lefts.peek() == '{' && prev2 == 'r' && prev1 == 'e') {
-                        sums[depth] = null
-                    }
+                lefts.peek() == '{' && prev2 == 'r' && prev1 == 'e' && it == 'd' -> {
+                    sums.poll()
+                    sums.push(null)
                 }
             }
 
@@ -71,8 +68,6 @@ fun main() {
             prev1 = it
         }
 
-        sums[0]?.also {
-            part2Result = it
-        }
+        part2Result = sums[0] ?: 0
     }
 }

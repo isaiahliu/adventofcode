@@ -39,7 +39,7 @@ fun main() {
                     }
 
                     else -> {
-                        regex.find(line, index)?.let { it.value }?.also {
+                        regex.find(line, index)?.value?.also {
                             current.add(it.toInt())
 
                             index += it.length
@@ -51,7 +51,7 @@ fun main() {
             return root
         }
 
-        fun compare(array1: List<Any>, array2: List<Any>): Int {
+        fun compare(array1: List<*>, array2: List<*>): Int {
             repeat(array1.size.coerceAtLeast(array2.size)) {
                 val value1 = array1.getOrNull(it)
                 val value2 = array2.getOrNull(it)
@@ -65,8 +65,8 @@ fun main() {
                         return if (value1 < value2) -1 else 1
                     }
                 } else {
-                    val subArray1 = value1.let { it as? List<Any> } ?: listOf(value1)
-                    val subArray2 = value2.let { it as? List<Any> } ?: listOf(value2)
+                    val subArray1 = (value1 as? List<*>) ?: listOf(value1)
+                    val subArray2 = (value2 as? List<*>) ?: listOf(value2)
 
                     val comparison = compare(subArray1, subArray2)
 
