@@ -1,75 +1,40 @@
 package y2015
 
+import util.expect
 import util.input
 
 fun main() {
-    val happinessMap = hashMapOf<String, MutableMap<String, Int>>()
+    expect(0, 0) {
+        val regex = "(\\w+) would (gain|lose) (\\d+) happiness units? by sitting next to (\\w+).".toRegex()
+        val happinessMap = hashMapOf<String, MutableMap<String, Int>>()
+        input.forEach {
+            val match = regex.matchEntire(it) ?: return@forEach
 
-    val regex = "(\\w+) would (gain|lose) (\\d+) happiness units? by sitting next to (\\w+).".toRegex()
-    input.forEach {
-        val match = regex.matchEntire(it) ?: return
+            val from = match.groupValues[1]
+            val to = match.groupValues[4]
+            val happiness = match.groupValues[3].toInt() * if (match.groupValues[2] == "gain") 1 else -1
 
-        val from = match.groupValues[1]
-        val to = match.groupValues[4]
-        val happiness = match.groupValues[3].toInt() * if (match.groupValues[2] == "gain") 1 else -1
-
-        happinessMap.computeIfAbsent(from) { hashMapOf() }[to] = happiness
-    }
-
-    val people = happinessMap.keys.toTypedArray()
-    val peopleCount = people.size
-
-    val happiness = Array(peopleCount) { x ->
-        IntArray(peopleCount) { y ->
-            happinessMap[people[x]]!![people[y]] ?: 0
+            happinessMap.computeIfAbsent(from) { hashMapOf() }[to] = happiness
         }
-    }
 
-    val seat = IntArray(peopleCount)
+        fun dfs(queue: List<String>, score: Int) {
+            if (queue.size == happinessMap.size) {
+                val first = queue.first()
+                val last = queue.last()
 
-    var maxPart1 = 0
-    var maxPart2 = 0
-
-    var rowIndex = 0
-    var columnIndex = 0
-
-    while (true) {
-        if (columnIndex == peopleCount) {
-            rowIndex--
-            if (rowIndex < 0) {
-                break
+                part1Result = maxOf(part1Result, score + (happinessMap[first]?.get(last) ?: 0) + (happinessMap[last]?.get(first) ?: 0))
+                part2Result = maxOf(part2Result, score)
             } else {
-                columnIndex = seat[rowIndex] + 1
-                continue
+                happinessMap.keys.forEach {
+                    if (it !in queue) {
+                        dfs(queue + it, score + (queue.lastOrNull()?.let { last ->
+                            (happinessMap[it]?.get(last) ?: 0) + (happinessMap[last]?.get(it) ?: 0)
+                        } ?: 0))
+                    }
+                }
             }
         }
 
-        if (rowIndex == peopleCount) {
-            val scorePart1 =
-                (0 until peopleCount).sumOf { happiness[seat[it]][seat[(it + 1) % peopleCount]] } + (0 until peopleCount).sumOf { happiness[seat[(it + 1) % peopleCount]][seat[it]] }
-            val scorePart2 = (0 until peopleCount).sumOf {
-                seat.getOrNull(it + 1)?.let { t -> happiness[seat[it]][t] } ?: 0
-            } + (0 until peopleCount).sumOf {
-                seat.getOrNull(it + 1)?.let { t -> happiness[t][seat[it]] } ?: 0
-            }
-
-            maxPart1 = maxPart1.coerceAtLeast(scorePart1)
-            maxPart2 = maxPart2.coerceAtLeast(scorePart2)
-
-            rowIndex -= 2
-            columnIndex = seat[rowIndex] + 1
-            continue
-        }
-
-        if (seat.take(rowIndex).any { it == columnIndex }) {
-            columnIndex++
-        } else {
-            seat[rowIndex] = columnIndex
-            rowIndex++
-            columnIndex = 0
-        }
+        dfs(emptyList(), 0)
     }
-
-    println(maxPart1)
-    println(maxPart2)
 }
