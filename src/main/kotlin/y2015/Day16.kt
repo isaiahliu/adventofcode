@@ -1,122 +1,52 @@
 package y2015
 
+import util.expect
 import util.input
 
 fun main() {
-    val targetAunt = Aunt(
-        children = 3,
-        cats = 7,
-        samoyeds = 2,
-        pomeranians = 3,
-        akitas = 0,
-        vizslas = 0,
-        goldfish = 5,
-        trees = 3,
-        cars = 2,
-        perfumes = 1
-    )
+    expect("", "") {
+        val targetAunt: Map<String, Pair<Int, (Int, Int) -> Boolean>> = mapOf(
+            "children" to (3 to Int::equals),
+            "cats" to (7 to { a, b -> a > b }),
+            "samoyeds" to (2 to Int::equals),
+            "pomeranians" to (3 to { a, b -> a < b }),
+            "akitas" to (0 to Int::equals),
+            "vizslas" to (0 to Int::equals),
+            "goldfish" to (5 to { a, b -> a < b }),
+            "trees" to (3 to { a, b -> a > b }),
+            "cars" to (2 to Int::equals),
+            "perfumes" to (1 to Int::equals),
+        )
 
-    val regex = "Sue (\\d+): (\\w+): (\\d+), (\\w+): (\\d+), (\\w+): (\\d+)".toRegex()
+        val regex = "Sue (\\d+): (\\w+): (\\d+), (\\w+): (\\d+), (\\w+): (\\d+)".toRegex()
 
-    var part1Result = 0
-    var part2Result = 0
+        input.forEach {
+            val match = regex.matchEntire(it) ?: return@expect
 
-    input.forEach {
-        val match = regex.matchEntire(it) ?: return
-
-        val num = match.groupValues[1].toInt()
-
-        val auntPart1 = targetAunt.copy()
-        val auntPart2 = targetAunt.copy()
-
-        fun fillProp(property: String, count: Int) {
-            when (property) {
-                "children" -> {
-                    auntPart1.children = count
-                    auntPart2.children = count
+            var sameCount = 0
+            var likeCount = 0
+            arrayOf(
+                match.groupValues[2] to match.groupValues[3].toInt(),
+                match.groupValues[4] to match.groupValues[5].toInt(),
+                match.groupValues[6] to match.groupValues[7].toInt(),
+            ).forEach { (key, value) ->
+                val (num, comp) = targetAunt[key] ?: return@forEach
+                if (num == value) {
+                    sameCount++
                 }
 
-                "cats" -> {
-                    auntPart1.cats = count
-                    if (auntPart2.cats >= count) {
-                        auntPart2.cats = -1
-                    }
-                }
-
-                "trees" -> {
-                    auntPart1.trees = count
-                    if (auntPart2.trees >= count) {
-                        auntPart2.trees = -1
-                    }
-                }
-
-                "samoyeds" -> {
-                    auntPart1.samoyeds = count
-                    auntPart2.samoyeds = count
-                }
-
-                "pomeranians" -> {
-                    auntPart1.pomeranians = count
-                    if (auntPart2.pomeranians <= count) {
-                        auntPart2.pomeranians = -1
-                    }
-                }
-
-                "goldfish" -> {
-                    auntPart1.goldfish = count
-                    if (auntPart2.goldfish <= count) {
-                        auntPart2.goldfish = -1
-                    }
-                }
-
-                "akitas" -> {
-                    auntPart1.akitas = count
-                    auntPart2.akitas = count
-                }
-
-                "vizslas" -> {
-                    auntPart1.vizslas = count
-                    auntPart2.vizslas = count
-                }
-
-                "cars" -> {
-                    auntPart1.cars = count
-                    auntPart2.cars = count
-                }
-
-                "perfumes" -> {
-                    auntPart1.perfumes = count
-                    auntPart2.perfumes = count
+                if (comp(value, num)) {
+                    likeCount++
                 }
             }
-        }
 
-        fillProp(match.groupValues[2], match.groupValues[3].toInt())
-        fillProp(match.groupValues[4], match.groupValues[5].toInt())
-        fillProp(match.groupValues[6], match.groupValues[7].toInt())
+            if (sameCount == 3) {
+                part1Result = match.groupValues[1]
+            }
 
-        if (auntPart1 == targetAunt) {
-            part1Result = num
-        }
-
-        if (auntPart2 == targetAunt) {
-            part2Result = num
+            if (likeCount == 3) {
+                part2Result = match.groupValues[1]
+            }
         }
     }
-
-    println(part1Result)
-    println(part2Result)
 }
-
-private data class Aunt(
-    var children: Int,
-    var cats: Int,
-    var samoyeds: Int,
-    var pomeranians: Int,
-    var akitas: Int,
-    var vizslas: Int,
-    var goldfish: Int,
-    var trees: Int,
-    var cars: Int,
-    var perfumes: Int
-)
