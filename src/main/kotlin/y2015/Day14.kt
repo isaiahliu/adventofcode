@@ -1,64 +1,42 @@
 package y2015
 
+import util.expect
 import util.input
 
 fun main() {
-    val regex = "\\w+ can fly (\\d+) km/s for (\\d+) seconds, but then must rest for (\\d+) seconds.".toRegex()
+    expect(0, 0) {
+        val regex = "\\w+ can fly (\\d+) km/s for (\\d+) seconds, but then must rest for (\\d+) seconds.".toRegex()
 
-    val reindeers = arrayListOf<Reindeer>()
+        val reindeers = arrayListOf<IntArray>()
 
-    input.forEach {
-        val match = regex.matchEntire(it) ?: return@forEach
-
-        val speed = match.groupValues[1].toInt()
-        val flySeconds = match.groupValues[2].toInt()
-        val restSeconds = match.groupValues[3].toInt()
-
-        reindeers += Reindeer(speed, flySeconds, restSeconds)
-    }
-
-    repeat(2503) {
-        reindeers.forEach { it.nextSecond() }
-
-        val lead = reindeers.maxOf { it.distance }
-
-        reindeers.filter { it.distance == lead }.forEach { it.point++ }
-    }
-
-    val part1Result = reindeers.maxOf { it.distance }
-    val part2Result = reindeers.maxOf { it.point }
-
-    println(part1Result)
-    println(part2Result)
-}
-
-private class Reindeer(private val speed: Int, private val maxFlySeconds: Int, private val maxRestSeconds: Int) {
-    private var flySeconds = maxFlySeconds
-
-    private var restSeconds = maxRestSeconds
-
-    private var resting = false
-
-    var distance = 0
-
-    var point = 0
-
-    fun nextSecond() {
-        if (resting) {
-            restSeconds--
-
-            if (restSeconds == 0) {
-                flySeconds = maxFlySeconds
-                resting = false
-            }
-        } else {
-            distance += speed
-            flySeconds--
-
-            if (flySeconds == 0) {
-                restSeconds = maxRestSeconds
-                resting = true
+        input.forEach {
+            regex.matchEntire(it)?.groupValues?.drop(1)?.map { it.toInt() }?.toIntArray()?.also {
+                reindeers += it
             }
         }
+
+        val distances = IntArray(reindeers.size)
+        val points = IntArray(reindeers.size)
+
+        repeat(2503) { second ->
+            var lead = 0
+            reindeers.forEachIndexed { index, (speed, flySeconds, restSeconds) ->
+                if (second % (flySeconds + restSeconds) < flySeconds) {
+                    distances[index] += speed
+                }
+
+                lead = maxOf(lead, distances[index])
+            }
+
+            reindeers.indices.forEach {
+                if (distances[it] == lead) {
+                    points[it]++
+                }
+            }
+        }
+
+        part1Result = distances.max()
+        part2Result = points.max()
     }
 }
+
