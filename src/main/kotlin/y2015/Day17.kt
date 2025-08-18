@@ -1,70 +1,27 @@
 package y2015
 
+import util.expect
+import util.forEachBit
 import util.input
 
 fun main() {
-    val target = 150
+    expect(0, Int.MAX_VALUE) {
+        val bottles = input.map { it.toInt() }.toIntArray()
 
-    val bottleCounts = input.map { it.toInt() }.groupingBy { it }.eachCount()
+        repeat(1 shl bottles.size) {
+            var sum = 0
+            var count = 0
 
-    val bottles = bottleCounts.keys.sorted().toTypedArray()
-
-    val usages = IntArray(bottles.size)
-
-    val part2 = IntArray(bottleCounts.values.sum())
-
-    fun calculateScore(): Int {
-        return usages.mapIndexed { index, usage ->
-            usage * bottles[index]
-        }.sum()
-    }
-
-    fun calculatePossibility(): Int {
-        return usages.mapIndexed { index, usage ->
-            var t = 1
-            val bottleCount = bottleCounts[bottles[index]] ?: 1
-            repeat(usage) {
-                t *= (bottleCount - it)
-            }
-            repeat(usage) {
-                t /= (it + 1)
+            it.forEachBit {
+                sum += bottles[it]
+                count++
             }
 
-            t
-        }.fold(1) { a, b -> a * b }
-    }
-
-    var bottleIndex = bottles.lastIndex
-
-    var part1Sum = 0
-    while (true) {
-        val maxCount = bottleCounts[bottles[bottleIndex]] ?: 0
-        val usage = usages[bottleIndex]
-
-        if (usage > maxCount) {
-            usages[bottleIndex] = 0
-
-            bottleIndex--
-            if (bottleIndex < 0) {
-                break
+            if (sum == 150) {
+                part1Result++
+                part2Result = minOf(part2Result, count)
             }
-
-            usages[bottleIndex]++
-            continue
         }
-
-        val score = calculateScore()
-        if (score == target) {
-            val possibility = calculatePossibility()
-            part1Sum += possibility
-
-            part2[usages.sum()] += possibility
-        }
-        bottleIndex = bottles.lastIndex
-        usages[bottleIndex]++
     }
-
-    println(part1Sum)
-    println(part2.first { it > 0 })
 }
 
