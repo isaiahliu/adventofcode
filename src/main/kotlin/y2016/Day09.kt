@@ -1,55 +1,54 @@
 package y2016
 
+import util.expect
 import util.input
 
 fun main() {
-    fun decompress(line: String, applyDecompressRecursively: Boolean = false): Long {
-        var result = 0L
+    expect(0L, 0L) {
+        val line = input.first()
 
-        var inParentheses = false
-        var index = 0
+        fun dfs(startIndex: Int, endIndex: Int, times: Long) {
+            var index = startIndex
 
-        val repeatStr = StringBuilder()
-        while (index < line.length) {
-            val char = line[index]
-            when {
-                char == '(' -> {
-                    inParentheses = true
-                    repeatStr.clear()
-                }
-
-                inParentheses && char == ')' -> {
-                    inParentheses = false
-
-                    val (a, b) = repeatStr.split("x")
-
-                    result += if (applyDecompressRecursively) {
-                        decompress(line.substring(index + 1, index + 1 + a.toInt()), true) * b.toInt()
-                    } else {
-                        a.toLong() * b.toInt()
+            val compressInfo = intArrayOf(0, 0)
+            var fillingInfoIndex = 0
+            while (index <= endIndex) {
+                when (val ch = line[index++]) {
+                    '(' -> {
+                        compressInfo[0] = 0
+                        compressInfo[1] = 0
+                        fillingInfoIndex = 0
                     }
 
-                    index += a.toInt()
-                }
+                    ')' -> {
+                        if (times == 1L) {
+                            part1Result += compressInfo[0] * compressInfo[1]
+                        }
 
-                else -> {
-                    if (inParentheses) {
-                        repeatStr.append(char)
-                    } else {
-                        result++
+                        dfs(index, index + compressInfo[0] - 1, times * compressInfo[1])
+
+                        index += compressInfo[0]
+                    }
+
+                    'x' -> {
+                        fillingInfoIndex++
+                    }
+
+                    in '0'..'9' -> {
+                        compressInfo[fillingInfoIndex] = compressInfo[fillingInfoIndex] * 10 + (ch - '0')
+                    }
+
+                    else -> {
+                        if (times == 1L) {
+                            part1Result++
+                        }
+
+                        part2Result += times
                     }
                 }
             }
-            index++
         }
 
-        return result
+        dfs(0, line.lastIndex, 1)
     }
-
-    val line = input.first()
-    val part1Result = decompress(line)
-    val part2Result = decompress(line, true)
-
-    println(part1Result)
-    println(part2Result)
 }
