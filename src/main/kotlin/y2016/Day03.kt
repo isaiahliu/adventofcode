@@ -1,51 +1,36 @@
 package y2016
 
+import util.expect
 import util.input
+import java.util.*
 
 fun main() {
-    val regex = "\\s*(\\d+)\\s*(\\d+)\\s*(\\d+)".toRegex()
+    expect(0, 0) {
+        val regex = "\\d+".toRegex()
 
-    var result1 = 0
-    var result2 = 0
+        val columns = arrayOf(arrayListOf<Int>(), arrayListOf(), arrayListOf())
+        input.forEach {
+            regex.findAll(it).map { it.groupValues[0].toInt() }.toList().also { nums ->
+                nums.forEachIndexed { index, num -> columns[index] += num }
 
-    val column1 = arrayListOf<Int>()
-    val column2 = arrayListOf<Int>()
-    val column3 = arrayListOf<Int>()
-    input.forEach {
-        val match = regex.matchEntire(it) ?: return
-
-        val sides = match.groupValues.drop(1).take(3).map { it.toInt() }.also {
-            column1 += it[0]
-            column2 += it[1]
-            column3 += it[2]
-        }.sorted()
-
-        if (sides[0] + sides[1] > sides[2]) {
-            result1++
-        }
-    }
-
-    val temp = arrayListOf<Int>()
-    fun read(columns: List<Int>) {
-        columns.forEach {
-            temp += it
-
-            if (temp.size == 3) {
-                val sides = temp.sorted()
-
-                if (sides[0] + sides[1] > sides[2]) {
-                    result2++
+                nums.sorted().takeIf { (a, b, c) -> a + b > c }?.also {
+                    part1Result++
                 }
+            }
+        }
 
-                temp.clear()
+        val temp = PriorityQueue<Int>()
+
+        columns.forEach {
+            it.forEach {
+                temp.add(it)
+
+                if (temp.size == 3) {
+                    if (temp.poll() + temp.poll() > temp.poll()) {
+                        part2Result++
+                    }
+                }
             }
         }
     }
-
-    read(column1)
-    read(column2)
-    read(column3)
-
-    println(result1)
-    println(result2)
 }

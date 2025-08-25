@@ -25,9 +25,8 @@ fun main() {
         }
 
         val directions = intArrayOf(0, 1)
-        val regex = "(\\w)(\\d+)".toRegex()
 
-        regex.findAll(input.first()).map {
+        "(\\w)(\\d+)".toRegex().findAll(input.first()).map {
             it.groupValues[1] to it.groupValues[2].toInt()
         }.forEach { (direction, steps) ->
             directions.reverse()
