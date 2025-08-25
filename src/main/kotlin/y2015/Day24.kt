@@ -7,33 +7,35 @@ fun main() {
     expect(Long.MAX_VALUE, Long.MAX_VALUE) {
         val packages = input.map { it.toInt() }
 
-        val packageSum1 = packages.sum() / 3
-        val packageSum2 = packages.sum() / 4
+        val totalSum = packages.sum()
+
+        val packageSum1 = totalSum / 3
+        val packageSum2 = totalSum / 4
 
         var dp = mutableMapOf<Int, Long>()
 
-        packages.forEach { p ->
+        packages.forEach { num ->
             val newDp = dp.toMutableMap()
 
-            dp.forEach { (sum, prod) ->
-                val newSum = sum + p
-                val newProd = prod * p
+            dp.forEach { (s, p) ->
+                val sum = s + num
+                val prod = p * num
 
-                if (newSum <= maxOf(packageSum1, packageSum2) && newProd > 0) {
-                    when (newSum) {
+                if (sum <= maxOf(packageSum1, packageSum2) && prod > 0) {
+                    when (sum) {
                         packageSum1 -> {
-                            part1Result = minOf(part1Result, newProd)
+                            part1Result = minOf(part1Result, prod)
                         }
 
                         packageSum2 -> {
-                            part2Result = minOf(part2Result, newProd)
+                            part2Result = minOf(part2Result, prod)
                         }
 
                     }
-                    newDp[newSum] = minOf(newDp[newSum] ?: Long.MAX_VALUE, newProd)
+                    newDp[sum] = minOf(newDp[sum] ?: Long.MAX_VALUE, prod)
                 }
             }
-            newDp[p] = minOf(newDp[p] ?: Long.MAX_VALUE, p.toLong())
+            newDp[num] = minOf(newDp[num] ?: Long.MAX_VALUE, num.toLong())
 
             dp = newDp
         }

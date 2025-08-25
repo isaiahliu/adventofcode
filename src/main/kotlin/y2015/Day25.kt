@@ -1,40 +1,18 @@
 package y2015
 
+import util.expect
 import util.input
 
 fun main() {
-    val regex =
-        "To continue, please consult the code grid in the manual.  Enter the code at row (\\d+), column (\\d+).".toRegex()
+    expect(0, "Merry Christmas!") {
+        val (row, column) = "\\d+".toRegex().findAll(input.first()).map { it.groupValues[0].toInt() }.toList()
 
-    val match = regex.matchEntire(input.first()) ?: return
+        val position = ((row + column - 2) * (row + column - 1) / 2 + column - 1).toBigInteger()
 
-    val row = match.groupValues[1].toInt()
-    val column = match.groupValues[2].toInt()
+        val base = 20151125.toBigInteger()
+        val factor = 252533.toBigInteger()
+        val mod = 33554393.toBigInteger()
 
-    var current = 20151125L
-
-    var currentRow = 1
-    var currentColumn = 1
-
-    fun next() {
-        current = (current * 252533L) % 33554393
+        part1Result = (base * factor.modPow(position, mod)).mod(mod).toInt()
     }
-
-    while (true) {
-        if (currentRow == 1) {
-            currentRow = currentColumn + 1
-            currentColumn = 1
-        } else {
-            currentColumn++
-            currentRow--
-        }
-
-        next()
-
-        if (currentRow == row && currentColumn == column) {
-            break
-        }
-    }
-
-    println(current)
 }
