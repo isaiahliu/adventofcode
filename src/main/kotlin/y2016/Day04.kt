@@ -1,43 +1,38 @@
 package y2016
 
+import util.expect
 import util.input
 
 fun main() {
-    val regex = "(.*)-(\\d+)\\[(.*)\\]".toRegex()
+    expect(0, 0) {
+        val regex = "(.*)-(\\d+)\\[(.*)]".toRegex()
 
-    var part1Result = 0
-    var part2Result = 0
+        input.forEach {
+            val (name, roomIdStr, checksum) = regex.matchEntire(it)?.groupValues?.drop(1) ?: return@forEach
 
-    val alphabets = ('a'..'z').map { it }.toCharArray()
+            val counts = name.groupingBy { it }.eachCount().toMutableMap()
+            counts -= '-'
 
-    input.forEach {
-        val match = regex.matchEntire(it) ?: return
+            var min = Int.MAX_VALUE
+            checksum.forEach {
+                min = minOf(min, counts.remove(it) ?: 0)
+            }
 
-        val (name, roomIdStr, checksum) = match.groupValues.drop(1)
+            val roomId = roomIdStr.toInt()
+            if (min >= counts.values.max()) {
+                part1Result += roomId
+            }
 
-        val charsCount = name.filter {
-            it in 'a'..'z'
-        }.groupingBy { it }.eachCount().toMutableMap()
+            val decryptedName = name.map {
+                when (it) {
+                    '-' -> ' '
+                    else -> 'a' + (it - 'a' + roomId) % 26
+                }
+            }.toCharArray().concatToString()
 
-        var min = Int.MAX_VALUE
-        checksum.forEach {
-            val count = charsCount.remove(it) ?: 0
-
-            min = min.coerceAtMost(count)
-        }
-
-        val roomId = roomIdStr.toInt()
-        if (charsCount.none { it.value > min }) {
-            part1Result += roomId
-        }
-
-        if (String(name.map {
-                if (it in 'a'..'z') alphabets[((it - 'a') + roomId) % 26] else ' '
-            }.toCharArray()) == "northpole object storage") {
-            part2Result = roomId
+            if (decryptedName == "northpole object storage") {
+                part2Result = roomId
+            }
         }
     }
-
-    println(part1Result)
-    println(part2Result)
 }
