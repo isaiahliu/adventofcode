@@ -1,83 +1,40 @@
 package y2015
 
+import util.expect
 import util.input
 
 fun main() {
-    val primes = arrayListOf<Int>()
-    fun nextPrime(num: Int): Int {
-        val next = primes.firstOrNull { it > num }
+    expect(0, 0) {
+        val target = input.first().toInt()
 
-        if (next != null) {
-            return next
-        }
+        fun calculate(times: Int, maxHouse: Int): Int {
+            val dp = hashMapOf<Int, MutableMap<Int, Int>>()
 
-        var temp = num + 1
-        while (true) {
-            var prime = true
-            for (f in 2..temp / 2) {
-                if (temp % f == 0) {
-                    prime = false
-
-                    break
+            var num = 2
+            while (true) {
+                var sum = (num + 1) * times
+                dp.remove(num)?.forEach { (key, house) ->
+                    sum += key * times
+                    if (house > 1) {
+                        dp.computeIfAbsent(num + key) { hashMapOf() }[key] = house - 1
+                    }
+                } ?: run {
+                    if (num > 20) {
+                        num++
+                        continue
+                    }
                 }
-            }
 
-            if (prime) {
-                return temp.also { primes += temp }
-            } else {
-                temp++
-            }
-        }
-    }
+                dp.computeIfAbsent(num + num) { hashMapOf() }[num] = maxHouse
+                if (sum >= target) {
+                    return num
+                }
 
-    val target = input.first().toInt()
-
-    var min1 = Long.MAX_VALUE
-    var min2 = Long.MAX_VALUE
-
-    fun process1(num: Long, minPrime: Int, factors: Set<Long>) {
-        var prime = minPrime
-        while (prime < 20) {
-            val newFactors = hashSetOf<Long>()
-
-            newFactors += factors
-            newFactors += factors.map { it * prime }
-
-            val newNum = num * prime
-            if (newFactors.sum() * 10 < target) {
-                process1(newNum, prime, newFactors)
-                prime = nextPrime(prime)
-            } else {
-                min1 = min1.coerceAtMost(newNum)
-
-                break
+                num++
             }
         }
+
+        part1Result = calculate(10, Int.MAX_VALUE)
+        part2Result = calculate(11, 50)
     }
-
-    fun process2(num: Long, minPrime: Int, factors: Set<Long>) {
-        var prime = minPrime
-        while (prime < 100) {
-            val newFactors = hashSetOf<Long>()
-
-            newFactors += factors
-            newFactors += factors.map { it * prime }
-
-            val newNum = num * prime
-            if (newFactors.filter { newNum / it <= 50 }.sum() * 11 < target) {
-                process2(newNum, prime, newFactors)
-                prime = nextPrime(prime)
-            } else {
-                min2 = min2.coerceAtMost(newNum)
-
-                break
-            }
-        }
-    }
-
-    process1(1, 2, setOf(1))
-    process2(1, 2, setOf(1))
-
-    println(min1)
-    println(min2)
 }
