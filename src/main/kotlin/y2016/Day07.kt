@@ -1,83 +1,37 @@
 package y2016
 
+import util.expect
 import util.input
 
 fun main() {
-    val regex = "(\\w+)\\[(\\w+)\\](.*)".toRegex()
+    expect(0, 0) {
+        input.forEach { line ->
+            var sides = 0
 
-    var result1 = 0
-    var result2 = 0
+            val abba = booleanArrayOf(false, false)
+            val aba = arrayOf(hashSetOf<Pair<Char, Char>>(), hashSetOf())
 
-    input.forEach {
-        val outside = arrayListOf<String>()
-        val inside = arrayListOf<String>()
+            line.forEachIndexed { index, ch ->
+                when (ch) {
+                    '[', ']' -> sides = 1 - sides
+                    line.getOrNull(index - 1) -> {}
+                    line.getOrNull(index - 3) if line.getOrNull(index - 2) == line.getOrNull(index - 1) -> {
+                        abba[sides] = true
+                    }
 
-        var line = it
-
-        while (true) {
-            if (line.isEmpty()) {
-                break
+                    line.getOrNull(index - 2) -> {
+                        aba[sides] += ch to line[index - 1]
+                    }
+                }
             }
 
-            val match = regex.matchEntire(line)
-            if (match == null) {
-                outside += line
-                break
-            } else {
-                outside += match.groupValues[1]
-                inside += match.groupValues[2]
-                line = match.groupValues[3]
+            if (abba[0] && !abba[1]) {
+                part1Result++
             }
-        }
 
-        if (outside.any { it.abba } && inside.none { it.abba }) {
-            result1++
-        }
-
-        val aba = outside.map { it.aba }.flatten().toSet()
-        val bab = inside.map { it.bab }.flatten().toSet()
-
-        if (aba.intersect(bab).isNotEmpty()) {
-            result2++
+            if (aba[0].any { (a, b) -> b to a in aba[1] }) {
+                part2Result++
+            }
         }
     }
-
-    println(result1)
-    println(result2)
 }
-
-private val String.abba: Boolean
-    get() {
-        repeat(length - 3) {
-            if (this[it] == this[it + 3] && this[it + 1] == this[it + 2] && this[it] != this[it + 1]) {
-                return true
-            }
-        }
-
-        return false
-    }
-
-private val String.aba: Set<String>
-    get() {
-        val set = hashSetOf<String>()
-        repeat(length - 2) {
-            if (this[it] == this[it + 2] && this[it] != this[it + 1]) {
-                set += "${this[it]}${this[it + 1]}"
-            }
-        }
-
-        return set
-    }
-private val String.bab: Set<String>
-    get() {
-        val set = hashSetOf<String>()
-        repeat(length - 2) {
-            if (this[it] == this[it + 2] && this[it] != this[it + 1]) {
-                set += "${this[it + 1]}${this[it]}"
-            }
-        }
-
-        return set
-    }
-
-
