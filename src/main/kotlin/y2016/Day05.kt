@@ -11,8 +11,7 @@ fun main() {
         val filledIndices = hashSetOf<Int>()
 
         while (part1Result.length < 8 || filledIndices.size < 8) {
-            val md5 = (input.first() + currentNum).md5
-            if (md5.startsWith("00000")) {
+            (input.first() + currentNum).md5.takeIf { it.startsWith("00000") }?.also { md5 ->
                 if (part1Result.length < 8) {
                     part1Result.append(md5[5])
                 }

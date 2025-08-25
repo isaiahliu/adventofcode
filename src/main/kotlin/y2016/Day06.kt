@@ -1,26 +1,15 @@
 package y2016
 
+import util.expect
 import util.input
 
 fun main() {
-    val list = Array<MutableList<Char>>(input.first().length) {
-        arrayListOf()
-    }
-
-    input.forEach {
-        it.forEachIndexed { index, c ->
-            list[index] += c
+    expect(StringBuilder(), StringBuilder()) {
+        input.first().indices.map { index ->
+            input.groupingBy { it[index] }.eachCount()
+        }.forEach {
+            part1Result.append(it.maxBy { it.value }.key)
+            part2Result.append(it.minBy { it.value }.key)
         }
     }
-
-    val result1 = list.joinToString("") {
-        it.groupingBy { it }.eachCount().maxBy { it.value }.key.toString()
-    }
-
-    val result2 = list.joinToString("") {
-        it.groupingBy { it }.eachCount().minBy { it.value }.key.toString()
-    }
-
-    println(result1)
-    println(result2)
 }
