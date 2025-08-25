@@ -1,63 +1,81 @@
 package y2016
 
+import util.expect
 import util.input
-import kotlin.math.absoluteValue
 
 fun main() {
-    val keyboard1 = Array(3) { x ->
-        IntArray(3) { y ->
-            x * 3 + y + 1
-        }
-    }
+    expect("", "") {
+        abstract class AbstractKeyBoard(protected var x: Int, protected var y: Int) {
+            protected abstract fun inBound(): Boolean
 
-    var num = 1
-    val keyboard2 = Array(5) { x ->
-        Array(5) { y ->
-            if ((x - 2).absoluteValue + (y - 2).absoluteValue <= 2) {
-                (num++).toString(16).uppercase()
-            } else {
-                ""
+            fun move(direction: Char) {
+                var deltaX = 0
+                var deltaY = 0
+
+                when (direction) {
+                    'U' -> deltaY = -1
+                    'D' -> deltaY = 1
+                    'L' -> deltaX = -1
+                    'R' -> deltaX = 1
+                }
+
+                x += deltaX
+                y += deltaY
+
+                if (!inBound()) {
+                    x -= deltaX
+                    y -= deltaY
+                }
             }
+
+            val password = StringBuilder()
+            fun markCode() {
+                password.append(code())
+            }
+
+            protected abstract fun code(): Char
         }
-    }
 
-    var x1 = 1
-    var y1 = 1
-    var x2 = 2
-    var y2 = 0
+        class KeyBoard1 : AbstractKeyBoard(2, 2) {
+            override fun inBound(): Boolean {
+                return x in 0..2 && y in 0..2
+            }
 
-    val result1 = StringBuilder()
-    val result2 = StringBuilder()
-
-    input.forEach {
-        it.forEach {
-            when (it) {
-                'L' -> {
-                    y1 = (y1 - 1).coerceAtLeast(0)
-                    y2 = (y2 - 1).coerceAtLeast((x2 - 2).absoluteValue)
-                }
-
-                'R' -> {
-                    y1 = (y1 + 1).coerceAtMost(2)
-                    y2 = (y2 + 1).coerceAtMost(4 - (x2 - 2).absoluteValue)
-                }
-
-                'U' -> {
-                    x1 = (x1 - 1).coerceAtLeast(0)
-                    x2 = (x2 - 1).coerceAtLeast((y2 - 2).absoluteValue)
-                }
-
-                'D' -> {
-                    x1 = (x1 + 1).coerceAtMost(2)
-                    x2 = (x2 + 1).coerceAtMost(4 - (y2 - 2).absoluteValue)
-                }
+            override fun code(): Char {
+                return '1' + y * 3 + x
             }
         }
 
-        result1.append(keyboard1[x1][y1])
-        result2.append(keyboard2[x2][y2])
-    }
+        class KeyBoard2 : AbstractKeyBoard(2, 0) {
+            override fun inBound(): Boolean {
+                return x - y in -2..2 && x + y in 2..6
+            }
 
-    println(result1)
-    println(result2)
+            private val map = arrayOf(
+                "  1  ",
+                " 234 ",
+                "56789",
+                " ABC ",
+                "  D  "
+            )
+
+            override fun code(): Char {
+                return map[y][x]
+            }
+        }
+
+        val boards = arrayOf(KeyBoard1(), KeyBoard2())
+
+        input.forEach {
+            it.forEach {
+                boards.forEach { b ->
+                    b.move(it)
+                }
+            }
+
+            boards.forEach { it.markCode() }
+        }
+        part1Result = boards[0].password.toString()
+        part2Result = boards[1].password.toString()
+    }
 }
