@@ -1,38 +1,41 @@
 package y2015
 
+import util.expect
 import util.input
 
 fun main() {
-    val packages = input.map { it.toInt() }.sortedDescending()
+    expect(Long.MAX_VALUE, Long.MAX_VALUE) {
+        val packages = input.map { it.toInt() }
 
-    fun process(packageSum: Int): Long {
-        var minPackageCount = Int.MAX_VALUE
-        var minQe = Long.MAX_VALUE
+        val packageSum1 = packages.sum() / 3
+        val packageSum2 = packages.sum() / 4
 
-        repeat(1 shl packages.size) { t ->
-            val picked = packages.filterIndexed { index, _ ->
-                t and (1 shl index) > 0
-            }
+        var dp = mutableMapOf<Int, Long>()
 
-            if (picked.size > minPackageCount) {
-                return@repeat
-            }
+        packages.forEach { p ->
+            val newDp = dp.toMutableMap()
 
-            if (picked.sum() == packageSum) {
-                val qe = picked.fold(1L) { a, b -> a * b }
+            dp.forEach { (sum, prod) ->
+                val newSum = sum + p
+                val newProd = prod * p
 
-                if (picked.size < minPackageCount) {
-                    minPackageCount = picked.size
-                    minQe = qe
-                } else {
-                    minQe = minQe.coerceAtMost(qe)
+                if (newSum <= maxOf(packageSum1, packageSum2) && newProd > 0) {
+                    when (newSum) {
+                        packageSum1 -> {
+                            part1Result = minOf(part1Result, newProd)
+                        }
+
+                        packageSum2 -> {
+                            part2Result = minOf(part2Result, newProd)
+                        }
+
+                    }
+                    newDp[newSum] = minOf(newDp[newSum] ?: Long.MAX_VALUE, newProd)
                 }
             }
+            newDp[p] = minOf(newDp[p] ?: Long.MAX_VALUE, p.toLong())
+
+            dp = newDp
         }
-
-        return minQe
     }
-
-    println(process(packages.sum() / 3))
-    println(process(packages.sum() / 4))
 }
