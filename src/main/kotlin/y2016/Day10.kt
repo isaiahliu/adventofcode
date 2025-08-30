@@ -1,102 +1,63 @@
 package y2016
 
+import util.expect
 import util.input
 
 fun main() {
-    val values = arrayListOf<Pair<Int, Int>>()
-
-    val robots = hashMapOf<Int, Robot>()
-    val outputs = hashMapOf<Int, Output>()
-
-    input.map { it.split(" ") }.forEach {
-        when (it[0]) {
-            "value" -> {
-                values += it[5].toInt() to it[1].toInt()
+    expect(0, 1) {
+        val bots = hashMapOf<Int, Pair<MutableList<Int>, Pair<(Int) -> Unit, (Int) -> Unit>>>()
+        val inputs = arrayListOf<Pair<Int, Int>>()
+        fun writeToOutput(index: Int, value: Int) {
+            if (index in 0..2) {
+                part2Result *= value
             }
+        }
 
-            "bot" -> {
-                val robot = robots.computeIfAbsent(it[1].toInt()) {
-                    Robot()
-                }
+        fun writeToBot(index: Int, value: Int) {
+            bots[index]?.also { (values, writer) ->
+                values.add(value)
 
-                robot.lower = when (it[5]) {
-                    "bot" -> {
-                        robots.computeIfAbsent(it[6].toInt()) { Robot() }
-                    }
+                if (values.size == 2) {
+                    values.sorted().also { (low, high) ->
+                        if (low == 17 && high == 61) {
+                            part1Result = index
+                        }
 
-                    else -> {
-                        outputs.computeIfAbsent(it[6].toInt()) { Output() }
-                    }
-                }
-
-                robot.higher = when (it[10]) {
-                    "bot" -> {
-                        robots.computeIfAbsent(it[11].toInt()) { Robot() }
-                    }
-
-                    else -> {
-                        outputs.computeIfAbsent(it[11].toInt()) { Output() }
+                        writer.first(low)
+                        writer.second(high)
                     }
                 }
             }
+        }
 
-            else -> {
-                throw Exception("else")
+        input.map { it.split(" ") }.forEach {
+            when (it[0]) {
+                "value" -> {
+                    inputs += it[5].toInt() to it[1].toInt()
+                }
+
+                "bot" -> {
+                    val lower = when (it[5]) {
+                        "bot" -> { value: Int -> writeToBot(it[6].toInt(), value) }
+                        else -> { value: Int -> writeToOutput(it[6].toInt(), value) }
+                    }
+
+                    val higher = when (it[10]) {
+                        "bot" -> { value: Int -> writeToBot(it[11].toInt(), value) }
+                        else -> { value: Int -> writeToOutput(it[11].toInt(), value) }
+                    }
+
+                    bots[it[1].toInt()] = mutableListOf<Int>() to (lower to higher)
+                }
+
+                else -> {
+                    throw Exception("else")
+                }
             }
         }
-    }
-
-    values.forEach {
-        robots[it.first]?.receive(it.second)
-    }
-
-    val result1 = robots.entries.first {
-        it.value.history.any {
-            it.first == 17 && it.second == 61
+        
+        inputs.forEach { (index, value) ->
+            writeToBot(index, value)
         }
-    }.key
-
-    println(result1)
-
-    val output012 =
-        outputs[0]?.history.orEmpty().union(outputs[1]?.history.orEmpty()).union(outputs[2]?.history.orEmpty())
-
-    println(output012.fold(1) { a, b -> a * b })
-}
-
-private interface IReceivable {
-    fun receive(value: Int)
-}
-
-private class Robot : IReceivable {
-    val values = arrayListOf<Int>()
-
-    lateinit var lower: IReceivable
-
-    lateinit var higher: IReceivable
-
-    val history = arrayListOf<Pair<Int, Int>>()
-
-    override fun receive(value: Int) {
-        values += value
-
-        if (values.size == 2) {
-            val (low, high) = values.sorted()
-
-            values.clear()
-
-            lower.receive(low)
-            higher.receive(high)
-
-            history += low to high
-        }
-    }
-}
-
-private class Output : IReceivable {
-    val history = arrayListOf<Int>()
-
-    override fun receive(value: Int) {
-        history += value
     }
 }
