@@ -22,7 +22,7 @@ fun main() {
                 }
             }
 
-            val visited = hashSetOf<Pair<Int, Long>>()
+            val visited = Array(4) { hashSetOf<Long>() }
             val tasks = LinkedList<Pair<Int, Long>>()
 
             fun addTask(floor: Int, state: Long) {
@@ -32,7 +32,7 @@ fun main() {
 
                 val newState = state.toSortedState()
 
-                if (visited.add(floor to newState)) {
+                if (visited[floor].add(newState)) {
                     tasks.add(floor to newState)
                 }
             }
@@ -74,24 +74,19 @@ fun main() {
         }
 
         var init = 0L
-        input.forEach {
-            val floor = when {
-                it.contains("first floor") -> 0b11L
-                it.contains("second floor") -> 0b10L
-                it.contains("third floor") -> 0b01L
-                else -> 0b00L
-            }
+        input.forEachIndexed { index, line ->
+            val floor = 3L - index
 
-            if (it.contains("promethium-compatible microchip")) init += floor shl 0
-            if (it.contains("promethium generator")) init += floor shl 2
-            if (it.contains("cobalt-compatible microchip")) init += floor shl 4
-            if (it.contains("cobalt generator")) init += floor shl 6
-            if (it.contains("curium-compatible microchip")) init += floor shl 8
-            if (it.contains("curium generator")) init += floor shl 10
-            if (it.contains("ruthenium-compatible microchip")) init += floor shl 12
-            if (it.contains("ruthenium generator")) init += floor shl 14
-            if (it.contains("plutonium-compatible microchip")) init += floor shl 16
-            if (it.contains("plutonium generator")) init += floor shl 18
+            if (line.contains("promethium-compatible microchip")) init += floor shl 0
+            if (line.contains("promethium generator")) init += floor shl 2
+            if (line.contains("cobalt-compatible microchip")) init += floor shl 4
+            if (line.contains("cobalt generator")) init += floor shl 6
+            if (line.contains("curium-compatible microchip")) init += floor shl 8
+            if (line.contains("curium generator")) init += floor shl 10
+            if (line.contains("ruthenium-compatible microchip")) init += floor shl 12
+            if (line.contains("ruthenium generator")) init += floor shl 14
+            if (line.contains("plutonium-compatible microchip")) init += floor shl 16
+            if (line.contains("plutonium generator")) init += floor shl 18
         }
 
         part1Result = process(init, 5)
