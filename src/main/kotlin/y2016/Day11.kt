@@ -1,140 +1,100 @@
 package y2016
 
+import util.expect
 import util.input
+import java.util.*
 
 fun main() {
-    val initSpace = IntArray(10)
+    expect(0, 0) {
+        fun process(state: Long, size: Int): Int {
+            fun Long.toSortedState(): Long {
+                return (0 until size).map {
+                    (this shr (it * 4)) and 0b1111
+                }.sorted().mapIndexed { index, state -> state shl (index * 4) }.sum()
+            }
 
-    input.forEach {
-        val floor = when {
-            it.contains("first floor") -> 0
-            it.contains("second floor") -> 1
-            it.contains("third floor") -> 2
-            else -> 3
-        }
+            fun checkState(state: Long): Boolean {
+                return (0 until 4).all { floor ->
+                    val microChips = (0 until size).filter { ((state shr (it * 4)) and 0b11).toInt() == floor }
+                    val generators = (0 until size).filter { ((state shr (it * 4 + 2)) and 0b11).toInt() == floor }
 
-        if (it.contains("promethium-compatible microchip")) initSpace[0] = floor
-        if (it.contains("cobalt-compatible microchip")) initSpace[1] = floor
-        if (it.contains("curium-compatible microchip")) initSpace[2] = floor
-        if (it.contains("ruthenium-compatible microchip")) initSpace[3] = floor
-        if (it.contains("plutonium-compatible microchip")) initSpace[4] = floor
-        if (it.contains("promethium generator")) initSpace[0 + 5] = floor
-        if (it.contains("cobalt generator")) initSpace[1 + 5] = floor
-        if (it.contains("curium generator")) initSpace[2 + 5] = floor
-        if (it.contains("ruthenium generator")) initSpace[3 + 5] = floor
-        if (it.contains("plutonium generator")) initSpace[4 + 5] = floor
-    }
-
-    fun process(inputSpace: IntArray): Int {
-        val walked = hashMapOf<Int, MutableSet<String>>(
-            0 to hashSetOf(),
-            1 to hashSetOf(),
-            2 to hashSetOf(),
-            3 to hashSetOf()
-        )
-
-        fun IntArray.walked(elevator: Int): Boolean {
-            return !walked[elevator]!!.add(joinToString(""))
-        }
-
-        fun IntArray.explode(): Boolean {
-            for (index in 0 until size / 2) {
-                if (this[index] != this[index + size / 2]) {
-                    if (this.takeLast(size / 2).any {
-                            it == this[index]
-                        }) {
-                        return true
-                    }
+                    generators.isEmpty() || microChips.all { it in generators }
                 }
             }
-            return false
-        }
 
-        var step = 0
+            val visited = hashSetOf<Pair<Int, Long>>()
+            val tasks = LinkedList<Pair<Int, Long>>()
 
-        val currentStats = arrayListOf(0 to inputSpace)
-
-        while (true) {
-            val stat = currentStats.toList()
-            currentStats.clear()
-
-            for ((elevator, space) in stat) {
-                if (space.walked(elevator)) {
-                    continue
+            fun addTask(floor: Int, state: Long) {
+                if (!checkState(state)) {
+                    return
                 }
 
-                if (space.all { it == 3 }) {
-                    return step
+                val newState = state.toSortedState()
+
+                if (visited.add(floor to newState)) {
+                    tasks.add(floor to newState)
                 }
+            }
 
-                if (space.explode()) {
-                    continue
-                }
+            addTask(0b11, state)
 
-                val current = space.mapIndexed { index, floor ->
-                    if (elevator == floor) {
-                        index
-                    } else {
-                        null
-                    }
-                }.filterNotNull().sortedDescending()
+            var result = 0
+            loop@ while (tasks.isNotEmpty()) {
+                repeat(tasks.size) {
+                    val (elevator, state) = tasks.poll()
 
-                current.forEach { item1 ->
-                    //Move up
-                    if (elevator < 3) {
-                        currentStats += (elevator + 1) to IntArray(space.size) {
-                            space[it]
-                        }.also {
-                            it[item1]++
-                        }
-
-                        current.forEach { item2 ->
-                            if (item1 < item2) {
-                                currentStats += (elevator + 1) to IntArray(space.size) {
-                                    space[it]
-                                }.also {
-                                    it[item1]++
-                                    it[item2]++
-                                }
-                            }
-                        }
+                    if (state == 0L) {
+                        break@loop
                     }
 
-                    if (elevator > 0) {
-                        currentStats += (elevator - 1) to IntArray(space.size) {
-                            space[it]
-                        }.also {
-                            it[item1]--
-                        }
+                    val items = (0 until size * 2).filter {
+                        ((state shr it * 2) and 0b11).toInt() == elevator
+                    }
 
-                        current.forEach { item2 ->
-                            if (item1 < item2) {
-                                currentStats += (elevator - 1) to IntArray(space.size) {
-                                    space[it]
-                                }.also {
-                                    it[item1]--
-                                    it[item2]--
-                                }
+                    arrayOf(elevator + 1, elevator - 1).filter { it in 0 until 4 }.forEach { targetFloor ->
+                        for (index1 in items.indices) {
+                            val item1 = items[index1]
+
+                            val newState = state + ((targetFloor - elevator) shl (item1 * 2))
+                            addTask(targetFloor, newState)
+
+                            for (index2 in index1 + 1 until items.size) {
+                                val item2 = items[index2]
+
+                                addTask(targetFloor, newState + ((targetFloor - elevator) shl (item2 * 2)))
                             }
                         }
                     }
                 }
+                result++
             }
-            step++
+
+            return result
         }
+
+        var init = 0L
+        input.forEach {
+            val floor = when {
+                it.contains("first floor") -> 0b11L
+                it.contains("second floor") -> 0b10L
+                it.contains("third floor") -> 0b01L
+                else -> 0b00L
+            }
+
+            if (it.contains("promethium-compatible microchip")) init += floor shl 0
+            if (it.contains("promethium generator")) init += floor shl 2
+            if (it.contains("cobalt-compatible microchip")) init += floor shl 4
+            if (it.contains("cobalt generator")) init += floor shl 6
+            if (it.contains("curium-compatible microchip")) init += floor shl 8
+            if (it.contains("curium generator")) init += floor shl 10
+            if (it.contains("ruthenium-compatible microchip")) init += floor shl 12
+            if (it.contains("ruthenium generator")) init += floor shl 14
+            if (it.contains("plutonium-compatible microchip")) init += floor shl 16
+            if (it.contains("plutonium generator")) init += floor shl 18
+        }
+
+        part1Result = process(init, 5)
+        part2Result = process((init shl 8) + 0b11111111, 7)
     }
-
-    println(process(initSpace))
-
-    val step2Input = buildList {
-        add(0)
-        add(0)
-        addAll(initSpace.take(initSpace.size / 2))
-        add(0)
-        add(0)
-        addAll(initSpace.takeLast(initSpace.size / 2))
-    }.toIntArray()
-
-    println(process(step2Input))
 }
-
