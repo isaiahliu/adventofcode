@@ -11,22 +11,21 @@ fun main() {
 
             val child by lazy { CheckSum(size / 2, output) }
             fun add(value: Int) {
-                if (size % 2 == 1) {
-                    output.append(value)
-                } else {
-                    count++
-                    checkSum += value
+                checkSum += value
+                when {
+                    size % 2 == 1 -> {
+                        output.append(value)
+                    }
 
-                    if (count == 2) {
+                    count++ % 2 == 1 -> {
                         child.add((checkSum and 1) xor 1)
                         checkSum = 0
-                        count = 0
                     }
                 }
             }
         }
 
-        val base = input.first()
+        val base = input.first().map { it - '0' }.toIntArray()
         var baseIndex = -1
         var baseIndexOffset = 1
         var split = 1
@@ -37,7 +36,7 @@ fun main() {
             baseIndex += baseIndexOffset
 
             val num = base.getOrNull(baseIndex)?.let {
-                it - '0' xor ((baseIndexOffset + 1) / 2) xor 1
+                it xor ((baseIndexOffset + 1) / 2) xor 1
             } ?: run {
                 baseIndexOffset = -baseIndexOffset
                 var num = split++
