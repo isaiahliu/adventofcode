@@ -1,68 +1,80 @@
 package y2016
 
+import util.expect
 import util.input
 import util.md5
+import java.util.*
 
 fun main() {
-    val salt = input.first()
-//    val salt = "abc"
+    expect(0, 0) {
+        val salt = input.first()
 
-    fun String.findDupChars(times: Int): Char? {
-        for (index in 0..length - times) {
-            val current = this[index]
+        fun process(additionalHashTimes: Int): Int {
+            val tripleChars = hashMapOf<Int, Char>()
+            val pentChars = hashMapOf<Char, LinkedList<Int>>()
 
-            if ((1 until times).all {
-                    current == this[index + it]
-                }) {
-                return current
-            }
-        }
+            var foundKeys = 0
+            var startSuffix = -1
+            var endSuffix = 0
 
-        return null
-    }
+            while (foundKeys < 64) {
+                startSuffix++
 
-    fun process(extra: Int): Int {
-        val md5Cache = hashMapOf<Int, String>()
-        fun Int.md5(): String {
-            return md5Cache.computeIfAbsent(this) {
-                (0..extra).fold("${salt}${this}") { a, _ ->
-                    a.md5
-                }
-            }
-        }
+                while (endSuffix - startSuffix < 1000) {
+                    var lastChar = ' '
+                    var count = 0
 
-        val pentCache = hashMapOf<Int, Char?>()
-        fun Int.pentChar(): Char? {
-            return pentCache.computeIfAbsent(this) {
-                it.md5().findDupChars(5)
-            }
-        }
+                    var pentChar: Char? = null
+                    var tripleChar: Char? = null
 
-        fun Int.tripleChar(): Char? {
-            return md5().findDupChars(3)
-        }
-
-        var currentNum = -1
-
-        var foundKeys = 0
-        while (foundKeys < 64) {
-            currentNum++
-
-            val tripleChar = currentNum.tripleChar()
-            if (tripleChar != null) {
-                for (i in 0 until 1000) {
-                    if ((currentNum + i + 1).pentChar() == tripleChar) {
-                        foundKeys++
-                        break
+                    var t = "${salt}${endSuffix}".md5
+                    repeat(additionalHashTimes) {
+                        t = t.md5
                     }
+
+                    t.forEach {
+                        if (it == lastChar) {
+                            count++
+
+                            when (count) {
+                                3 -> {
+                                    tripleChar = tripleChar ?: it
+                                }
+
+                                5 -> {
+                                    pentChar = pentChar ?: it
+                                }
+                            }
+                        } else {
+                            lastChar = it
+                            count = 1
+                        }
+                    }
+
+                    tripleChar?.also {
+                        tripleChars[endSuffix] = it
+                    }
+
+                    pentChar?.also {
+                        pentChars.computeIfAbsent(it) { LinkedList() } += endSuffix
+                    }
+
+                    endSuffix++
+                }
+
+                tripleChars[startSuffix]?.let {
+                    pentChars[it]
+                }?.takeIf {
+                    it.last() > startSuffix
+                }?.also {
+                    foundKeys++
                 }
             }
+
+            return startSuffix
         }
 
-        return currentNum
+        part1Result = process(0)
+        part2Result = process(2016)
     }
-
-
-    println(process(0))
-    println(process(2016))
 }
