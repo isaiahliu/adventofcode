@@ -1,38 +1,55 @@
 package y2016
 
+import util.expect
 import util.input
 
 fun main() {
-    val ranges = input.map { it.split("-") }.map { IpRange(it[0].toLong(), it[1].toLong()) }
-        .sortedWith(compareBy<IpRange> { it.min }.thenBy { it.max })
-
-    var (min, max) = ranges.first()
-    var part1Result = min - 1
-
-    var part2Result = min
-
-    for (range in ranges) {
-        if (part1Result < 0 && range.min > max + 1) {
-            part1Result = max + 1
-        }
-
-        when {
-            range.min > max -> {
-                part2Result += range.min - max - 1
-
-                max = range.max
+    expect(0L, 0L) {
+        class SegNode(val start: Long, val end: Long) {
+            val children by lazy {
+                arrayOf(SegNode(start, (start + end) / 2), SegNode((start + end) / 2 + 1, end))
             }
 
-            else -> {
-                max = max.coerceAtLeast(range.max)
+            var someBanned = false
+            var allBanned = false
+
+            fun mark(from: Long, to: Long) {
+                when {
+                    from > end || to < start -> {}
+                    from <= start && to >= end -> allBanned = true
+                    else -> {
+                        someBanned = true
+                        children.forEach {
+                            it.mark(from, to)
+                        }
+                    }
+                }
+            }
+
+            fun min(): Long? {
+                return when {
+                    allBanned -> null
+                    !someBanned -> start
+                    else -> children[0].min() ?: children[1].min()
+                }
+            }
+
+            fun count(): Long {
+                return when {
+                    allBanned -> 0
+                    !someBanned -> end - start + 1
+                    else -> children.sumOf { it.count() }
+                }
             }
         }
+
+        val root = SegNode(0L, 4294967295L)
+
+        input.map { it.split("-").map { it.toLong() } }.forEach { (from, to) ->
+            root.mark(from, to)
+        }
+
+        part1Result = root.min() ?: 0
+        part2Result = root.count()
     }
-
-    part2Result += 4294967295 - max
-
-    println(part1Result)
-    println(part2Result)
 }
-
-private data class IpRange(var min: Long, var max: Long)
