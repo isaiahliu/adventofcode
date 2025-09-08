@@ -1,40 +1,41 @@
 package y2016
 
+import util.expect
 import util.input
 
 fun main() {
-    val count = input.first().toInt()
+    expect(0, 0) {
+        val count = input.first().toInt()
 
-    var elves = Array(count) {
-        (it + 1) % count
+        var elves = Array(count) {
+            (it + 1) % count
+        }
+
+        while (elves[part1Result] != part1Result) {
+            elves[part1Result] = elves[elves[part1Result]]
+
+            part1Result = elves[part1Result]
+        }
+
+        part1Result++
+
+        elves = Array(count) {
+            (it + 1) % count
+        }
+
+        part2Result = count / 2 - 1
+
+        if (count % 2 == 1) {
+            elves[part2Result] = elves[elves[part2Result]]
+            part2Result += 2
+        }
+
+        while (elves[elves[part2Result]] != part2Result) {
+            elves[part2Result] = elves[elves[elves[part2Result]]]
+
+            part2Result = elves[part2Result]
+        }
+
+        part2Result++
     }
-
-    var current = 0
-
-    while (elves[current] != current) {
-        elves[current] = elves[elves[current]]
-
-        current = elves[current]
-    }
-
-    println(current + 1)
-
-    elves = Array(count) {
-        (it + 1) % count
-    }
-
-    current = count / 2 - 1
-
-    if (count % 2 == 1) {
-        elves[current] = elves[elves[current]]
-        current += 2
-    }
-
-    while (elves[elves[current]] != current) {
-        elves[current] = elves[elves[elves[current]]]
-
-        current = elves[current]
-    }
-
-    println(current + 1)
 }
