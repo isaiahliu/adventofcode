@@ -43,7 +43,7 @@ fun main() {
             }
         }
 
-        val root = SegNode(0L, 4294967295L)
+        val root = SegNode(0L, (1L shl 32) - 1)
 
         input.map { it.split("-").map { it.toLong() } }.forEach { (from, to) ->
             root.mark(from, to)
