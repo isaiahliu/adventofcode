@@ -1,25 +1,23 @@
 package y2016
 
+import util.expect
 import util.input
 
 fun main() {
-    fun process(rowCount: Int): Int {
-        var line = input.first().map { it == '^' }.toBooleanArray()
-        val map = arrayListOf(line)
-        repeat(rowCount - 1) {
-            line = (line.indices).map {
-                val left = line.getOrNull(it - 1) ?: false
-                val center = line.getOrNull(it) ?: false
-                val right = line.getOrNull(it + 1) ?: false
+    expect(0, 0) {
+        var dp = input.first().map { it == '^' }.toBooleanArray()
 
-                left && center && !right || !left && center && right || left && !center && !right || !left && !center && right
-            }.toBooleanArray()
+        repeat(400000) { index ->
+            dp = BooleanArray(dp.size) {
+                if (!dp[it]) {
+                    if (index < 40) {
+                        part1Result++
+                    }
+                    part2Result++
+                }
 
-            map += line
+                dp.getOrElse(it - 1) { false } xor dp.getOrElse(it + 1) { false }
+            }
         }
-        return map.sumOf { it.count { !it } }
     }
-
-    println(process(40))
-    println(process(400000))
 }
