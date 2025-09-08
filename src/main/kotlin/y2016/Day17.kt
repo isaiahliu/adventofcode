@@ -1,61 +1,44 @@
 package y2016
 
+import util.expect
 import util.input
 import util.md5
+import java.util.*
 
 fun main() {
-    val line = input.first()
-//    val line = "ihgpwlah"
+    expect("", 0) {
+        val line = input.first()
 
-    fun process(): Pair<String, String> {
-        val current = arrayListOf(Stat(0, 0, ""))
-        var max = ""
-        var min = ""
+        val directions = arrayOf(
+            -1 to 0 to 'U',
+            1 to 0 to 'D',
+            0 to -1 to 'L',
+            0 to 1 to 'R',
+        )
+        val tasks = LinkedList<Pair<Pair<Int, Int>, String>>()
+        tasks.add(0 to 0 to "")
 
-        while (current.isNotEmpty()) {
-            val tasks = current.toList()
+        while (tasks.isNotEmpty()) {
+            val (pos, step) = tasks.poll()
+            val (r, c) = pos
 
-            current.clear()
-
-            for (task in tasks) {
-                if (task.x == 3 && task.y == 3) {
-                    if (min.isEmpty()) {
-                        min = task.step
-                    }
-                    max = task.step
-
-                    continue
+            if (r + c == 6) {
+                if (part1Result.isEmpty()) {
+                    part1Result = step
                 }
+                part2Result = step.length
+                continue
+            }
+            val md5 = "$line$step".md5
 
-                val (up, down, left, right) = (line + task.step).md5.take(4).map {
-                    it != 'a' && it !in '0'..'9'
-                }
+            directions.forEachIndexed { index, (offset, direction) ->
+                val newR = r + offset.first
+                val newC = c + offset.second
 
-                if (up && task.y > 0) {
-                    current += task.copy(y = task.y - 1, step = task.step + "U")
-                }
-
-                if (down && task.y < 3) {
-                    current += task.copy(y = task.y + 1, step = task.step + "D")
-                }
-
-                if (left && task.x > 0) {
-                    current += task.copy(x = task.x - 1, step = task.step + "L")
-                }
-
-                if (right && task.x < 3) {
-                    current += task.copy(x = task.x + 1, step = task.step + "R")
+                if (md5[index] in 'b'..'f' && newR in 0..3 && newC in 0..3) {
+                    tasks.add(newR to newC to step + direction)
                 }
             }
         }
-
-        return min to max
     }
-
-    val (min, max) = process()
-
-    println(min)
-    println(max.length)
 }
-
-private data class Stat(val x: Int, val y: Int, val step: String)
