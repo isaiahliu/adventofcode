@@ -5,7 +5,7 @@ import util.input
 import kotlin.math.sign
 
 fun main() {
-    expect("", "") {
+    expect("abcdefgh", "fbgdceah") {
         abstract class AbstractInstruction {
             abstract fun scramble(input: String): String
             open fun unscramble(input: String): String {
@@ -174,13 +174,13 @@ fun main() {
                 else -> throw Exception("Invalid input")
             }
         }
-        
-        part1Result = instructions.fold("abcdefgh") { input, instruction ->
-            instruction.scramble(input)
+
+        instructions.forEach {
+            part1Result = it.scramble(part1Result)
         }
 
-        part2Result = instructions.reversed().fold("fbgdceah") { input, instruction ->
-            instruction.unscramble(input)
+        instructions.asReversed().forEach {
+            part2Result = it.unscramble(part2Result)
         }
     }
 }
