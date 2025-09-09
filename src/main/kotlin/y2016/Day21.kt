@@ -141,39 +141,40 @@ fun main() {
             }
         }
 
-        val instructions = arrayListOf<AbstractInstruction>()
-
-        input.map { it.split(" ") }.forEach {
+        val instructions = input.map { it.split(" ") }.map {
             when {
                 it[0] == "swap" && it[1] == "position" -> {
-                    instructions += SwapPosition(it[2].toInt(), it[5].toInt())
+                    SwapPosition(it[2].toInt(), it[5].toInt())
                 }
 
                 it[0] == "swap" && it[1] == "letter" -> {
-                    instructions += SwapCharacter(it[2][0], it[5][0])
+                    SwapCharacter(it[2][0], it[5][0])
                 }
 
                 it[0] == "rotate" && it[1] == "left" -> {
-                    instructions += Rotate(it[2].toInt() * -1)
+                    Rotate(it[2].toInt() * -1)
                 }
 
                 it[0] == "rotate" && it[1] == "right" -> {
-                    instructions += Rotate(it[2].toInt())
+                    Rotate(it[2].toInt())
                 }
 
                 it[0] == "rotate" && it[1] == "based" -> {
-                    instructions += RotateOnCharacter(it[6][0])
+                    RotateOnCharacter(it[6][0])
                 }
 
                 it[0] == "reverse" -> {
-                    instructions += Reverse(it[2].toInt(), it[4].toInt())
+                    Reverse(it[2].toInt(), it[4].toInt())
                 }
 
                 it[0] == "move" -> {
-                    instructions += Move(it[2].toInt(), it[5].toInt())
+                    Move(it[2].toInt(), it[5].toInt())
                 }
+
+                else -> throw Exception("Invalid input")
             }
         }
+        
         part1Result = instructions.fold("abcdefgh") { input, instruction ->
             instruction.scramble(input)
         }
