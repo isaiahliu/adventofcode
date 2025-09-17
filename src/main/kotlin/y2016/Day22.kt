@@ -1,160 +1,83 @@
 package y2016
 
+import util.expect
 import util.input
+import java.util.*
 
 fun main() {
-    val regex = "/dev/grid/node-x(\\d+)-y(\\d+)\\s+(\\d+)T\\s+(\\d+)T\\s+\\d+T\\s+\\d+%".toRegex()
+    expect(0, 0) {
+        val regex = "/dev/grid/node-x(\\d+)-y(\\d+)\\s+(\\d+)T\\s+(\\d+)T\\s+\\d+T\\s+\\d+%".toRegex()
 
-    val (maxX, maxY) = regex.matchEntire(input.last())?.groupValues?.drop(1).orEmpty()
+        val frees = PriorityQueue<Int>()
+        val uses = PriorityQueue<Int>()
 
-    val gridList = arrayListOf<Grid>()
+        var freeNode = 0 to 0
+        val forbidden = hashSetOf<Pair<Int, Int>>()
 
-    val grids = Array(maxY.toInt() + 1) {
-        Array(maxX.toInt() + 1) { Grid(0, 0) }
-    }
+        val (maxX, maxY) = regex.matchEntire(input.last())?.let {
+            it.groupValues.drop(1).take(2).map { it.toInt() }
+        } ?: return@expect
 
-    input.forEach {
-        val match = regex.matchEntire(it) ?: return@forEach
+        input.forEach {
+            val match = regex.matchEntire(it) ?: return@forEach
 
-        val (x, y, total, used) = match.groupValues.drop(1)
+            val (x, y, total, used) = match.groupValues.drop(1).map { it.toInt() }
 
-        grids[y.toInt()][x.toInt()] = Grid(total.toInt(), used.toInt()).also {
-            gridList += it
-        }
-    }
-
-    fun Array<Array<Grid>>.dupGrids(): Array<Array<Grid>> {
-        return Array(this.size) {
-            val row = this[it]
-            Array(row.size) {
-                row[it].copy()
-            }
-        }
-    }
-
-    var result1 = 0
-    for (x in gridList.indices) {
-        for (y in x + 1 until gridList.size) {
-            if (gridList[x].used > 0 && gridList[x].used <= gridList[y].available || gridList[y].used > 0 && gridList[y].used <= gridList[x].available) {
-                result1++
-            }
-        }
-    }
-
-    println(result1)
-
-    val goal = grids[0].last()
-    goal.goal = true
-
-    val swapSpace = gridList.first { it.used == 0 }.total
-    val goalSpace = goal.used
-
-    var swapSpaceX = 0
-    var swapSpaceY = 0
-
-    val mark = grids.mapIndexed { y, row ->
-        row.mapIndexed { x, grid ->
-            when {
-                grid.goal -> "G"
-                grid.used == 0 -> {
-                    swapSpaceX = x
-                    swapSpaceY = y
-
-                    "_"
+            if (used > 0) {
+                uses.add(used)
+                if (used * 2 <= total) {
+                    part1Result--
                 }
-
-                grid.used <= swapSpace && grid.total >= goalSpace -> "."
-                else -> "#"
             }
-        }.toTypedArray()
-    }.toTypedArray()
 
-    fun findPath(
-        fromX: Int,
-        fromY: Int,
-        excludeX: Int = Int.MAX_VALUE,
-        excludeY: Int = Int.MAX_VALUE
-    ): Array<IntArray> {
-        val result = Array(mark.size) {
-            IntArray(mark[it].size) {
-                Int.MAX_VALUE
+            if (used == 0) {
+                freeNode = x to y
+            }
+
+            frees.add(total - used)
+
+            if (used > 100) {
+                forbidden += x to y
             }
         }
 
-        result[fromY][fromX] = 0
-
-        val tasks = arrayListOf(fromX to fromY)
-
-        while (tasks.isNotEmpty()) {
-            val current = tasks.toList()
-            tasks.clear()
-
-            for ((x, y) in current) {
-                val currentValue = result[y][x]
-
-                result.getOrNull(y - 1)?.getOrNull(x)
-                    ?.takeIf { !(y - 1 == excludeY && x == excludeX) && mark[y - 1][x] != "#" && it > currentValue + 1 }
-                    ?.also {
-                        result[y - 1][x] = currentValue + 1
-                        tasks += x to y - 1
-                    }
-
-                result.getOrNull(y + 1)?.getOrNull(x)
-                    ?.takeIf { !(y + 1 == excludeY && x == excludeX) && mark[y + 1][x] != "#" && it > currentValue + 1 }
-                    ?.also {
-                        result[y + 1][x] = currentValue + 1
-                        tasks += x to y + 1
-                    }
-
-                result.getOrNull(y)?.getOrNull(x - 1)
-                    ?.takeIf { !(y == excludeY && x - 1 == excludeX) && mark[y][x - 1] != "#" && it > currentValue + 1 }
-                    ?.also {
-                        result[y][x - 1] = currentValue + 1
-                        tasks += x - 1 to y
-                    }
-
-                result.getOrNull(y)?.getOrNull(x + 1)
-                    ?.takeIf { !(y == excludeY && x + 1 == excludeX) && mark[y][x + 1] != "#" && it > currentValue + 1 }
-                    ?.also {
-                        result[y][x + 1] = currentValue + 1
-                        tasks += x + 1 to y
-                    }
+        while (uses.isNotEmpty() && frees.isNotEmpty()) {
+            val used = uses.poll()
+            while (frees.isNotEmpty() && used > frees.peek()) {
+                frees.poll()
             }
+
+            part1Result += frees.size
         }
 
-        return result
+        fun bfs(fromPos: Pair<Int, Int>, toPos: Pair<Int, Int>, lockPos: Pair<Int, Int>? = null): List<Pair<Int, Int>> {
+            val routes = Array(maxY + 1) { arrayOfNulls<List<Pair<Int, Int>>>(maxX + 1) }
+            routes[fromPos.second][fromPos.first] = listOf(fromPos)
+
+            val tasks = LinkedList<Pair<Int, Int>>()
+            tasks.add(fromPos)
+
+            while (routes[toPos.second][toPos.first] == null) {
+                val (x, y) = tasks.poll()
+                val route = routes[y][x].orEmpty()
+
+                arrayOf(x - 1 to y, x + 1 to y, x to y - 1, x to y + 1).forEach { (nx, ny) ->
+                    val newPos = nx to ny
+                    if (nx in 0..maxX && ny in 0..maxY && routes[ny][nx] == null && newPos !in forbidden && newPos != lockPos) {
+                        routes[ny][nx] = route + newPos
+                        tasks.add(newPos)
+                    }
+                }
+            }
+
+            return routes[toPos.second][toPos.first].orEmpty()
+        }
+
+        bfs(maxX to 0, 0 to 0).reduce { from, to ->
+            part2Result += bfs(freeNode, to, from).size
+
+            freeNode = from
+            to
+        }
     }
-
-    val path = findPath(0, 0)
-
-    var goalX = grids[0].lastIndex
-    var goalY = 0
-    var currentPath = path[goalY][goalX]
-
-    var result2 = 0
-    while (goalX > 0 || goalY > 0) {
-        val swapPath = findPath(swapSpaceX, swapSpaceY, goalX, goalY)
-        swapSpaceX = goalX
-        swapSpaceY = goalY
-        if (path.getOrNull(goalY - 1)?.getOrNull(goalX) == currentPath - 1) {
-            goalY--
-        } else if (path.getOrNull(goalY + 1)?.getOrNull(goalX) == currentPath - 1) {
-            goalY++
-        } else if (path.getOrNull(goalY)?.getOrNull(goalX - 1) == currentPath - 1) {
-            goalX--
-        } else if (path.getOrNull(goalY)?.getOrNull(goalX + 1) == currentPath - 1) {
-            goalX++
-        }
-
-        currentPath--
-
-        result2++
-        result2 += swapPath[goalY][goalX]
-    }
-
-    println(result2)
-}
-
-private data class Grid(val total: Int, var used: Int, var goal: Boolean = false) {
-    val available: Int get() = total - used
 }
