@@ -1,107 +1,101 @@
 package y2016
 
+import util.expect
 import util.input
+import java.util.*
 
 fun main() {
-    val pathCache = mutableMapOf<String, Array<IntArray>>()
+    expect(0, 0) {
+        val pointsMap = hashMapOf<Int, Pair<Int, Int>>()
 
-    fun process(returnToStart: Boolean): Int {
-        var startRowIndex = 0
-        var startColumnIndex = 0
-        val points = arrayListOf<Pair<Int, Int>>()
         val map = Array(input.size) { rowIndex ->
             val row = input[rowIndex]
-            IntArray(row.length) { columnIndex ->
+            BooleanArray(row.length) { columnIndex ->
                 when (row[columnIndex]) {
-                    '#' -> -1
-                    '.' -> 0
-                    '0' -> {
-                        startRowIndex = rowIndex
-                        startColumnIndex = columnIndex
-                        0
-                    }
-
+                    '#' -> false
+                    '.' -> true
                     else -> {
-                        points += rowIndex to columnIndex
-                        0
+                        pointsMap[row[columnIndex] - '0'] = rowIndex to columnIndex
+                        true
                     }
                 }
             }
         }
 
-        fun findPath(fromRowIndex: Int, fromColumnIndex: Int): Array<IntArray> {
-            return pathCache.computeIfAbsent("${fromRowIndex}_${fromColumnIndex}") {
-                val result = Array(map.size) { rowIndex ->
-                    val row = map[rowIndex]
-                    IntArray(row.size) {
-                        when (map[rowIndex][it]) {
-                            -1 -> -1
-                            else -> Int.MAX_VALUE
+        val points = Array(pointsMap.size) {
+            pointsMap[it] ?: throw Exception("Error")
+        }
+
+        val distances = Array(points.size) {
+            IntArray(points.size)
+        }
+
+        val neighbors = setOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)
+
+        for (i in points.indices) {
+            val target = points[i]
+            for (j in i + 1 until points.size) {
+                val visitMap = Array(map.size) { r ->
+                    Array(map[r].size) { -1 }
+                }
+                visitMap[points[j].first][points[j].second] = 0
+                val tasks = LinkedList<Pair<Int, Int>>()
+                tasks.add(points[j])
+
+                while (visitMap[target.first][target.second] < 0) {
+                    repeat(tasks.size) {
+                        val (r, c) = tasks.poll()
+
+                        neighbors.forEach { (dr, dc) ->
+                            val newR = r + dr
+                            val newC = c + dc
+
+                            if (map.getOrNull(newR)?.getOrNull(newC) == true && visitMap[newR][newC] < 0) {
+                                visitMap[newR][newC] = visitMap[r][c] + 1
+                                tasks.add(newR to newC)
+                            }
                         }
                     }
                 }
 
-                result[fromRowIndex][fromColumnIndex] = 0
-                val tasks = arrayListOf(fromRowIndex to fromColumnIndex)
-
-                while (tasks.isNotEmpty()) {
-                    val current = tasks.toList()
-                    tasks.clear()
-
-                    for ((rowIndex, columnIndex) in current) {
-                        val currentValue = result[rowIndex][columnIndex]
-
-                        result[rowIndex - 1][columnIndex].takeIf { currentValue + 1 < it }?.also {
-                            result[rowIndex - 1][columnIndex] = currentValue + 1
-                            tasks += rowIndex - 1 to columnIndex
-                        }
-
-                        result[rowIndex + 1][columnIndex].takeIf { currentValue + 1 < it }?.also {
-                            result[rowIndex + 1][columnIndex] = currentValue + 1
-                            tasks += rowIndex + 1 to columnIndex
-                        }
-
-                        result[rowIndex][columnIndex - 1].takeIf { currentValue + 1 < it }?.also {
-                            result[rowIndex][columnIndex - 1] = currentValue + 1
-                            tasks += rowIndex to columnIndex - 1
-                        }
-
-                        result[rowIndex][columnIndex + 1].takeIf { currentValue + 1 < it }?.also {
-                            result[rowIndex][columnIndex + 1] = currentValue + 1
-                            tasks += rowIndex to columnIndex + 1
-                        }
-                    }
-                }
-
-                result
+                distances[i][j] = visitMap[target.first][target.second]
+                distances[j][i] = visitMap[target.first][target.second]
             }
         }
 
-        var minSteps = Int.MAX_VALUE
-        fun walk(steps: Int, rowIndex: Int, columnIndex: Int, points: List<Pair<Int, Int>>) {
-            if (points.isEmpty()) {
-                var additionalSteps = 0
-                if (returnToStart) {
-                    additionalSteps = findPath(rowIndex, columnIndex)[startRowIndex][startColumnIndex]
+        val dp1 = Array(points.size) { IntArray(1 shl points.size) { Int.MAX_VALUE } }
+        val dp2 = Array(points.size) { IntArray(1 shl points.size) { Int.MAX_VALUE } }
+        repeat(points.size) {
+            dp1[it][1 shl it] = 0
+            dp2[it][1 shl it] = distances[0][it]
+        }
+
+        fun Int.forEachBit(consumer: (Int) -> Unit) {
+            var t = this
+
+            var index = 0
+            while (t > 0) {
+                if (t % 2 == 1) {
+                    consumer(index)
                 }
-                minSteps = minSteps.coerceAtMost(steps + additionalSteps)
-            }
 
-            points.forEach { pair ->
-                val path = findPath(rowIndex, columnIndex)
-
-                walk(
-                    steps + path[pair.first][pair.second],
-                    pair.first,
-                    pair.second,
-                    points.toMutableList().also { it.remove(pair) })
+                t /= 2
+                index++
             }
         }
 
-        walk(0, startRowIndex, startColumnIndex, points)
+        repeat(1 shl points.size) { mark ->
+            mark.forEachBit { pointIndex ->
+                val otherMark = mark xor (1 shl pointIndex)
 
-        return minSteps
+                otherMark.forEachBit { otherPointIndex ->
+                    dp1[pointIndex][mark] = minOf(dp1[pointIndex][mark], dp1[otherPointIndex][otherMark] + distances[pointIndex][otherPointIndex])
+                    dp2[pointIndex][mark] = minOf(dp2[pointIndex][mark], dp2[otherPointIndex][otherMark] + distances[pointIndex][otherPointIndex])
+                }
+            }
+        }
+
+        part1Result = dp1[0].last()
+        part2Result = dp2[0].last()
     }
-    println(process(false))
-    println(process(true))
 }
