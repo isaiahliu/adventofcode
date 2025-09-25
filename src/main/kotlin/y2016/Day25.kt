@@ -1,97 +1,61 @@
 package y2016
 
+import util.expect
 import util.input
 
 fun main() {
-    val instructions = input.map { it.split(" ") }
+    expect(-1, "Merry Christmas!") {
+        val instructions = input.map { it.split(" ") }
 
-    var initValue = -1
-    var found = false
-    while (!found) {
-        var instructionIndex = 0
-
-        val registers = arrayOf(++initValue, 0, 0, 0)
-
-        fun String.evaluate(): Int {
-            return this.toIntOrNull() ?: registers[this[0] - 'a']
-        }
-
-        var currentTiktok = true
         var tiktokCount = 0
+        while (tiktokCount < 100) {
+            tiktokCount = 0
 
-        while (instructionIndex < instructions.size) {
-            val instruction = instructions[instructionIndex]
+            val registers = arrayOf(++part1Result, 0, 0, 0)
 
-            when (instruction[0]) {
-                "cpy" -> {
-                    registers[instruction[2][0] - 'a'] = instruction[1].evaluate()
-                    instructionIndex++
-                }
+            fun String.evaluate(): Int {
+                return this.toIntOrNull() ?: registers[this[0] - 'a']
+            }
 
-                "inc" -> {
-                    registers[instruction[1][0] - 'a']++
-                    instructionIndex++
-                }
+            var instructionIndex = 0
+            while (tiktokCount < 100) {
+                val instruction = instructions[instructionIndex]
+                var instructionOffset = 1
 
-                "dec" -> {
-                    registers[instruction[1][0] - 'a']--
-                    instructionIndex++
-                }
+                when (instruction[0]) {
+                    "cpy" -> {
+                        registers[instruction[2][0] - 'a'] = instruction[1].evaluate()
+                    }
 
-                "jnz" -> {
-                    if (instruction[1].evaluate() != 0) {
-                        instructionIndex += instruction[2].evaluate()
-                    } else {
-                        instructionIndex++
+                    "inc" -> {
+                        registers[instruction[1][0] - 'a']++
+                    }
+
+                    "dec" -> {
+                        registers[instruction[1][0] - 'a']--
+                    }
+
+                    "jnz" -> {
+                        if (instruction[1].evaluate() != 0) {
+                            instructionOffset = instruction[2].evaluate()
+                        }
+                    }
+
+                    "out" if instruction[1].evaluate() == 0 && tiktokCount % 2 == 0 -> {
+                        tiktokCount++
+                    }
+
+                    "out" if instruction[1].evaluate() == 1 && tiktokCount % 2 == 1 -> {
+                        tiktokCount++
+                    }
+
+                    else -> {
+                        break
                     }
                 }
 
-                "out" -> {
-                    when (instruction[1].evaluate()) {
-                        0 -> {
-                            if (currentTiktok) {
-                                currentTiktok = false
-                                instructionIndex++
-
-                                if (++tiktokCount == 100) {
-                                    found = true
-                                    break
-                                } else {
-                                    continue
-                                }
-                            } else {
-                                break
-                            }
-                        }
-
-                        1 -> {
-                            if (!currentTiktok) {
-                                currentTiktok = true
-                                instructionIndex++
-
-                                if (++tiktokCount == 1000) {
-                                    found = true
-                                    break
-                                } else {
-                                    continue
-                                }
-                            } else {
-                                break
-                            }
-                        }
-
-                        else -> {
-                            println("error - ${instruction[1].evaluate()}")
-                            break
-                        }
-                    }
-                }
-
-                else -> {
-                }
+                instructionIndex += instructionOffset
             }
         }
     }
-
-    println(initValue)
 }
