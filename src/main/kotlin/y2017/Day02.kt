@@ -1,23 +1,24 @@
 package y2017
 
+import util.expect
 import util.input
 
 fun main() {
-    val part1Result = input.sumOf {
-        it.split("\\s+".toRegex()).map { it.toInt() }.let {
-            it.max() - it.min()
+    expect(0, 0) {
+        input.forEach {
+            val nums = it.split("\\s+".toRegex()).map { it.toInt() }
+            var min = Int.MAX_VALUE
+            var max = Int.MIN_VALUE
+
+            nums.forEach { num ->
+                min = minOf(min, num)
+                max = maxOf(max, num)
+
+                nums.firstOrNull { it < num && num % it == 0 }?.also {
+                    part2Result += num / it
+                }
+            }
+            part1Result += max - min
         }
     }
-
-    println(part1Result)
-
-    val part2Result = input.sumOf {
-        it.split("\\s+".toRegex()).map { it.toInt() }.sortedDescending().let {
-            it.mapIndexed { index, a ->
-                it.drop(index + 1).filter { a % it == 0 }.sumOf { a / it }
-            }.sum()
-        }
-    }
-
-    println(part2Result)
 }
