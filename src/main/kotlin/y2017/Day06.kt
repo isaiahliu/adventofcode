@@ -1,44 +1,34 @@
 package y2017
 
+import util.expect
 import util.input
+import kotlin.math.sign
 
 fun main() {
-    val array = input.first().split("\\s+".toRegex()).map { it.toInt() }.toIntArray()
+    expect(0, 0) {
+        val array = input.first().split("\\s+".toRegex()).map { it.toInt() }.toIntArray()
+        val visited = hashMapOf<String, Int>()
 
-    val cache = linkedSetOf<String>()
+        while (true) {
+            part2Result = visited.put(array.joinToString("_") { it.toString() }, part1Result)?.let {
+                visited.size - it
+            } ?: 0
 
-    fun walked(): Int {
-        val path = array.joinToString("_") { it.toString() }
-        return if (cache.add(path)) {
-            0
-        } else {
-            cache.size - cache.indexOf(path)
+            if (part2Result > 0) {
+                break
+            }
+
+            val max = array.max()
+
+            val maxIndex = array.indexOfFirst { it == max }
+
+            array[maxIndex] = 0
+
+            repeat(array.size) {
+                array[(maxIndex + it + 1) % array.size] += max / array.size + (max % array.size / (it + 1)).sign
+            }
+
+            part1Result++
         }
     }
-
-    var steps = 0
-    var cycleSize: Int
-    while (true) {
-        cycleSize = walked()
-        if (cycleSize > 0) {
-            break
-        }
-
-        var max = array.max()
-
-        var maxIndex = array.indexOfFirst { it == max }
-
-        array[maxIndex] = 0
-
-        while (max-- > 0) {
-            maxIndex = (maxIndex + 1) % array.size
-
-            array[maxIndex]++
-        }
-
-        steps++
-    }
-
-    println(steps)
-    println(cycleSize)
 }
