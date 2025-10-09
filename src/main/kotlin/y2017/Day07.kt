@@ -1,8 +1,26 @@
 package y2017
 
+import util.expect
 import util.input
 
 fun main() {
+    expect("", 0) {
+        val children = hashMapOf<String, Set<String>>()
+        val parents = hashMapOf<String, String>()
+        val weights = hashMapOf<String, Int>()
+        input.map { it.split(" ") }.forEach {
+            val name = it[0]
+
+            weights[name] = it[1].trim('(', ')').toInt()
+
+            children[name] = it.drop(3).onEach {
+                val childName = it.trim(',')
+                parents[childName] = name
+            }.toMutableSet()
+        }
+
+        part1Result = (children.keys - parents.keys).first()
+    }
     val nodes = hashMapOf<String, Node>()
 
     input.map { it.split(" ") }.forEach {
