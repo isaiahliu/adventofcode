@@ -9,7 +9,7 @@ fun main() {
     expect(0, 1) {
         val target = input[0].toInt()
 
-        val round = sqrt((target - 1).toDouble()).toInt().let { it - (it % 2 xor 1) }
+        val round = sqrt((target - 1).toDouble()).toInt().let { it - (it and 1 xor 1) }
 
         part1Result = ((target - round * round - 1) % (round + 1) - round / 2).absoluteValue + round / 2 + 1
 
