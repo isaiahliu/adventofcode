@@ -1,34 +1,27 @@
 package y2017
 
+import util.expect
 import util.input
 
 fun main() {
-    var array = input.map { it.toInt() }.toIntArray()
-    var index = 0
-    var step = 0
-    while (index < array.size) {
-        index += array[index]++
+    expect(0, 0) {
+        fun process(offset: Int.() -> Int): Int {
+            val array = input.map { it.toInt() }.toIntArray()
+            var index = 0
+            var result = 0
+            while (index in array.indices) {
+                val jump = array[index]
 
-        step++
-    }
+                array[index] += jump.offset()
 
-    println(step)
+                index += jump
+                result++
+            }
 
-    array = input.map { it.toInt() }.toIntArray()
-    index = 0
-    step = 0
-    while (index < array.size) {
-        val offset = array[index]
-
-        array[index] += if (offset < 3) {
-            1
-        } else {
-            -1
+            return result
         }
 
-        index += offset
-        step++
+        part1Result = process { 1 }
+        part2Result = process { if (this >= 3) -1 else 1 }
     }
-
-    println(step)
 }
