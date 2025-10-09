@@ -1,156 +1,35 @@
 package y2017
 
+import util.expect
 import util.input
 import kotlin.math.absoluteValue
 import kotlin.math.sqrt
 
 fun main() {
-    val target = input.first().toInt()
+    expect(0, 1) {
+        val target = input[0].toInt()
 
-    var part1Result = 0
+        val round = sqrt((target - 1).toDouble()).toInt().let { it - (it % 2 xor 1) }
 
-    val temp = sqrt(target.toDouble())
+        part1Result = ((target - round * round - 1) % (round + 1) - round / 2).absoluteValue + round / 2 + 1
 
-    val size = (temp.toInt() + if (temp - temp.toInt() > 0) {
-        1
-    } else {
-        0
-    }) / 2 * 2 + 1
-
-    if (size > 1) {
-        var remaining = target
-
-        remaining -= (size - 2) * (size - 2)
-
+        val nums = hashMapOf(0 to 0 to 1)
         var x = 0
         var y = 0
 
-        x = size / 2
-        for (yIndex in size / 2 - 1 downTo 0 - size / 2) {
-            remaining--
-
-            if (remaining == 0) {
-                part1Result = x.absoluteValue + yIndex.absoluteValue
-                break
+        while (part2Result <= target) {
+            when {
+                x > y.absoluteValue -> y++
+                y >= x.absoluteValue && x + y > 0 -> x--
+                -x >= y.absoluteValue && y - x > 0 -> y--
+                else -> x++
             }
-        }
 
-        if (remaining > 0) {
-            y = size / 2
-            for (xIndex in size / 2 - 1 downTo 0 - size / 2) {
-                remaining--
-
-                if (remaining == 0) {
-                    part1Result = y.absoluteValue + xIndex.absoluteValue
-                    break
-                }
+            part2Result = arrayOf(x - 1 to y - 1, x - 1 to y, x - 1 to y + 1, x to y - 1, x to y + 1, x + 1 to y - 1, x + 1 to y, x + 1 to y + 1).sumOf {
+                nums[it] ?: 0
             }
-        }
 
-        if (remaining > 0) {
-            x = 0 - size / 2
-            for (yIndex in 1 - size / 2..size / 2) {
-                remaining--
-
-                if (remaining == 0) {
-                    part1Result = x.absoluteValue + yIndex.absoluteValue
-                    break
-                }
-            }
-        }
-
-        if (remaining > 0) {
-            y = 0 - size / 2
-            for (xIndex in 1 - size / 2..size / 2) {
-                remaining--
-
-                if (remaining == 0) {
-                    part1Result = y.absoluteValue + xIndex.absoluteValue
-                    break
-                }
-            }
+            nums[x to y] = part2Result
         }
     }
-
-    println(part1Result)
-
-    var part2Result = 1
-
-    val part2Array = Array(size) { IntArray(size) }
-    fun sumNumbersAround(x: Int, y: Int): Int {
-        part2Array[x][y] = (part2Array.getOrNull(x - 1)?.getOrNull(y - 1) ?: 0) +
-                (part2Array.getOrNull(x - 1)?.getOrNull(y) ?: 0) +
-                (part2Array.getOrNull(x - 1)?.getOrNull(y + 1) ?: 0) +
-                (part2Array.getOrNull(x)?.getOrNull(y - 1) ?: 0) +
-                (part2Array.getOrNull(x)?.getOrNull(y) ?: 0) +
-                (part2Array.getOrNull(x)?.getOrNull(y + 1) ?: 0) +
-                (part2Array.getOrNull(x + 1)?.getOrNull(y - 1) ?: 0) +
-                (part2Array.getOrNull(x + 1)?.getOrNull(y) ?: 0) +
-                (part2Array.getOrNull(x + 1)?.getOrNull(y + 1) ?: 0)
-
-        return part2Array[x][y]
-    }
-
-    var x = size / 2
-    var y = size / 2
-    part2Array[x][y] = 1
-
-    x++
-    var direction = 0
-    var found = false
-    while (!found) {
-        when (direction) {
-            0 -> {
-                while (part2Array[x - 1][y] > 0) {
-                    val sum = sumNumbersAround(x, y)
-                    if (sum > target) {
-                        part2Result = sum
-                        found = true
-                        break
-                    }
-                    y++
-                }
-            }
-
-            1 -> {
-                while (part2Array[x][y - 1] > 0) {
-                    val sum = sumNumbersAround(x, y)
-                    if (sum > target) {
-                        part2Result = sum
-                        found = true
-                        break
-                    }
-                    x--
-                }
-            }
-
-            2 -> {
-                while (part2Array[x + 1][y] > 0) {
-                    val sum = sumNumbersAround(x, y)
-                    if (sum > target) {
-                        part2Result = sum
-                        found = true
-                        break
-                    }
-                    y--
-                }
-            }
-
-            3 -> {
-                while (part2Array[x][y + 1] > 0) {
-                    val sum = sumNumbersAround(x, y)
-                    if (sum > target) {
-                        part2Result = sum
-                        found = true
-                        break
-                    }
-                    x++
-                }
-            }
-        }
-
-        direction = (direction + 1) % 4
-    }
-
-    println(part2Result)
 }
