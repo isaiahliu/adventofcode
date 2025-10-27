@@ -1,54 +1,52 @@
 package y2017
 
+import util.expect
 import util.input
 
 fun main() {
-    val line = input.first()
+    expect(0, 0) {
+        var inGarbage = false
+        var ignoreNext = false
 
-    var result = 0
-    var result2 = 0
+        var score = 0
+        input.first().forEach {
+            when {
+                !inGarbage -> {
+                    when (it) {
+                        '<' -> {
+                            inGarbage = true
+                        }
 
-    var inGarbage = false
-    var ignoreNext = false
+                        '{' -> {
+                            score++
+                        }
 
-    var score = 0
-    line.forEach {
-        if (inGarbage) {
-            if (ignoreNext) {
-                ignoreNext = false
-            } else {
-                when (it) {
-                    '!' -> {
-                        ignoreNext = true
-                    }
-
-                    '>' -> {
-                        inGarbage = false
-                    }
-
-                    else -> {
-                        result2++
+                        '}' -> {
+                            part1Result += score
+                            score--
+                        }
                     }
                 }
-            }
-        } else {
-            when (it) {
-                '<' -> {
-                    inGarbage = true
-                }
 
-                '{' -> {
-                    score++
-                }
+                ignoreNext -> ignoreNext = false
 
-                '}' -> {
-                    result += score
-                    score--
+                else -> {
+                    when (it) {
+                        '!' -> {
+                            ignoreNext = true
+                        }
+
+                        '>' -> {
+                            inGarbage = false
+                        }
+
+                        else -> {
+                            part2Result++
+                        }
+                    }
+
                 }
             }
         }
     }
-
-    println(result)
-    println(result2)
 }
