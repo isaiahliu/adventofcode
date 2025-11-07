@@ -29,23 +29,9 @@ fun main() {
                 }
 
                 ignoreNext -> ignoreNext = false
-
-                else -> {
-                    when (it) {
-                        '!' -> {
-                            ignoreNext = true
-                        }
-
-                        '>' -> {
-                            inGarbage = false
-                        }
-
-                        else -> {
-                            part2Result++
-                        }
-                    }
-
-                }
+                it == '!' -> ignoreNext = true
+                it == '>' -> inGarbage = false
+                else -> part2Result++
             }
         }
     }
