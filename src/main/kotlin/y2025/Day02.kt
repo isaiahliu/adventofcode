@@ -7,7 +7,7 @@ import java.util.*
 fun main() {
     expect(0L, 0L) {
         fun process(count: Int): Set<Long>? {
-            var result = hashSetOf<Long>()
+            val result = hashSetOf<Long>()
             val map = TreeMap<Long, Int>()
             input.forEach {
                 it.split(",").forEach {
@@ -19,21 +19,27 @@ fun main() {
             }
 
             var base = 0L
-            var m = 1L
+            var baseMove = 1L
+            var m = 0L
+            var t = 1L
+            repeat(count) {
+                m += t
+                t *= baseMove
+            }
 
             var size = 0
             while (map.isNotEmpty()) {
-                base++
-                if (base == m) {
-                    m *= 10
+                if (++base == baseMove) {
+                    baseMove *= 10
+                    m = 0L
+                    t = 1L
+                    repeat(count) {
+                        m += t
+                        t *= baseMove
+                    }
                 }
 
-                var invalidNum = 0L
-                var move = 1L
-                repeat(count) {
-                    invalidNum += base * move
-                    move *= m
-                }
+                val invalidNum = base * m
 
                 while (map.isNotEmpty() && invalidNum >= map.firstKey()) {
                     size += map.pollFirstEntry().value
