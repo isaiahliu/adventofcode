@@ -2,33 +2,27 @@ package y2025
 
 import util.expect
 import util.input
+import kotlin.math.sign
 
 fun main() {
     expect(0, 0L) {
-        var beam = hashMapOf<Int, Long>()
+        val dp = LongArray(input[0].length)
+
         input.forEach {
-            val newBeam = hashMapOf<Int, Long>()
             it.forEachIndexed { index, ch ->
                 when (ch) {
-                    'S' -> newBeam[index] = 1L
-                    '.' -> Unit
-                    else -> {
-                        beam.remove(index)?.also {
-                            part1Result++
-                            newBeam[index - 1] = (newBeam[index - 1] ?: 0) + it
-                            newBeam[index + 1] = (newBeam[index + 1] ?: 0) + it
-                        }
+                    'S' -> dp[index]++
+                    '^' -> {
+                        part1Result += dp[index].sign
+                        dp[index - 1] += dp[index]
+                        dp[index + 1] += dp[index]
+                        dp[index] = 0
                     }
                 }
             }
-
-            beam.forEach { (key, value) ->
-                newBeam[key] = (newBeam[key] ?: 0) + value
-            }
-            beam = newBeam
         }
 
-        part2Result += beam.values.sum()
+        part2Result += dp.sum()
     }
 }
 
