@@ -17,14 +17,12 @@ fun main() {
             }
         }
 
-        class QuartNode(val minX: Int, val minY: Int, val maxX: Int, val maxY: Int) {
+        class QuartNode(val minX: Int, val minY: Int, val maxX: Int, val maxY: Int, val mark: Boolean) {
             val children = arrayListOf<QuartNode>()
-
-            var mark = false
 
             fun horizontalSplit(y: Int, fromX: Int, toX: Int, bottomMark: Boolean) {
                 when {
-                    y !in minY..maxY || fromX >= maxX || toX <= minX -> Unit
+                    y !in minY..maxY || fromX > maxX || toX < minX -> Unit
                     !children.isEmpty() -> {
                         children.forEach {
                             it.horizontalSplit(y, fromX, toX, bottomMark)
@@ -32,19 +30,9 @@ fun main() {
                     }
 
                     else -> {
-                        var splitY = y
-                        if (!bottomMark) {
-                            splitY++
-                        }
-
-                        children.add(QuartNode(minX, minY, maxX, splitY - 1))
-                        children.add(QuartNode(minX, splitY, maxX, maxY))
-
-                        if (bottomMark) {
-                            children[1].mark = true
-                        } else {
-                            children[0].mark = true
-                        }
+                        children.add(QuartNode(minX, minY, maxX, y - 1, !bottomMark))
+                        children.add(QuartNode(minX, y, maxX, y, true))
+                        children.add(QuartNode(minX, y + 1, maxX, maxY, bottomMark))
                     }
                 }
             }
@@ -59,19 +47,9 @@ fun main() {
                     }
 
                     else -> {
-                        var splitX = x
-                        if (!rightMark) {
-                            splitX++
-                        }
-
-                        children.add(QuartNode(minX, minY, splitX - 1, maxY))
-                        children.add(QuartNode(splitX, minY, maxX, maxY))
-
-                        if (rightMark) {
-                            children[1].mark = true
-                        } else {
-                            children[0].mark = true
-                        }
+                        children.add(QuartNode(minX, minY, x - 1, maxY, !rightMark))
+                        children.add(QuartNode(x, minY, x, maxY, true))
+                        children.add(QuartNode(x + 1, minY, maxX, maxY, rightMark))
                     }
                 }
             }
@@ -97,7 +75,7 @@ fun main() {
             }
         }
 
-        val root = QuartNode(0, 0, Int.MAX_VALUE, Int.MAX_VALUE)
+        val root = QuartNode(0, 0, Int.MAX_VALUE, Int.MAX_VALUE, false)
 
         repeat(nodes.size) { index ->
             val (cx, cy) = nodes[(startIndex + index * d).mod(nodes.size)]
