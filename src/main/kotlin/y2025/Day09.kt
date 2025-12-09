@@ -85,7 +85,7 @@ fun main() {
                 nx > cx -> root.horizontalSplit(cy, cx, nx, true)
                 nx < cx -> root.horizontalSplit(cy, nx, cx, false)
                 ny > cy -> root.verticalSplit(cx, cy, ny, false)
-                else -> root.verticalSplit(cx, ny, cy, true)
+                ny < cy -> root.verticalSplit(cx, ny, cy, true)
             }
         }
 
