@@ -147,8 +147,6 @@ fun main() {
 
                             count++
                         }
-
-                        result.takeIf { it < Int.MAX_VALUE }
                     }
 
                     else -> {
