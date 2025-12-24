@@ -2,19 +2,16 @@ package y2025
 
 import util.expect
 import util.input
-import kotlin.math.sign
 
 fun main() {
-    expect(0, 0) {
+    expect(0, "Merry Christmas!") {
         var index = 0
         val regex = "(\\d+)x(\\d+): (.*)".toRegex()
 
         var gridIndex = 0
 
-        val marks = Array(62) {
-            1L shl (it + 1) - 1
-        }
-        val nodes = hashMapOf<Long, Int>()
+        val nodes = hashMapOf<Array<BooleanArray>, Int>()
+
         while (index < input.size) {
             val line = input[index++]
             when {
@@ -22,13 +19,13 @@ fun main() {
                     arrayOf(0..2 to 0..2, 0..2 to (2 downTo 0), 2 downTo 0 to 0..2, 2 downTo 0 to (2 downTo 0)).forEach {
                         val (r1, r2) = it
 
-                        var node1 = 0L
-                        var node2 = 0L
+                        val node1 = Array(3) { BooleanArray(3) }
+                        val node2 = Array(3) { BooleanArray(3) }
                         r1.forEachIndexed { i1, p1 ->
                             r2.forEachIndexed { i2, p2 ->
                                 if (input[p1 + index][p2] == '#') {
-                                    node1 += (1L shl i2) shl (i1 * 3)
-                                    node2 += (1L shl i1) shl (i2 * 3)
+                                    node1[i1][i2] = true
+                                    node2[i2][i1] = true
                                 }
                             }
                         }
@@ -46,43 +43,48 @@ fun main() {
                     regex.matchEntire(line)?.groupValues?.drop(1)?.also { (w, h, c) ->
                         val height = h.toInt()
                         val width = w.toInt()
-                        val board = LongArray(height)
+                        val board = Array(height) { BooleanArray(width) }
                         val counts = c.split(" ").map { it.toInt() }.toIntArray()
-                        val sizes = IntArray(counts.size) { nodeIndex ->
-                            nodes.entries.first { it.value == nodeIndex }.key.countOneBits()
-                        }
+                        var remainingSizes = counts.indices.sumOf { nodeIndex -> counts[nodeIndex] * nodes.entries.first { it.value == nodeIndex }.key.sumOf { it.count { it } } }
 
-                        fun match(node: Long, row: Int, column: Int): Boolean {
-                            val r1 = board.getOrNull(row)?.let { it shr column }?.let { it and 0b111 } ?: return false
-                            val r2 = board.getOrNull(row + 1)?.let { it shr column }?.let { it and 0b111 } ?: return false
-                            val r3 = board.getOrNull(row + 2)?.let { it shr column }?.let { it and 0b111 } ?: return false
-
-                            return (node and r1 == 0L) && ((node shr 3) and r2 == 0L) && ((node shr 6) and r3 == 0L)
+                        fun match(node: Array<BooleanArray>, row: Int, column: Int): Boolean {
+                            return node.indices.all { rowIndex ->
+                                node[rowIndex].indices.all { columnIndex ->
+                                    !node[rowIndex][columnIndex] || board.getOrNull(row + rowIndex)?.getOrNull(column + columnIndex) == false
+                                }
+                            }
                         }
 
                         var remainingSpaces = width * height
-                        var remainingSizes = counts.indices.sumOf { counts[it] * sizes[it] }
 
-                        fun use(node: Long, row: Int, column: Int) {
+                        fun use(node: Array<BooleanArray>, row: Int, column: Int) {
                             nodes[node]?.also {
                                 counts[it]--
                             }
 
-                            board[row] += (node and 0b111) shl column
-                            board[row + 1] += ((node shr 3) and 0b111) shl column
-                            board[row + 2] += ((node shr 6) and 0b111) shl column
-                            remainingSizes -= node.countOneBits()
+                            node.forEachIndexed { rowIndex, r ->
+                                r.forEachIndexed { columnIndex, value ->
+                                    if (value) {
+                                        board[row + rowIndex][column + columnIndex] = true
+                                        remainingSizes--
+                                    }
+                                }
+                            }
                         }
 
-                        fun unuse(node: Long, row: Int, column: Int) {
+                        fun unuse(node: Array<BooleanArray>, row: Int, column: Int) {
                             nodes[node]?.also {
-                                counts[it]--
+                                counts[it]++
                             }
 
-                            board[row] -= (node and 0b111) shl column
-                            board[row + 1] -= ((node shr 3) and 0b111) shl column
-                            board[row + 2] -= ((node shr 6) and 0b111) shl column
-                            remainingSizes += node.countOneBits()
+                            node.forEachIndexed { rowIndex, r ->
+                                r.forEachIndexed { columnIndex, value ->
+                                    if (value) {
+                                        board[row + rowIndex][column + columnIndex] = false
+                                        remainingSizes++
+                                    }
+                                }
+                            }
                         }
 
                         fun dfs(row: Int, column: Int): Boolean {
@@ -102,17 +104,27 @@ fun main() {
                                     nodes.keys.filter { nodes[it]?.takeIf { counts[it] > 0 } != null && match(it, row, column) }.forEach {
                                         use(it, row, column)
 
-                                        remainingSpaces -= (board[row] and (1L shl column)).sign
+                                        if (board[row][column]) {
+                                            remainingSpaces--
+                                        }
                                         if (dfs(row - 1, column + 1)) {
                                             return true
                                         }
-                                        remainingSpaces += (board[row] and (1L shl column)).sign
+
+                                        if (board[row][column]) {
+                                            remainingSpaces++
+                                        }
+
                                         unuse(it, row, column)
                                     }
 
-                                    remainingSpaces -= (board[row] and (1L shl column)).sign
+                                    if (board[row][column]) {
+                                        remainingSpaces--
+                                    }
                                     dfs(row - 1, column + 1).also {
-                                        remainingSpaces += (board[row] and (1L shl column)).sign
+                                        if (board[row][column]) {
+                                            remainingSpaces++
+                                        }
                                     }
                                 }
                             }

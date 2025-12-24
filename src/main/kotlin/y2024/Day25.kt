@@ -4,7 +4,7 @@ import util.expect
 import util.input
 
 fun main() {
-    expect(0, "") {
+    expect(0, "Merry Christmas!") {
         class Trie {
             val children by lazy { Array(8) { Trie() } }
 
@@ -41,6 +41,5 @@ fun main() {
         }
 
         part1Result = keys.sumOf { it.count }
-        part2Result = "Merry Christmas!"
     }
 }
